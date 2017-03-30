@@ -54,17 +54,56 @@ export default class travelight extends Component {
         super(props);
 
         this.state = {
+            tours: [
+                {
+                    coordinate: {
+                        latitude: 32.0802627,
+                        longitude: 34.7808783
+                    },
+                    latDel: LATITUDE_DELTA,
+                    lonDel: LONGITUDE_DELTA
+                },
+                {
+                    coordinate: {
+                        latitude: 32.0745575,
+                        longitude: 34.7772692
+                    },
+                    latDel: LATITUDE_DELTA,
+                    lonDel: LONGITUDE_DELTA
+                },
+                {
+                    coordinate: {
+                        latitude: 32.0633612,
+                        longitude: 34.7730913
+                    },
+                    latDel: LATITUDE_DELTA,
+                    lonDel: LONGITUDE_DELTA
+                }
+            ],
             region: {
                 latitude: LATITUDE,
                 longitude: LONGITUDE,
                 latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA
             },
             markers: [],
         };
     }
 
-    onMapPress(e) {
+    // onMapPress(e) {
+    //     this.setState({
+    //         markers: [
+    //             ...this.state.markers,
+    //             {
+    //                 coordinate: e.nativeEvent.coordinate,
+    //                 key: id++,
+    //                 color: randomColor(),
+    //             },
+    //         ],
+    //     });
+    // }
+
+    onTourPress(e) {
         this.setState({
             markers: [
                 ...this.state.markers,
@@ -86,20 +125,24 @@ export default class travelight extends Component {
                   title="AwesomeApp"
                   actions={[{title: 'Settings', icon: baraklogo, show: 'always'}]}
                   onActionSelected={this._onActionSelected} />
-              <MapView
+
+
+                <MapView
                   provider={this.props.provider}
                   style={styles.map}
                   initialRegion={this.state.region}
-                  onPress={(e) => this.onMapPress(e)}
+                  {/*onPress={(e) => this.onMapPress(e)}*/}
               >
-                  {this.state.markers.map(marker => (
+                  {this.state.tours.map(marker => (
                       <MapView.Marker
                           key={marker.key}
                           coordinate={marker.coordinate}
                           image={barakpin}
+                          onMarkerPress={(e) => this.onTourPress(e)}
                       />
                   ))}
               </MapView>
+
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     onPress={() => this.setState({ markers: [] })}
