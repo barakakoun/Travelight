@@ -15,6 +15,8 @@ import {
     ToolbarAndroid
 } from 'react-native';
 import MapView from 'react-native-maps';
+// import X from 'components/X';
+
 
 import barakpin from './assets/barakpin.png';
 import baraklogo from './assets/baraklogo.png';
