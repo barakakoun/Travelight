@@ -56,6 +56,7 @@ export default class travelight extends Component {
         this.state = {
             tours: [
                 {
+                    key: 1,
                     coordinate: {
                         latitude: 32.0802627,
                         longitude: 34.7808783
@@ -64,6 +65,7 @@ export default class travelight extends Component {
                     lonDel: LONGITUDE_DELTA
                 },
                 {
+                    key: 2,
                     coordinate: {
                         latitude: 32.0745575,
                         longitude: 34.7772692
@@ -72,6 +74,7 @@ export default class travelight extends Component {
                     lonDel: LONGITUDE_DELTA
                 },
                 {
+                    key: 3,
                     coordinate: {
                         latitude: 32.0633612,
                         longitude: 34.7730913
@@ -131,7 +134,6 @@ export default class travelight extends Component {
                   provider={this.props.provider}
                   style={styles.map}
                   initialRegion={this.state.region}
-                  {/*onPress={(e) => this.onMapPress(e)}*/}
               >
                   {this.state.tours.map(marker => (
                       <MapView.Marker
