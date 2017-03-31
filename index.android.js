@@ -131,7 +131,6 @@ export default class travelight extends Component {
                   provider={this.props.provider}
                   style={styles.map}
                   initialRegion={this.state.region}
-                  {/*onPress={(e) => this.onMapPress(e)}*/}
               >
                   {this.state.tours.map(marker => (
                       <MapView.Marker
