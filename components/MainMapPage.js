@@ -170,7 +170,10 @@ class MainMapPage extends Component {
     gotoTourDetailsPage() {
         this.props.navigator.push({
             id: 'TourDetailsPage',
-            name: this,
+            name: '我的主页',
+            passProps: {
+                key: key
+            }
         });
     }
 

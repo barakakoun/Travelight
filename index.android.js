@@ -19,7 +19,7 @@ import {
 import MainMapPage from './components/MainMapPage';
 import SplashPage from './components/SplashPage';
 import LoginPage from './components/LoginPage';
-import LoginPage from './components/TourDetailsPage';
+import TourDetailsPage from './components/TourDetailsPage';
 
 // import X from 'components/X';
 
@@ -80,7 +80,7 @@ export default class travelight extends Component {
             if (routeId === 'TourDetailsPage') {
                 return (
                     <LoginPage
-                        navigator={navigator} />
+                        navigator={navigator}  />
                 );
             }
             return this.noRoute(navigator);
