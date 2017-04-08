@@ -1,8 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
 
 import React, { Component } from 'react';
 import {
@@ -13,19 +8,12 @@ import {
     Dimensions,
     Navigator,
     TouchableOpacity,
-    ToolbarAndroid
 } from 'react-native';
 
 import MainMapPage from './components/MainMapPage';
 import SplashPage from './components/SplashPage';
 import LoginPage from './components/LoginPage';
 import TourDetailsPage from './components/TourDetailsPage';
-
-// import X from 'components/X';
-
-
-import barakpin from './assets/barakpin.png';
-import baraklogo from './assets/baraklogo.png';
 var nativeImageSource = require('nativeImageSource');
 
 const { width, height } = Dimensions.get('window');
@@ -79,8 +67,8 @@ export default class travelight extends Component {
             }
             if (routeId === 'TourDetailsPage') {
                 return (
-                    <LoginPage
-                        navigator={navigator}  />
+                    <TourDetailsPage
+                        navigator={navigator} chosenTour={route.chosenTour} />
                 );
             }
             return this.noRoute(navigator);

@@ -25,13 +25,13 @@ class LoginPage extends Component {
             <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                 <TouchableHighlight
                     onPress={this.gotoNext.bind(this)}>
-                    <Text style={{color: 'red'}}>נגיד שזה מסך התחברות</Text>
+                    <Text style={{color: 'red'}}>התחבר</Text>
                 </TouchableHighlight>
             </View>
         );
     }
     gotoNext() {
-        this.props.navigator.push({
+        this.props.navigator.replace({
             id: 'MainMapPage',
             name: 'whaha loginpagge',
         });
@@ -49,7 +49,7 @@ var NavigationBarRouteMapper = {
         return (
             <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
                 <Text style={{color: 'white', margin: 10, fontSize: 16}}>
-                    dd
+                    מסך התחברות
                 </Text>
             </TouchableOpacity>
         );
