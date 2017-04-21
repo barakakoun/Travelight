@@ -66,46 +66,47 @@ export default class travelight extends Component {
         renderScene(route, navigator) {
             var routeId = route.id;
 
-            // var contentView =
+            var contentView = <View style={{flex: 1, alignItems: 'stretch', justifyContent: 'center'}}>
+                <TouchableOpacity style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
+                                  onPress={() => navigator.pop()}>
+                    <Text style={{color: 'red', fontWeight: 'bold'}}>s index.js ss renderScene sss</Text>
+                </TouchableOpacity>
+            </View>;
 
 
             if (routeId === 'SplashPage') {
-                return (
-                    <SplashPage
-                        navigator={navigator} />
-                );
+                contentView = <SplashPage
+                    navigator={navigator} />;
             }
             if (routeId === 'MainMapPage') {
-                return (
-                    <MainMapPage
-                        navigator={navigator} />
-                );
+                contentView = <MainMapPage
+                        navigator={navigator} />;
             }
             if (routeId === 'LoginPage') {
-                return (
-                    <LoginPage
-                        navigator={navigator} />
-                );
+                contentView = <LoginPage
+                        navigator={navigator} />;
             }
             if (routeId === 'TourDetailsPage') {
-                return (
-                    <TourDetailsPage
-                        navigator={navigator} chosenTour={route.chosenTour} />
-                );
+                contentView = <TourDetailsPage
+                        navigator={navigator} chosenTour={route.chosenTour} />;
             }
-            return this.noRoute(navigator);
+
+
+            return contentView;
+
+            // return this.noRoute(navigator);
 
         }
-        noRoute(navigator) {
-            return (
-                <View style={{flex: 1, alignItems: 'stretch', justifyContent: 'center'}}>
-                    <TouchableOpacity style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
-                                      onPress={() => navigator.pop()}>
-                        <Text style={{color: 'red', fontWeight: 'bold'}}>s index.js ss renderScene sss</Text>
-                    </TouchableOpacity>
-                </View>
-            );
-        }
+        // noRoute(navigator) {
+        //     return (
+        //         <View style={{flex: 1, alignItems: 'stretch', justifyContent: 'center'}}>
+        //             <TouchableOpacity style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
+        //                               onPress={() => navigator.pop()}>
+        //                 <Text style={{color: 'red', fontWeight: 'bold'}}>s index.js ss renderScene sss</Text>
+        //             </TouchableOpacity>
+        //         </View>
+        //     );
+        // }
 }
 
 var styles = StyleSheet.create({

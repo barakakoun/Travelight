@@ -13,10 +13,13 @@ import {
     TouchableOpacity,
     Dimensions,
     DrawerLayoutAndroid,
+    Alert,
+    Button,
 } from 'react-native';
 import MapView from 'react-native-maps';
 import TourDetailsModal from './TourDetailsModal';
-// import Navigation from './Navigation';
+import { Toolbar as MaterialToolbar } from 'react-native-material-design';
+import SideNavigation from './SideNavigation';
 // import TourDetailsPage from './TourDetailsPage';
 
 // import X from 'components/X';
@@ -36,6 +39,10 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 // const drawer = this.refs.navigator && this.refs.navigator.refs.modal2;
 
 class MainMapPage extends Component {
+
+    static childContextTypes = {
+        drawer: React.PropTypes.object
+    };
 
     // here we get all the tours in the current city
     constructor(props) {
@@ -80,6 +87,8 @@ class MainMapPage extends Component {
             markers: [],
             chosenTour: null,
             isTourModalOpen: false,
+            drawer: null,
+            barak: "barak",
         };
     }
 
@@ -102,6 +111,9 @@ class MainMapPage extends Component {
         }, 500);
     }
 
+    onOpenBurger(e) {
+        this.state.drawer.openDrawer();
+    }
 
     // AFTER we close the details modal
     onModalTourDetailsClosed() {
@@ -125,16 +137,26 @@ class MainMapPage extends Component {
         }
     }
 
+    setDrawer = (drawer) => {
+        this.setState({
+            drawer
+        });
+    };
+
+    PushToNavigator(id) {
+        this.props.navigator.push({
+            id: id,
+            configureScene: Navigator.SceneConfigs.FloatFromBottom
+        });
+    }
+
     render() {
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}
                 navigator={this.props.navigator}
                 ref="MainMapNav"
-                navigationBar={
-                    <Navigator.NavigationBar style={{backgroundColor: '#246dd5'}}
-                                             routeMapper={NavigationBarRouteMapper}/>
-                }/>
+                />
         );
     }
 
@@ -144,17 +166,25 @@ class MainMapPage extends Component {
                 <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}>I'm in the Drawer!</Text>
             </View>
         );
+
         return (
         <DrawerLayoutAndroid
-            drawerWidth={300}
+            drawerWidth={200}
             drawerPosition={DrawerLayoutAndroid.positions.Left}
-            renderNavigationView={() => navigationView}>
+            renderNavigationView={() => <SideNavigation navigator={navigator} onChangeScene={this.PushToNavigator.bind(this)}/>}
+            ref={(drawer) => { !this.state.drawer ? this.setDrawer(drawer) : null }}>
             <View style={styles.container}>
+
+
+
 
                 <MapView
                     provider={this.props.provider}
                     style={styles.map}
                     initialRegion={this.state.region}
+                    toolbarEnabled={false}
+                    showsUserLocation={true}
+                    showsMyLocationButton={true}
                     onRegionChange={() => {
                         if (this.state.isTourModalOpen) {
                             this.refs.MainMapNav.refs.TourDetailsModal.closeModal();
@@ -162,6 +192,7 @@ class MainMapPage extends Component {
                         }
                     }}
                 >
+
                     {this.state.tours.map(currTour => (
                         <MapView.Marker
                             key={currTour.key}
@@ -172,6 +203,18 @@ class MainMapPage extends Component {
                     ))}
                 </MapView>
 
+                <MaterialToolbar title={'Travelight'}
+                                 primary={'googleBlue'}
+                                 icon="menu"
+                                 onIconPress={this.onOpenBurger.bind(this)}/>
+
+                {/*<View style={styles.buttonContainer}>*/}
+                    {/*<Button*/}
+                        {/*onPress={this.onOpenBurger.bind(this)}*/}
+                        {/*title="hey"*/}
+                    {/*/>*/}
+                {/*</View>*/}
+
                 <TourDetailsModal ref="TourDetailsModal" goToTourDetails={this.goToTourDetails.bind(this)}
                                   onModalTourDetailsClosed={this.onModalTourDetailsClosed.bind(this)}
                                   chosenTour={this.state.chosenTour}/>
@@ -181,6 +224,66 @@ class MainMapPage extends Component {
         </DrawerLayoutAndroid>
         );
     }
+
+    // render() {
+    //     return (
+    //         <Navigator
+    //             renderScene={this.renderScene.bind(this)}
+    //             navigator={this.props.navigator}
+    //             ref="MainMapNav"
+    //             navigationBar={
+    //                 <MaterialToolbar title={'The title :)'}
+    //                                  primary={'googleBlue'}
+    //                                  icon="menu"
+    //                                  onIconPress={this.onOpenBurger.bind(this)}/>
+    //             }/>
+    //     );
+    // }
+    //
+    // renderScene(route, navigator) {
+    //     var navigationView = (
+    //         <View style={{flex: 1, backgroundColor: '#fff'}}>
+    //             <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}>I'm in the Drawer!</Text>
+    //         </View>
+    //     );
+    //     return (
+    //         <DrawerLayoutAndroid
+    //             drawerWidth={300}
+    //             drawerPosition={DrawerLayoutAndroid.positions.Left}
+    //             renderNavigationView={() => navigationView}
+    //             ref={(drawer) => { !this.state.drawer ? this.setDrawer(drawer) : null }}>
+    //             <View style={styles.container}>
+    //
+    //                 <MapView
+    //                     provider={this.props.provider}
+    //                     style={styles.map}
+    //                     initialRegion={this.state.region}
+    //                     onRegionChange={() => {
+    //                         if (this.state.isTourModalOpen) {
+    //                             this.refs.MainMapNav.refs.TourDetailsModal.closeModal();
+    //                             this.setState({isTourModalOpen: false});
+    //                         }
+    //                     }}
+    //                 >
+    //                     {this.state.tours.map(currTour => (
+    //                         <MapView.Marker
+    //                             key={currTour.key}
+    //                             coordinate={currTour.coordinate}
+    //                             image={barakpin}
+    //                             onPress={this.onTourPress.bind(this, currTour)}
+    //                         />
+    //                     ))}
+    //                 </MapView>
+    //
+    //                 <TourDetailsModal ref="TourDetailsModal" goToTourDetails={this.goToTourDetails.bind(this)}
+    //                                   onModalTourDetailsClosed={this.onModalTourDetailsClosed.bind(this)}
+    //                                   chosenTour={this.state.chosenTour}/>
+    //
+    //             </View>
+    //
+    //         </DrawerLayoutAndroid>
+    //     );
+    // }
 
 }
 
@@ -215,6 +318,21 @@ const styles = StyleSheet.create({
     },
     map: {
         ...StyleSheet.absoluteFillObject,
+    },
+    button: {
+        width: 80,
+        paddingHorizontal: 12,
+        alignItems: 'center',
+        marginHorizontal: 10,
+    },
+    buttonContainer: {
+        // flexDirection: 'row',
+        // marginVertical: 20,
+        backgroundColor: 'transparent',
+    },
+    toolbar: {
+        backgroundColor: '#e9eaed',
+        height: 56,
     },
 });
 
