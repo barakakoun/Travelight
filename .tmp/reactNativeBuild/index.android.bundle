@@ -1273,20 +1273,47 @@ function randomColor() {
 var travelight = function (_Component) {
     babelHelpers.inherits(travelight, _Component);
 
-    function travelight() {
+    function travelight(props) {
         babelHelpers.classCallCheck(this, travelight);
-        return babelHelpers.possibleConstructorReturn(this, (travelight.__proto__ || Object.getPrototypeOf(travelight)).apply(this, arguments));
+
+        var _this = babelHelpers.possibleConstructorReturn(this, (travelight.__proto__ || Object.getPrototypeOf(travelight)).call(this, props));
+
+        _this.navigator = null;
+
+        _this.handleBack = function () {
+            if (_this.navigator && _this.navigator.getCurrentRoutes().length > 1) {
+                _this.navigator.pop();
+                return true;
+            }
+
+            return false;
+        }.bind(_this);return _this;
     }
 
     babelHelpers.createClass(travelight, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            _reactNative.BackAndroid.addEventListener('hardwareBackPress', this.handleBack);
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            _reactNative.BackAndroid.removeEventListener('hardwareBackPress', this.handleBack);
+        }
+    }, {
         key: 'render',
         value: function render() {
+            var _this2 = this;
+
             return _react2.default.createElement(_reactNative.Navigator, {
                 initialRoute: { id: 'SplashPage', name: 'Index' },
                 renderScene: this.renderScene.bind(this),
+                ref: function ref(navigator) {
+                    _this2.navigator = navigator;
+                },
                 configureScene: function configureScene(route) {
-                    if (route.sceneConfig) {
-                        return route.sceneConfig;
+                    if (route.configureScene) {
+                        return route.configureScene;
                     }
                     return _reactNative.Navigator.SceneConfigs.FloatFromRight;
                 } });
@@ -1295,7 +1322,6 @@ var travelight = function (_Component) {
         key: 'renderScene',
         value: function renderScene(route, navigator) {
             var routeId = route.id;
-
             if (routeId === 'SplashPage') {
                 return _react2.default.createElement(_SplashPage2.default, {
                     navigator: navigator });
@@ -46351,12 +46377,6 @@ var LONGITUDE = 34.780852;
 var LATITUDE_DELTA = 0.0922;
 var LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-var id = 0;
-
-function randomColor() {
-    return '#' + Math.floor(Math.random() * 16777215).toString(16);
-}
-
 var MainMapPage = function (_Component) {
     babelHelpers.inherits(MainMapPage, _Component);
 
@@ -46364,22 +46384,6 @@ var MainMapPage = function (_Component) {
         babelHelpers.classCallCheck(this, MainMapPage);
 
         var _this = babelHelpers.possibleConstructorReturn(this, (MainMapPage.__proto__ || Object.getPrototypeOf(MainMapPage)).call(this, props));
-
-        _this.state = {
-            actionText: 'Example app with toolbar component',
-            toolbarSwitch: false,
-            colorProps: {
-                titleColor: '#3b5998',
-                subtitleColor: '#6a7180'
-            }
-        };
-
-        _this._onActionSelected = function (position) {
-            console.log('_onActionSelected');
-            _this.setState({
-                actionText: 'Selected ' + toolbarActions[position].title
-            });
-        };
 
         _this.state = {
             tours: [{
@@ -46415,9 +46419,8 @@ var MainMapPage = function (_Component) {
             },
             markers: [],
             chosenTour: null,
-            isOpen: false
+            isTourModalOpen: false
         };
-
         return _this;
     }
 
@@ -46428,31 +46431,34 @@ var MainMapPage = function (_Component) {
 
             this.setState({
                 chosenTour: e,
-                isOpen: false
+                isTourModalOpen: false
             });
 
             setTimeout(function () {
                 if (_this2.state.chosenTour != null) {
                     _this2.setState({
-                        isOpen: true
+                        isTourModalOpen: true
                     });
                 }
             }, 500);
         }
     }, {
-        key: 'getCurrentTour',
-        value: function getCurrentTour() {
-            console.log('Modal just 3');
-            return _react2.default.createElement(
-                _reactNative.Text,
-                { style: [styles.text, { color: "white" }] },
-                'hey'
-            );
-        }
-    }, {
         key: 'onModalTourDetailsClosed',
         value: function onModalTourDetailsClosed() {
             this.setState({ chosenTour: null });
+        }
+    }, {
+        key: 'goToTourDetails',
+        value: function goToTourDetails(e) {
+            var chosenTour = this.state.chosenTour;
+
+            if (chosenTour != null) {
+                this.props.navigator.push({
+                    id: 'TourDetailsPage',
+                    chosenTour: chosenTour,
+                    configureScene: _reactNative.Navigator.SceneConfigs.FloatFromBottom
+                });
+            }
         }
     }, {
         key: 'render',
@@ -46472,11 +46478,6 @@ var MainMapPage = function (_Component) {
             return _react2.default.createElement(
                 _reactNative.View,
                 { style: styles.container },
-                _react2.default.createElement(_reactNative.ToolbarAndroid, {
-                    logo: _baraklogo2.default,
-                    title: 'AwesomeApp',
-                    actions: [{ title: 'Settings', icon: _baraklogo2.default, show: 'always' }],
-                    onActionSelected: this._onActionSelected }),
                 _react2.default.createElement(
                     _reactNativeMaps2.default,
                     {
@@ -46484,8 +46485,9 @@ var MainMapPage = function (_Component) {
                         style: styles.map,
                         initialRegion: this.state.region,
                         onRegionChange: function onRegionChange() {
-                            if (_this3.state.isOpen) {
-                                _this3.refs.MainMapNav.refs.TourDetailsModal.closeModal();_this3.setState({ isOpen: false });
+                            if (_this3.state.isTourModalOpen) {
+                                _this3.refs.MainMapNav.refs.TourDetailsModal.closeModal();
+                                _this3.setState({ isTourModalOpen: false });
                             }
                         }
                     },
@@ -46500,71 +46502,16 @@ var MainMapPage = function (_Component) {
                 ),
                 _react2.default.createElement(_TourDetailsModal2.default, { ref: 'TourDetailsModal', goToTourDetails: this.goToTourDetails.bind(this),
                     onModalTourDetailsClosed: this.onModalTourDetailsClosed.bind(this),
-                    chosenTour: this.state.chosenTour }),
-                _react2.default.createElement(
-                    _reactNative.View,
-                    { style: styles.buttonContainer },
-                    _react2.default.createElement(
-                        _reactNative.TouchableOpacity,
-                        {
-                            onPress: function onPress() {
-                                return _this3.setState({ markers: [] });
-                            },
-                            style: styles.bubble
-                        },
-                        _react2.default.createElement(
-                            _reactNative.Text,
-                            { style: { color: 'blue' } },
-                            this.state.region.latitude.toString()
-                        )
-                    )
-                )
+                    chosenTour: this.state.chosenTour })
             );
-        }
-    }, {
-        key: 'goToTourDetails',
-        value: function goToTourDetails(e) {
-            var _this4 = this;
-
-            var chosenTour = this.state.chosenTour;
-            this.refs.MainMapNav.refs.TourDetailsModal.closeModal();
-            this.setState({ isOpen: false });
-
-            setTimeout(function () {
-                if (chosenTour != null) {
-                    _this4.props.navigator.push({
-                        id: 'TourDetailsPage',
-                        name: 'ha?',
-                        chosenTour: chosenTour
-                    });
-                } else {
-
-                    _reactNative.Alert.alert("sa");
-                }
-            }, 500);
         }
     }]);
     return MainMapPage;
 }(_react.Component);
 
-MainMapPage.title = '<ToolbarAndroid>';
-MainMapPage.description = 'Examples of using the Android toolbar.';
-
-
 var NavigationBarRouteMapper = {
     LeftButton: function LeftButton(route, navigator, index, navState) {
-        return _react2.default.createElement(
-            _reactNative.TouchableOpacity,
-            { style: { flex: 1, justifyContent: 'center' },
-                onPress: function onPress() {
-                    return navigator.parentNavigator.pop();
-                } },
-            _react2.default.createElement(
-                _reactNative.Text,
-                { style: { color: 'white', margin: 10 } },
-                'left button'
-            )
-        );
+        return null;
     },
     RightButton: function RightButton(route, navigator, index, navState) {
         return null;
@@ -46576,7 +46523,7 @@ var NavigationBarRouteMapper = {
             _react2.default.createElement(
                 _reactNative.Text,
                 { style: { color: 'white', margin: 10, fontSize: 16 } },
-                'title'
+                'Travelight'
             )
         );
     }
@@ -46586,59 +46533,12 @@ MainMapPage.propTypes = {
     provider: _reactNativeMaps2.default.ProviderPropType
 };
 
-var toolbarActions = [{ title: 'Create', icon: nativeImageSource({
-        android: 'ic_create_black_48dp',
-        width: 96,
-        height: 96
-    }), show: 'always' }, { title: 'Filter' }, { title: 'Settings', icon: nativeImageSource({
-        android: 'ic_settings_black_48dp',
-        width: 96,
-        height: 96
-    }), show: 'always' }];
-
 var styles = _reactNative.StyleSheet.create({
     container: babelHelpers.extends({}, _reactNative.StyleSheet.absoluteFillObject, {
         justifyContent: 'flex-end',
         alignItems: 'center'
     }),
-    map: babelHelpers.extends({}, _reactNative.StyleSheet.absoluteFillObject),
-    toolbar: {
-        backgroundColor: '#e9eaed',
-        height: 56
-    },
-    bubble: {
-        backgroundColor: 'rgba(236,160,95,0.6)',
-        paddingHorizontal: 18,
-        paddingVertical: 12,
-        borderRadius: 20
-    },
-    latlng: {
-        width: 200,
-        alignItems: 'stretch'
-    },
-    button: {
-        width: 80,
-        paddingHorizontal: 12,
-        alignItems: 'center',
-        marginHorizontal: 10
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        marginVertical: 20,
-        backgroundColor: 'transparent'
-    },
-
-    text: {
-        color: "black",
-        fontSize: 22
-    },
-
-    btn: {
-        margin: 10,
-        backgroundColor: "#3B5998",
-        color: "white",
-        padding: 10
-    }
+    map: babelHelpers.extends({}, _reactNative.StyleSheet.absoluteFillObject)
 });
 
 module.exports = MainMapPage;
@@ -47937,7 +47837,9 @@ var TourDetailsModal = function (_Component) {
     }, {
         key: 'closeModal',
         value: function closeModal() {
-            this.refs.modalTourDetails.close();
+            if (this.refs.modalTourDetails) {
+                this.refs.modalTourDetails.close();
+            }
         }
     }, {
         key: 'render',
@@ -47953,8 +47855,8 @@ var TourDetailsModal = function (_Component) {
                 _react2.default.createElement(
                     _reactNative.Text,
                     { style: [styles.text, { color: "white" }] },
-                    this.props.chosenTour.key.toString(),
-                    ' and '
+                    'Tour key: ',
+                    this.props.chosenTour.key.toString()
                 ),
                 _react2.default.createElement(_reactNative.Button, { onPress: this.props.goToTourDetails.bind(this), title: 'More Info', style: styles.btn })
             );
@@ -48538,6 +48440,7 @@ var TourDetailsPage = function (_Component) {
     }, {
         key: 'renderScene',
         value: function renderScene(route, navigator) {
+            var tour = this.props.chosenTour;
             return _react2.default.createElement(
                 _reactNative.View,
                 { style: { flex: 1, backgroundColor: '#246dd5', alignItems: 'center', justifyContent: 'center' } },
@@ -48545,21 +48448,15 @@ var TourDetailsPage = function (_Component) {
                     _reactNative.Text,
                     { style: { color: 'white', fontSize: 32 } },
                     'TOUR DETAILS: ',
-                    this.props.chosenTour.key.toString()
+                    tour.key.toString(),
+                    ' and ',
+                    tour.coordinate.latitude.toString()
                 )
             );
         }
     }]);
     return TourDetailsPage;
 }(_react.Component);
-
-_reactNative.BackAndroid.addEventListener('hardwareBackPress', function () {
-    var navi = this.props.navigator;
-
-
-    navi.pop();
-    return true;
-});
 
 var NavigationBarRouteMapper = {
     LeftButton: function LeftButton(route, navigator, index, navState) {

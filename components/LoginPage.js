@@ -32,8 +32,7 @@ class LoginPage extends Component {
     }
     gotoNext() {
         this.props.navigator.replace({
-            id: 'MainMapPage',
-            name: 'whaha loginpagge',
+            id: 'MainMapPage'
         });
     }
 }

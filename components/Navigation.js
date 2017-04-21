@@ -27,12 +27,19 @@ export default class Navigation extends Component {
         drawer.closeDrawer();
     };
 
+    //////////////////////////// importantttttttttttttttttttttttttttttttttt!!!!!!!!!!!!!! use this!
+    _onPress(id) {
+        this.props.navigator.push({
+            id: id,
+        });
+    }
+
     render() {
         const { route } = this.state;
 
         return (
             <Drawer theme='light'>
-                <Drawer.Header image={<Image source={require('./../img/nav.jpg')} />}>
+                <Drawer.Header image={<Image source={require('../assets/baraklogo.png')} />}>
                     <View style={styles.header}>
                         <Avatar size={80} image={<Image source={{ uri: "http://facebook.github.io/react-native/img/opengraph.png?2" }}/>} />
                         <Text style={[styles.text, COLOR.paperGrey50, TYPO.paperFontSubhead]}>React Native Material Design</Text>
@@ -44,8 +51,8 @@ export default class Navigation extends Component {
                         icon: 'home',
                         value: 'Welcome',
                         active: !route || route === 'welcome',
-                        onPress: () => this.changeScene('welcome'),
-                        onLongPress: () => this.changeScene('welcome')
+                        // onPress: () => this.changeScene('welcome'),
+                        // onLongPress: () => this.changeScene('welcome')
                     }]}
                 />
 
@@ -56,43 +63,43 @@ export default class Navigation extends Component {
                         value: 'Avatars',
                         label: '12',
                         active: route === 'avatars',
-                        onPress: () => this.changeScene('avatars'),
-                        onLongPress: () => this.changeScene('avatars')
+                        // onPress: () => this.changeScene('avatars'),
+                        // onLongPress: () => this.changeScene('avatars')
                     }, {
                         icon: 'label',
                         value: 'Buttons',
                         active: route === 'buttons',
                         label: '8',
-                        onPress: () => this.changeScene('buttons'),
-                        onLongPress: () => this.changeScene('buttons')
+                        // onPress: () => this.changeScene('buttons'),
+                        // onLongPress: () => this.changeScene('buttons')
                     }, {
                         icon: 'check-box',
                         value: 'Checkboxes',
                         label: '10',
                         active: route === 'checkboxes',
-                        onPress: () => this.changeScene('checkboxes'),
-                        onLongPress: () => this.changeScene('checkboxes')
+                        // onPress: () => this.changeScene('checkboxes'),
+                        // onLongPress: () => this.changeScene('checkboxes')
                     }, {
                         icon: 'label',
                         value: 'Dividers',
                         label: '10',
                         active: route === 'dividers',
-                        onPress: () => this.changeScene('dividers'),
-                        onLongPress: () => this.changeScene('dividers')
+                        // onPress: () => this.changeScene('dividers'),
+                        // onLongPress: () => this.changeScene('dividers')
                     }, {
                         icon: 'label',
                         value: 'Icon Toggles',
                         label: 'NEW',
                         active: route === 'icon-toggles',
-                        onPress: () => this.changeScene('icon-toggles'),
-                        onLongPress: () => this.changeScene('icon-toggles')
+                        // onPress: () => this.changeScene('icon-toggles'),
+                        // onLongPress: () => this.changeScene('icon-toggles')
                     }, {
                         icon: 'radio-button-checked',
                         value: 'Radio Buttons',
                         label: '8',
                         active: route === 'radio-buttons',
-                        onPress: () => this.changeScene('radio-buttons'),
-                        onLongPress: () => this.changeScene('radio-buttons')
+                        // onPress: () => this.changeScene('radio-buttons'),
+                        // onLongPress: () => this.changeScene('radio-buttons')
                     },
                         //{
                         //   icon: 'list',
@@ -107,8 +114,8 @@ export default class Navigation extends Component {
                             value: 'Subheaders',
                             label: '4',
                             active: route === 'subheaders',
-                            onPress: () => this.changeScene('subheaders'),
-                            onLongPress: () => this.changeScene('subheaders')
+                            // onPress: () => this.changeScene('subheaders'),
+                            // onLongPress: () => this.changeScene('subheaders')
                         }]}
                 />
                 <Divider style={{ marginTop: 8 }} />
@@ -119,8 +126,8 @@ export default class Navigation extends Component {
                         value: 'Change Theme',
                         label: '24',
                         active: route === 'themes',
-                        onPress: () => this.changeScene('themes'),
-                        onLongPress: () => this.changeScene('themes')
+                        // onPress: () => this.changeScene('themes'),
+                        // onLongPress: () => this.changeScene('themes')
                     }]}
                 />
 

@@ -8,6 +8,7 @@ import {
     Dimensions,
     Navigator,
     TouchableOpacity,
+    BackAndroid,
 } from 'react-native';
 
 import MainMapPage from './components/MainMapPage';
@@ -31,14 +32,31 @@ function randomColor() {
 
 
 export default class travelight extends Component {
+    constructor(props) {
+        super(props)
+        this.nav= null;
+
+        this.handleBack = (() => {
+            if (this.nav && this.nav.getCurrentRoutes().length > 1){
+                this.nav.pop();
+                return true; //avoid closing the app
+            }
+
+            return false; //close the app
+        }).bind(this) //don't forget bind this, you will remenber anyway.
+    }
+    componentDidMount() {
+        BackAndroid.addEventListener('hardwareBackPress', this.handleBack);
+    }
     render() {
         return (
             <Navigator
                 initialRoute={{id: 'SplashPage', name: 'Index'}}
                 renderScene={this.renderScene.bind(this)}
+                ref={navigator => {this.nav = navigator}}
                 configureScene={(route) => {
-            if (route.sceneConfig) {
-              return route.sceneConfig;
+            if (route.configureScene) {
+              return route.configureScene;
             }
             return Navigator.SceneConfigs.FloatFromRight;
           }}/>
@@ -47,6 +65,10 @@ export default class travelight extends Component {
 
         renderScene(route, navigator) {
             var routeId = route.id;
+
+            // var contentView =
+
+
             if (routeId === 'SplashPage') {
                 return (
                     <SplashPage
@@ -104,6 +126,7 @@ var styles = StyleSheet.create({
         marginBottom: 5,
     },
 });
+
 
 
 AppRegistry.registerComponent('travelight', () => travelight);

@@ -12,9 +12,11 @@ import {
     Navigator,
     TouchableOpacity,
     Dimensions,
+    DrawerLayoutAndroid,
 } from 'react-native';
 import MapView from 'react-native-maps';
 import TourDetailsModal from './TourDetailsModal';
+// import Navigation from './Navigation';
 // import TourDetailsPage from './TourDetailsPage';
 
 // import X from 'components/X';
@@ -77,7 +79,7 @@ class MainMapPage extends Component {
             },
             markers: [],
             chosenTour: null,
-            isOpen: false,
+            isTourModalOpen: false,
         };
     }
 
@@ -88,13 +90,13 @@ class MainMapPage extends Component {
         // We set the chosen tour as the clicked one
         this.setState({
             chosenTour: e,
-            isOpen: false
+            isTourModalOpen: false
         });
 
         setTimeout(() => {
             if (this.state.chosenTour != null) {
                 this.setState({
-                    isOpen: true
+                    isTourModalOpen: true
                 });
             }
         }, 500);
@@ -109,13 +111,16 @@ class MainMapPage extends Component {
     // Go to the page contains the tour details
     goToTourDetails(e) {
         var chosenTour = this.state.chosenTour;
+
+        // Enable if you want the modal to close
         this.refs.MainMapNav.refs.TourDetailsModal.closeModal();
-        this.setState({isOpen: false});
+        this.setState({isTourModalOpen: false});
 
         if (chosenTour != null) {
             this.props.navigator.push({
                 id: 'TourDetailsPage',
-                chosenTour: chosenTour
+                chosenTour: chosenTour,
+                configureScene: Navigator.SceneConfigs.FloatFromBottom
             });
         }
     }
@@ -134,7 +139,16 @@ class MainMapPage extends Component {
     }
 
     renderScene(route, navigator) {
+        var navigationView = (
+            <View style={{flex: 1, backgroundColor: '#fff'}}>
+                <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}>I'm in the Drawer!</Text>
+            </View>
+        );
         return (
+        <DrawerLayoutAndroid
+            drawerWidth={300}
+            drawerPosition={DrawerLayoutAndroid.positions.Left}
+            renderNavigationView={() => navigationView}>
             <View style={styles.container}>
 
                 <MapView
@@ -142,9 +156,9 @@ class MainMapPage extends Component {
                     style={styles.map}
                     initialRegion={this.state.region}
                     onRegionChange={() => {
-                        if (this.state.isOpen) {
+                        if (this.state.isTourModalOpen) {
                             this.refs.MainMapNav.refs.TourDetailsModal.closeModal();
-                            this.setState({isOpen: false});
+                            this.setState({isTourModalOpen: false});
                         }
                     }}
                 >
@@ -163,6 +177,8 @@ class MainMapPage extends Component {
                                   chosenTour={this.state.chosenTour}/>
 
             </View>
+
+        </DrawerLayoutAndroid>
         );
     }
 

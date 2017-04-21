@@ -4,6 +4,7 @@ import {
     View,
     Text,
     Image,
+    Navigator,
 } from 'react-native';
 
 import logo from '../assets/splash.png';
@@ -13,7 +14,7 @@ class SplashPage extends Component {
         var navigator = this.props.navigator;
         setTimeout(() => {
             navigator.replace({
-                id: 'LoginPage',
+                id: 'LoginPage'
             });
         }, 500);
     }
