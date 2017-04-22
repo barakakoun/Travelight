@@ -141,7 +141,7 @@ class MainMapPage extends Component {
         this.setState({
             drawer
         });
-    };
+    }
 
     PushToNavigator(id) {
         this.props.navigator.push({

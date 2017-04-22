@@ -26,9 +26,9 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 let id = 0;
 
-function randomColor() {
-    return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-}
+// function randomColor() {
+//     return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+// }
 
 
 export default class travelight extends Component {
@@ -54,6 +54,7 @@ export default class travelight extends Component {
                 initialRoute={{id: 'SplashPage', name: 'Index'}}
                 renderScene={this.renderScene.bind(this)}
                 ref={navigator => {this.nav = navigator}}
+                style={{backgroundColor:'#91b6f2'}}
                 configureScene={(route) => {
             if (route.configureScene) {
               return route.configureScene;
