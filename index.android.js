@@ -15,6 +15,11 @@ import MainMapPage from './components/MainMapPage';
 import SplashPage from './components/SplashPage';
 import LoginPage from './components/LoginPage';
 import TourDetailsPage from './components/TourDetailsPage';
+import EventsPage from './components/menu_pages/EventsPage';
+import RecommendedPage from './components/menu_pages/RecommendedPage';
+import SettingsPage from './components/menu_pages/SettingsPage';
+import AboutPage from './components/menu_pages/AboutPage';
+import UserPage from './components/menu_pages/UserPage';
 var nativeImageSource = require('nativeImageSource');
 
 const { width, height } = Dimensions.get('window');
@@ -89,8 +94,32 @@ export default class travelight extends Component {
             }
             if (routeId === 'TourDetailsPage') {
                 contentView = <TourDetailsPage
-                        navigator={navigator} chosenTour={route.chosenTour} />;
+                    navigator={navigator} chosenTour={route.chosenTour} />;
             }
+            if (routeId === 'EventsPage') {
+                contentView = <EventsPage
+                    navigator={navigator} />;
+            }
+            if (routeId === 'RecommendedPage') {
+                contentView = <RecommendedPage
+                    navigator={navigator} />;
+            }
+            if (routeId === 'SettingsPage') {
+                contentView = <SettingsPage
+                    navigator={navigator} />;
+            }
+            if (routeId === 'AboutPage') {
+                contentView = <AboutPage
+                    navigator={navigator} />;
+            }
+            if (routeId === 'UserPage') {
+                contentView = <UserPage
+                    navigator={navigator} />;
+            }
+            if (routeId === 'Exit') {
+                BackAndroid.exitApp();
+            }
+
 
 
             return contentView;
