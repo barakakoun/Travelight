@@ -8,12 +8,18 @@ import {
     Dimensions,
     Navigator,
     TouchableOpacity,
+    BackAndroid,
 } from 'react-native';
 
 import MainMapPage from './components/MainMapPage';
 import SplashPage from './components/SplashPage';
 import LoginPage from './components/LoginPage';
 import TourDetailsPage from './components/TourDetailsPage';
+import EventsPage from './components/menu_pages/EventsPage';
+import RecommendedPage from './components/menu_pages/RecommendedPage';
+import SettingsPage from './components/menu_pages/SettingsPage';
+import AboutPage from './components/menu_pages/AboutPage';
+import UserPage from './components/menu_pages/UserPage';
 var nativeImageSource = require('nativeImageSource');
 
 const { width, height } = Dimensions.get('window');
@@ -25,20 +31,38 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 let id = 0;
 
-function randomColor() {
-    return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-}
+// function randomColor() {
+//     return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+// }
 
 
 export default class travelight extends Component {
+    constructor(props) {
+        super(props)
+        this.nav= null;
+
+        this.handleBack = (() => {
+            if (this.nav && this.nav.getCurrentRoutes().length > 1){
+                this.nav.pop();
+                return true; //avoid closing the app
+            }
+
+            return false; //close the app
+        }).bind(this) //don't forget bind this, you will remenber anyway.
+    }
+    componentDidMount() {
+        BackAndroid.addEventListener('hardwareBackPress', this.handleBack);
+    }
     render() {
         return (
             <Navigator
                 initialRoute={{id: 'SplashPage', name: 'Index'}}
                 renderScene={this.renderScene.bind(this)}
+                ref={navigator => {this.nav = navigator}}
+                style={{backgroundColor:'#91b6f2'}}
                 configureScene={(route) => {
-            if (route.sceneConfig) {
-              return route.sceneConfig;
+            if (route.configureScene) {
+              return route.configureScene;
             }
             return Navigator.SceneConfigs.FloatFromRight;
           }}/>
@@ -47,43 +71,72 @@ export default class travelight extends Component {
 
         renderScene(route, navigator) {
             var routeId = route.id;
+
+            var contentView = <View style={{flex: 1, alignItems: 'stretch', justifyContent: 'center'}}>
+                <TouchableOpacity style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
+                                  onPress={() => navigator.pop()}>
+                    <Text style={{color: 'red', fontWeight: 'bold'}}>s index.js ss renderScene sss</Text>
+                </TouchableOpacity>
+            </View>;
+
+
             if (routeId === 'SplashPage') {
-                return (
-                    <SplashPage
-                        navigator={navigator} />
-                );
+                contentView = <SplashPage
+                    navigator={navigator} />;
             }
             if (routeId === 'MainMapPage') {
-                return (
-                    <MainMapPage
-                        navigator={navigator} />
-                );
+                contentView = <MainMapPage
+                        navigator={navigator} />;
             }
             if (routeId === 'LoginPage') {
-                return (
-                    <LoginPage
-                        navigator={navigator} />
-                );
+                contentView = <LoginPage
+                        navigator={navigator} />;
             }
             if (routeId === 'TourDetailsPage') {
-                return (
-                    <TourDetailsPage
-                        navigator={navigator} chosenTour={route.chosenTour} />
-                );
+                contentView = <TourDetailsPage
+                    navigator={navigator} chosenTour={route.chosenTour} />;
             }
-            return this.noRoute(navigator);
+            if (routeId === 'EventsPage') {
+                contentView = <EventsPage
+                    navigator={navigator} />;
+            }
+            if (routeId === 'RecommendedPage') {
+                contentView = <RecommendedPage
+                    navigator={navigator} />;
+            }
+            if (routeId === 'SettingsPage') {
+                contentView = <SettingsPage
+                    navigator={navigator} />;
+            }
+            if (routeId === 'AboutPage') {
+                contentView = <AboutPage
+                    navigator={navigator} />;
+            }
+            if (routeId === 'UserPage') {
+                contentView = <UserPage
+                    navigator={navigator} />;
+            }
+            if (routeId === 'Exit') {
+                BackAndroid.exitApp();
+            }
+
+
+
+            return contentView;
+
+            // return this.noRoute(navigator);
 
         }
-        noRoute(navigator) {
-            return (
-                <View style={{flex: 1, alignItems: 'stretch', justifyContent: 'center'}}>
-                    <TouchableOpacity style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
-                                      onPress={() => navigator.pop()}>
-                        <Text style={{color: 'red', fontWeight: 'bold'}}>s index.js ss renderScene sss</Text>
-                    </TouchableOpacity>
-                </View>
-            );
-        }
+        // noRoute(navigator) {
+        //     return (
+        //         <View style={{flex: 1, alignItems: 'stretch', justifyContent: 'center'}}>
+        //             <TouchableOpacity style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
+        //                               onPress={() => navigator.pop()}>
+        //                 <Text style={{color: 'red', fontWeight: 'bold'}}>s index.js ss renderScene sss</Text>
+        //             </TouchableOpacity>
+        //         </View>
+        //     );
+        // }
 }
 
 var styles = StyleSheet.create({
@@ -104,6 +157,7 @@ var styles = StyleSheet.create({
         marginBottom: 5,
     },
 });
+
 
 
 AppRegistry.registerComponent('travelight', () => travelight);
