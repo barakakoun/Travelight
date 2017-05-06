@@ -152,7 +152,9 @@ class MainMapPage extends Component {
     // Jump to current location
     _findMe(){
 
-        this.map.animateToRegion(this.state.currRegion);
+        if(this.state.currRegion) {
+            this.map.animateToRegion(this.state.currRegion);
+        }
 
         // navigator.geolocation.getCurrentPosition(
         //     ({coords}) => {
