@@ -11,11 +11,12 @@ import {
 } from 'react-native';
 
 import { Button, SocialIcon } from 'react-native-elements'
+import { observer } from 'mobx-react/native';
 
 // import Login from 'react-native-simple-login';
 import Login from 'react-native-login';
-import logo from '../assets/splash.png';
-import backgroundImage from '../assets/loginBackground.jpg';
+import logo from '../../../assets/splash.png';
+import backgroundImage from '../../../assets/loginBackground.jpg';
 
 const config = {
     url: 'https://auth.no-mad.net/auth',
@@ -26,43 +27,39 @@ const config = {
     kc_idp_hint: 'facebook',
 };
 
+@observer
 class LoginPage extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            tokens: null,
-        };
+
+        this.renderScene.bind(this)
     }
     componentWillMount() {
-        Login.tokens().then(tokens => this.setState({tokens})).catch(() => this.setState({tokens: null}));
+        Login.tokens()
+            .then(tokens =>  this.props.store.setLoginTokens(tokens))
+            .catch(() => this.props.store.setLoginTokens(null));
     }
 
     onLogin() {
         // Login.start(config).then(tokens => {
         //     this.setState({tokens: tokens});
         // }).catch(() => this.setState({tokens: null}));
-
-        this.props.navigator.replace({
-            id: 'MainMapPage'
-        });
+        this.props.store.navigatorReplace('MainMapPage');
     }
 
     onLogout() {
         Login.end();
-        this.setState({tokens: null});
+        this.props.store.setLoginTokens(null);
     }
 
-    // render() {
-    //     return this.state.tokens ? this.renderAppScreen() : this.renderLoginScreen();
-    // }
-
     render() {
+        const { loginTokens } = this.props.store;
         return (
             <View style={styles.navigatorContainer}>
                 <Image source={backgroundImage} style={styles.background} />
                 <Navigator
-                renderScene={this.renderScene.bind(this)}
+                renderScene={(r, n) => this.renderScene(r,n,loginTokens)}
                 navigationBar={
             <Navigator.NavigationBar style={{backgroundColor: '#246dd5', alignItems: 'center'}}
                 routeMapper={NavigationBarRouteMapper} />
@@ -71,34 +68,13 @@ class LoginPage extends Component {
         );
     }
 
-    renderScene(route, navigator) {
+    renderScene(route, navigator, loginTokens) {
 
-        return this.state.tokens ? this.renderAppScreen() : this.renderLoginScreen();
-
-        // if (this.state.tokens) {
-        //     return (
-        //
-        //
-        //     );
-        //
-        // }
-        //
-        // return (
-        //     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        //         <TouchableHighlight
-        //             onPress={this.gotoNext.bind(this)}>
-        //             <Text style={{color: 'red'}}>התחבר</Text>
-        //         </TouchableHighlight>
-        //         <Login
-        //             onLogin={this.onLogin.bind(this, email, password)}
-        //             onResetPassword={this.onResetPassword.bind(this, email)}
-        //         />
-        //     </View>
-        // );
+        return loginTokens ? this.renderAppScreen(loginTokens) : this.renderLoginScreen();
     }
 
-    renderAppScreen() {
-        const details = Login.decodeToken(this.state.tokens.id_token);
+    renderAppScreen(loginTokens) {
+        const details = Login.decodeToken(loginTokens.id_token);
 
         return (
             <View style={styles.container}>
@@ -115,13 +91,30 @@ class LoginPage extends Component {
     renderLoginScreen() {
         return (
             <View style={styles.container}>
-                <Text style={{color: 'white', fontSize: 16,}}>some text & shit!!</Text>
+                <Text style={{color: 'white', fontSize: 16,}}>Welcome to Travelight!</Text>
                 <SocialIcon title='Sign In With Facebook' button type='facebook' onPress={() => this.onLogin()} />
                 <SocialIcon title='Sign In With Google' button type='google-plus-official' onPress={() => this.onLogin()} />
             </View>
         );
     }
 }
+const NavigationBarRouteMapper = {
+    LeftButton(route, navigator, index, navState) {
+        return null;
+    },
+    RightButton(route, navigator, index, navState) {
+        return null;
+    },
+    Title(route, navigator, index, navState) {
+        return (
+            <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
+                <Text style={{color: 'white', margin: 10, fontSize: 16}}>
+                    מסך התחברות
+                </Text>
+            </TouchableOpacity>
+        );
+    }
+};
 
 const styles = StyleSheet.create({
     profile: {
@@ -194,23 +187,5 @@ const styles = StyleSheet.create({
 //         });
 //     }
 // }
-
-var NavigationBarRouteMapper = {
-    LeftButton(route, navigator, index, navState) {
-        return null;
-    },
-    RightButton(route, navigator, index, navState) {
-        return null;
-    },
-    Title(route, navigator, index, navState) {
-        return (
-            <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
-                <Text style={{color: 'white', margin: 10, fontSize: 16}}>
-                    מסך התחברות
-                </Text>
-            </TouchableOpacity>
-        );
-    }
-};
 
 module.exports = LoginPage;

@@ -6,19 +6,21 @@ import {
     Image,
     Navigator,
 } from 'react-native';
+import { observer, inject } from 'mobx-react/native';
 
-import logo from '../assets/splash.png';
+import logo from '../../../assets/splash.png';
 
+@observer
 class SplashPage extends Component {
     componentWillMount() {
-        var navigator = this.props.navigator;
+        const { appNavigator,
+                navigatorReplace } = this.props.store;
         setTimeout(() => {
-            navigator.replace({
-                id: 'LoginPage'
-            });
-        }, 500);
+            navigatorReplace('LoginPage');
+        }, 1000);
     }
     render() {
+
         return (
             <View style={{flex: 1, backgroundColor: '#246dd5', alignItems: 'center', justifyContent: 'center'}}>
                 <Image source={logo} />

@@ -18,16 +18,14 @@ import {
     Button,
 } from 'react-native';
 import MapView from 'react-native-maps';
-import TourDetailsModal from './TourDetailsModal';
+import TourDetailsModal from '../TourDetails/TourDetailsModal';
 import { Toolbar as MaterialToolbar, Icon } from 'react-native-material-design';
-import SideNavigation from './SideNavigation';
+import SideNavigation from '../Navigation/SideNavigation';
 
-// import X from 'components/X';
+import barakpin from '../../../assets/barakpin.png';
+import baraklogo from '../../../assets/baraklogo.png';
 
-
-import barakpin from '../assets/barakpin.png';
-import baraklogo from '../assets/baraklogo.png';
-var nativeImageSource = require('nativeImageSource');
+const nativeImageSource = require('nativeImageSource');
 
 const {width, height} = Dimensions.get('window');
 

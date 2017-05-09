@@ -3,10 +3,10 @@
  */
 
 var db = require('../database');
-var tourConsts = require('../../../Consts/tour');
-var stationConsts = require('../../../Consts/station');
-var tourStationConsts = require('../../../Consts/tourStation');
-var messages = require('../../../Consts/messages');
+var tourConsts = require('../../../consts/tour');
+var stationConsts = require('../../../consts/station');
+var tourStationConsts = require('../../../consts/tourStation');
+var messages = require('../../../consts/messages');
 //create connection to mysql
 
 exports.test = function(req, res) {

@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import {
     AppRegistry,
@@ -11,16 +10,19 @@ import {
     BackAndroid,
 } from 'react-native';
 
-import MainMapPage from './components/MainMapPage';
-import SplashPage from './components/SplashPage';
-import LoginPage from './components/LoginPage';
-import TourDetailsPage from './components/TourDetailsPage';
-import EventsPage from './components/menu_pages/EventsPage';
-import RecommendedPage from './components/menu_pages/RecommendedPage';
-import SettingsPage from './components/menu_pages/SettingsPage';
-import AboutPage from './components/menu_pages/AboutPage';
-import UserPage from './components/menu_pages/UserPage';
+import MainMapPage from './public/src/components/MainMapPage/MainMapPage';
+import SplashPage from './public/src/components/Login/SplashPage';
+import LoginPage from './public/src/components/Login/LoginPage';
+import TourDetailsPage from './public/src/components/TourDetails/TourDetailsPage';
+import EventsPage from './public/src/components/MenuPages/EventsPage';
+import RecommendedPage from './public/src/components/MenuPages/RecommendedPage';
+import SettingsPage from './public/src/components/MenuPages/SettingsPage';
+import AboutPage from './public/src/components/MenuPages/AboutPage';
+import UserPage from './public/src/components/MenuPages/UserPage';
 var nativeImageSource = require('nativeImageSource');
+
+import Store from './public/src/model/store';
+import { observer } from 'mobx-react/native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -35,30 +37,34 @@ let id = 0;
 //     return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 // }
 
-
+@observer
 export default class travelight extends Component {
     constructor(props) {
-        super(props)
-        this.nav= null;
+        super(props);
 
-        this.handleBack = (() => {
-            if (this.nav && this.nav.getCurrentRoutes().length > 1){
-                this.nav.pop();
-                return true; //avoid closing the app
-            }
-
-            return false; //close the app
-        }).bind(this) //don't forget bind this, you will remenber anyway.
+        this.handleBack.bind(this);
     }
+
     componentDidMount() {
         BackAndroid.addEventListener('hardwareBackPress', this.handleBack);
     }
+
+    handleBack() {
+        if (Store.appNavigator && Store.appNavigator.getCurrentRoutes().length > 1){
+            Store.navigatorPop();
+            return true; //avoid closing the app
+        }
+
+        return false; //close the app
+    }
+
     render() {
+        const { setAppNavigator } = Store;
         return (
             <Navigator
                 initialRoute={{id: 'SplashPage', name: 'Index'}}
                 renderScene={this.renderScene.bind(this)}
-                ref={navigator => {this.nav = navigator}}
+                ref={nav => {setAppNavigator(nav)}}
                 style={{backgroundColor:'#91b6f2'}}
                 configureScene={(route) => {
             if (route.configureScene) {
@@ -70,73 +76,70 @@ export default class travelight extends Component {
     }
 
         renderScene(route, navigator) {
-            var routeId = route.id;
 
-            var contentView = <View style={{flex: 1, alignItems: 'stretch', justifyContent: 'center'}}>
+            var routeId = route.id;
+            if(!Store.appNavigator) {
+                Store.appNavigator = navigator;
+            }
+
+            var contentView =
+            <View style={{flex: 1, alignItems: 'stretch', justifyContent: 'center'}}>
                 <TouchableOpacity style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
-                                  onPress={() => navigator.pop()}>
+                                  onPress={() => Store.navigatorPop()}>
                     <Text style={{color: 'red', fontWeight: 'bold'}}>s index.js ss renderScene sss</Text>
                 </TouchableOpacity>
             </View>;
 
-
             if (routeId === 'SplashPage') {
                 contentView = <SplashPage
-                    navigator={navigator} />;
+                    store={Store} />;
             }
             if (routeId === 'MainMapPage') {
                 contentView = <MainMapPage
-                        navigator={navigator} />;
+                        navigator={navigator}
+                        store={Store} />;
             }
             if (routeId === 'LoginPage') {
                 contentView = <LoginPage
-                        navigator={navigator} />;
+                        store={Store} />;
             }
             if (routeId === 'TourDetailsPage') {
                 contentView = <TourDetailsPage
-                    navigator={navigator} chosenTour={route.chosenTour} />;
+                    navigator={navigator}
+                    chosenTour={route.chosenTour}
+                    store={Store} />;
             }
             if (routeId === 'EventsPage') {
                 contentView = <EventsPage
-                    navigator={navigator} />;
+                    navigator={navigator}
+                    store={Store} />;
             }
             if (routeId === 'RecommendedPage') {
                 contentView = <RecommendedPage
-                    navigator={navigator} />;
+                    navigator={navigator}
+                    store={Store} />;
             }
             if (routeId === 'SettingsPage') {
                 contentView = <SettingsPage
-                    navigator={navigator} />;
+                    navigator={navigator}
+                    store={Store} />;
             }
             if (routeId === 'AboutPage') {
                 contentView = <AboutPage
-                    navigator={navigator} />;
+                    navigator={navigator}
+                    store={Store} />;
             }
             if (routeId === 'UserPage') {
                 contentView = <UserPage
-                    navigator={navigator} />;
+                    navigator={navigator}
+                    store={Store} />;
             }
             if (routeId === 'Exit') {
                 BackAndroid.exitApp();
             }
 
-
-
             return contentView;
-
-            // return this.noRoute(navigator);
-
         }
-        // noRoute(navigator) {
-        //     return (
-        //         <View style={{flex: 1, alignItems: 'stretch', justifyContent: 'center'}}>
-        //             <TouchableOpacity style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
-        //                               onPress={() => navigator.pop()}>
-        //                 <Text style={{color: 'red', fontWeight: 'bold'}}>s index.js ss renderScene sss</Text>
-        //             </TouchableOpacity>
-        //         </View>
-        //     );
-        // }
 }
 
 var styles = StyleSheet.create({

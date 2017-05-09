@@ -9,7 +9,13 @@ import {
 } from 'react-native';
 // import React, { Component, PropTypes, View, Text, Image } from 'react-native';
 
-import { Avatar, Drawer, Divider, COLOR, TYPO, PRIMARY_COLORS } from 'react-native-material-design';
+import { Avatar,
+        Drawer,
+        Divider,
+        COLOR,
+        TYPO,
+        PRIMARY_COLORS } from 'react-native-material-design';
+import userLogo from '../../../assets/baraklogo.png'
 
 export default class SideNavigation extends Component {
 
@@ -27,7 +33,7 @@ export default class SideNavigation extends Component {
             <Drawer theme='light'>
                 <Drawer.Header backgroundColor='#4286f5' height={100}>
                     <View style={styles.header}>
-                        <Avatar size={60} image={<Image source={require('../assets/baraklogo.png')}/>} />
+                        <Avatar size={60} image={<Image source={userLogo}/>} />
                         <Text style={[styles.text, COLOR.paperGrey50, TYPO.paperFontSubhead]}>Kanye West</Text>
                     </View>
                 </Drawer.Header>
