@@ -21,21 +21,21 @@ import MapView from 'react-native-maps';
 import TourDetailsModal from '../TourDetails/TourDetailsModal';
 import { Toolbar as MaterialToolbar, Icon } from 'react-native-material-design';
 import SideNavigation from '../Navigation/SideNavigation';
-
+import {observer} from 'mobx-react/native';
 import barakpin from '../../../assets/barakpin.png';
 import baraklogo from '../../../assets/baraklogo.png';
 
 const nativeImageSource = require('nativeImageSource');
 
 const {width, height} = Dimensions.get('window');
+import {
+    LATITUDE,
+    LONGITUDE,
+    LATITUDE_DELTA,
+    LONGITUDE_DELTA
+} from '../../../../consts/variables';
 
-const ASPECT_RATIO = width / height;
-const LATITUDE = 32.080523;
-const LONGITUDE = 34.780852;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-// const drawer = this.refs.navigator && this.refs.navigator.refs.modal2;
-
+@observer
 class MainMapPage extends Component {
 
     static childContextTypes = {
@@ -82,7 +82,6 @@ class MainMapPage extends Component {
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA
             },
-            chosenTour: null,
             isTourModalOpen: false,
             drawer: null,
             barak: "barak",
@@ -94,13 +93,17 @@ class MainMapPage extends Component {
     onTourPress(e, chosenTour) {
 
         // We set the chosen tour as the clicked one
+        // this.setState({
+        //     chosenTour: e,
+        //     isTourModalOpen: false
+        // });
         this.setState({
-            chosenTour: e,
             isTourModalOpen: false
         });
+        this.props.store.onTourPress(e);
 
         setTimeout(() => {
-            if (this.state.chosenTour != null) {
+            if (this.props.store.chosenTour) {
                 this.setState({
                     isTourModalOpen: true
                 });
@@ -109,26 +112,28 @@ class MainMapPage extends Component {
     }
 
     onOpenBurger(e) {
-        this.state.drawer.openDrawer();
+        this.props.store.drawer.openDrawer();
     }
 
     // AFTER we close the details modal
     onModalTourDetailsClosed() {
-        this.setState({chosenTour: null});
+        //this.setState({chosenTour: null});
+        this.props.store.onTourPress(null);
     }
 
     // Go to the page contains the tour details
     goToTourDetails(e) {
-        var chosenTour = this.state.chosenTour;
+        //let chosenTour = this.state.chosenTour;
 
         // Enable if you want the modal to close
         this.refs.MainMapNav.refs.TourDetailsModal.closeModal();
         this.setState({isTourModalOpen: false});
 
-        if (chosenTour != null) {
+        //if (chosenTour) {
+        if (this.props.store.chosenTour) {
             this.props.navigator.push({
                 id: 'TourDetailsPage',
-                chosenTour: chosenTour,
+                chosenTour: this.props.store.chosenTour,
                 configureScene: Navigator.SceneConfigs.FloatFromBottom
             });
         }
@@ -138,7 +143,7 @@ class MainMapPage extends Component {
         this.setState({
             drawer
         });
-    }
+    };
 
     PushToNavigator(id) {
         this.props.navigator.push({
@@ -179,7 +184,7 @@ class MainMapPage extends Component {
     componentDidMount() {
         navigator.geolocation.getCurrentPosition(
             ({coords}) => {
-                const {latitude, longitude} = coords
+                const {latitude, longitude} = coords;
                 this.setState({
                     position: {
                         latitude,
@@ -211,7 +216,7 @@ class MainMapPage extends Component {
                 //         long
                 //     }
                 // })
-                const {latitude, longitude} = coords
+                const {latitude, longitude} = coords;
                 this.setState({
                     position: {
                         latitude,
@@ -249,7 +254,7 @@ class MainMapPage extends Component {
             bottom: 15,
             left: 15,
             right: 15,
-        }
+        };
         bbStyle = function(vheight) {
             return {
                 position: 'absolute',
@@ -259,9 +264,9 @@ class MainMapPage extends Component {
                 backgroundColor: 'transparent',
                 alignItems: 'flex-end',
             }
-        }
+        };
 
-        var navigationView = (
+        let navigationView = (
             <View style={{flex: 1, backgroundColor: '#fff'}}>
                 <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}>I'm in the Drawer!</Text>
             </View>
@@ -329,7 +334,7 @@ class MainMapPage extends Component {
 
                 <TourDetailsModal ref="TourDetailsModal" goToTourDetails={this.goToTourDetails.bind(this)}
                                   onModalTourDetailsClosed={this.onModalTourDetailsClosed.bind(this)}
-                                  chosenTour={this.state.chosenTour}/>
+                                  chosenTour={this.props.store.chosenTour} />
 
             </View>
 
@@ -338,7 +343,7 @@ class MainMapPage extends Component {
     }
 }
 
-var NavigationBarRouteMapper = {
+let NavigationBarRouteMapper = {
     LeftButton(route, navigator, index, navState) {
         return null;
     },

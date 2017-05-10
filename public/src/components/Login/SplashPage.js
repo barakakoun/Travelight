@@ -6,7 +6,7 @@ import {
     Image,
     Navigator,
 } from 'react-native';
-import { observer, inject } from 'mobx-react/native';
+import { observer } from 'mobx-react/native';
 
 import logo from '../../../assets/splash.png';
 

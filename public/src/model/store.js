@@ -1,10 +1,12 @@
 import {observable, action, computed, runInAction} from 'mobx';
-
+import { LATITUDE_DELTA,
+         LONGITUDE_DELTA } from '../../../consts/variables';
 class Store {
 
     @observable appNavigator = null;
     @observable loginTokens = null;
     @observable availableTours = [];
+    @observable chosenTour = null;
 
     constructor() {
         this.setAppNavigator = this.setAppNavigator.bind(this);
@@ -12,6 +14,7 @@ class Store {
         this.navigatorReplace = this.navigatorReplace.bind(this);
         this.navigatorPush = this.navigatorPush.bind(this);
         this.navigatorPop = this.navigatorPop.bind(this);
+        this.onTourPress = this.onTourPress.bind(this);
     }
 
     @action setAppNavigator(nav) {
@@ -31,7 +34,7 @@ class Store {
     }
 
     @action navigatorPop() {
-        this.appNavigator.replace( {id: screenId})
+        this.appNavigator.pop();
     }
     
     @action getAvailableTours() {
@@ -64,6 +67,10 @@ class Store {
                 lonDel: LONGITUDE_DELTA
             }
         ];
+    }
+
+    @action onTourPress(tour) {
+        this.chosenTour = tour;
     }
 }
 
