@@ -7,6 +7,10 @@ class Store {
     @observable loginTokens = null;
     @observable availableTours = [];
     @observable chosenTour = null;
+    @observable region = null;
+    @observable currRegion = null;
+    @observable position = null;
+    @observable drawer = null;
 
     constructor() {
         this.setAppNavigator = this.setAppNavigator.bind(this);
@@ -15,6 +19,10 @@ class Store {
         this.navigatorPush = this.navigatorPush.bind(this);
         this.navigatorPop = this.navigatorPop.bind(this);
         this.onTourPress = this.onTourPress.bind(this);
+        this.setRegion = this.setRegion.bind(this);
+        this.setCurrRegion = this.setCurrRegion.bind(this);
+        this.setPosition = this.setPosition.bind(this);
+        this.watchPosition = this.watchPosition.bind(this);
     }
 
     @action setAppNavigator(nav) {
@@ -29,9 +37,15 @@ class Store {
         this.appNavigator.replace( {id: screenId})
     }
 
-    @action navigatorPush(screenId) {
-        this.appNavigator.replace( {id: screenId})
+    // Not done yet
+    @action navigatorPush(screenId,configureScene ) {
+        this.appNavigator.push({
+            id: screenId,
+            configureScene: configureScene
+        });
     }
+
+    @action
 
     @action navigatorPop() {
         this.appNavigator.pop();
@@ -71,6 +85,46 @@ class Store {
 
     @action onTourPress(tour) {
         this.chosenTour = tour;
+    }
+
+    @action setLocation(latitude,longitude,latitudeDelta,longitudeDelta) {
+        this.setRegion(latitude,longitude,latitudeDelta,longitudeDelta);
+        this.setCurrRegion(latitude,longitude,latitudeDelta,longitudeDelta);
+        this.setPosition(latitude,longitude);
+    }
+
+    @action setRegion(latitude,longitude,latitudeDelta,longitudeDelta) {
+        this.region = {
+            latitude,
+            longitude,
+            latitudeDelta,
+            longitudeDelta
+        }
+    }
+
+    @action setCurrRegion(latitude,longitude,latitudeDelta,longitudeDelta) {
+        this.currRegion = {
+            latitude,
+            longitude,
+            latitudeDelta,
+            longitudeDelta
+        }
+    }
+
+    @action setPosition(latitude,longitude) {
+        this.position = {
+            latitude,
+            longitude
+        }
+    }
+
+    @action watchPosition(latitude,longitude,latitudeDelta,longitudeDelta) {
+        this.setCurrRegion(latitude,longitude,latitudeDelta,longitudeDelta);
+        this.setPosition(latitude,longitude);
+    }
+
+    @action setDrawer(drawer) {
+        this.drawer = drawer;
     }
 }
 
