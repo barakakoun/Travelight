@@ -27,14 +27,6 @@ import baraklogo from '../../../assets/baraklogo.png';
 
 const nativeImageSource = require('nativeImageSource');
 
-const {width, height} = Dimensions.get('window');
-import {
-    LATITUDE,
-    LONGITUDE,
-    LATITUDE_DELTA,
-    LONGITUDE_DELTA
-} from '../../../../consts/variables';
-
 @observer
 class MainMapPage extends Component {
 
@@ -47,47 +39,10 @@ class MainMapPage extends Component {
         super(props);
 
         this.state = {
-            tours: [
-                {
-                    key: 1,
-                    coordinate: {
-                        latitude: 32.0802627,
-                        longitude: 34.7808783
-                    },
-                    latDel: LATITUDE_DELTA,
-                    lonDel: LONGITUDE_DELTA
-                },
-                {
-                    key: 2,
-                    coordinate: {
-                        latitude: 32.0745575,
-                        longitude: 34.7772692
-                    },
-                    latDel: LATITUDE_DELTA,
-                    lonDel: LONGITUDE_DELTA
-                },
-                {
-                    key: 3,
-                    coordinate: {
-                        latitude: 32.0633612,
-                        longitude: 34.7730913
-                    },
-                    latDel: LATITUDE_DELTA,
-                    lonDel: LONGITUDE_DELTA
-                }
-            ],
-            region: {
-                latitude: LATITUDE,
-                longitude: LONGITUDE,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA
-            },
             isTourModalOpen: false,
             drawer: null,
-            barak: "barak",
         };
     }
-
 
     // When we press on a map marker (which represent tour)
     onTourPress(e, chosenTour) {
@@ -112,7 +67,7 @@ class MainMapPage extends Component {
     }
 
     onOpenBurger(e) {
-        this.props.store.drawer.openDrawer();
+        this.state.drawer.openDrawer();
     }
 
     // AFTER we close the details modal
@@ -155,8 +110,8 @@ class MainMapPage extends Component {
     // Jump to current location
     _findMe(){
 
-        if(this.state.currRegion) {
-            this.map.animateToRegion(this.state.currRegion);
+        if(this.props.store.currRegion) {
+            this.map.animateToRegion(this.props.store.currRegion);
         }
 
         // navigator.geolocation.getCurrentPosition(
@@ -185,24 +140,28 @@ class MainMapPage extends Component {
         navigator.geolocation.getCurrentPosition(
             ({coords}) => {
                 const {latitude, longitude} = coords;
-                this.setState({
-                    position: {
-                        latitude,
-                        longitude,
-                    },
-                    region: {
-                        latitude,
-                        longitude,
-                        latitudeDelta: 0.005,
-                        longitudeDelta: 0.001,
-                    },
-                    currRegion: {
-                        latitude,
-                        longitude,
-                        latitudeDelta: 0.005,
-                        longitudeDelta: 0.001,
-                    }
-                })
+                this.props.store.setLocation(latitude,longitude,0.005,0.001);
+                // this.props.store.setRegion(latitude,longitude,0.005,0.001);
+                // this.props.store.setCurrRegion(latitude,longitude,0.005,0.001);
+                // this.props.store.setPosition(latitude,longitude);
+                // this.setState({
+                //     position: {
+                //         latitude,
+                //         longitude,
+                //     },
+                //     region: {
+                //         latitude,
+                //         longitude,
+                //         latitudeDelta: 0.005,
+                //         longitudeDelta: 0.001,
+                //     },
+                //     currRegion: {
+                //         latitude,
+                //         longitude,
+                //         latitudeDelta: 0.005,
+                //         longitudeDelta: 0.001,
+                //     }
+                // })
             },
             (error) => alert('Error: Are location services on?'),
             {enableHighAccuracy: true}
@@ -217,19 +176,21 @@ class MainMapPage extends Component {
                 //     }
                 // })
                 const {latitude, longitude} = coords;
-                this.setState({
-                    position: {
-                        latitude,
-                        longitude
-                    },
-                    currRegion: {
-                        latitude,
-                        longitude,
-                        latitudeDelta: 0.005,
-                        longitudeDelta: 0.001,
-                    }
-                })
+                this.props.store.watchPosition(latitude,longitude,0.005,0.001);
+                // this.setState({
+                //     position: {
+                //         latitude,
+                //         longitude
+                //     },
+                //     currRegion: {
+                //         latitude,
+                //         longitude,
+                //         latitudeDelta: 0.005,
+                //         longitudeDelta: 0.001,
+                //     }
+                // })
             });
+        this.props.store.getAvailableTours();
     }
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchID);
@@ -246,7 +207,7 @@ class MainMapPage extends Component {
     }
 
     renderScene(route, navigator) {
-
+        const {region} = this.props.store;
         const { height: windowHeight } = Dimensions.get('window');
         const varTop = windowHeight - 125;
         const hitSlop = {
@@ -296,7 +257,7 @@ class MainMapPage extends Component {
                 <MapView
                     provider={this.props.provider}
                     style={styles.map}
-                    initialRegion={this.state.region}
+                    initialRegion={region}
                     toolbarEnabled={false}
                     showsUserLocation={true}
                     showsMyLocationButton={true}
@@ -309,7 +270,7 @@ class MainMapPage extends Component {
                     }}
                 >
 
-                    {this.state.tours.map(currTour => (
+                    {this.props.store.availableTours.map(currTour => (
                         <MapView.Marker
                             key={currTour.key}
                             coordinate={currTour.coordinate}
