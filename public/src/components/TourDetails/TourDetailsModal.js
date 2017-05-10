@@ -24,7 +24,7 @@ class TourDetailsModal extends Component {
     }
 
     render() {
-        if (this.props.chosenTour == null) {
+        if (!this.props.chosenTour) {
             return null;
         }
         return (
