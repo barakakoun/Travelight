@@ -21,21 +21,13 @@ import MapView from 'react-native-maps';
 import TourDetailsModal from '../TourDetails/TourDetailsModal';
 import { Toolbar as MaterialToolbar, Icon } from 'react-native-material-design';
 import SideNavigation from '../Navigation/SideNavigation';
-
+import {observer} from 'mobx-react/native';
 import barakpin from '../../../assets/barakpin.png';
 import baraklogo from '../../../assets/baraklogo.png';
 
 const nativeImageSource = require('nativeImageSource');
 
-const {width, height} = Dimensions.get('window');
-
-const ASPECT_RATIO = width / height;
-const LATITUDE = 32.080523;
-const LONGITUDE = 34.780852;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-// const drawer = this.refs.navigator && this.refs.navigator.refs.modal2;
-
+@observer
 class MainMapPage extends Component {
 
     static childContextTypes = {
@@ -47,60 +39,26 @@ class MainMapPage extends Component {
         super(props);
 
         this.state = {
-            tours: [
-                {
-                    key: 1,
-                    coordinate: {
-                        latitude: 32.0802627,
-                        longitude: 34.7808783
-                    },
-                    latDel: LATITUDE_DELTA,
-                    lonDel: LONGITUDE_DELTA
-                },
-                {
-                    key: 2,
-                    coordinate: {
-                        latitude: 32.0745575,
-                        longitude: 34.7772692
-                    },
-                    latDel: LATITUDE_DELTA,
-                    lonDel: LONGITUDE_DELTA
-                },
-                {
-                    key: 3,
-                    coordinate: {
-                        latitude: 32.0633612,
-                        longitude: 34.7730913
-                    },
-                    latDel: LATITUDE_DELTA,
-                    lonDel: LONGITUDE_DELTA
-                }
-            ],
-            region: {
-                latitude: LATITUDE,
-                longitude: LONGITUDE,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA
-            },
-            chosenTour: null,
             isTourModalOpen: false,
             drawer: null,
-            barak: "barak",
         };
     }
-
 
     // When we press on a map marker (which represent tour)
     onTourPress(e, chosenTour) {
 
         // We set the chosen tour as the clicked one
+        // this.setState({
+        //     chosenTour: e,
+        //     isTourModalOpen: false
+        // });
         this.setState({
-            chosenTour: e,
             isTourModalOpen: false
         });
+        this.props.store.onTourPress(e);
 
         setTimeout(() => {
-            if (this.state.chosenTour != null) {
+            if (this.props.store.chosenTour) {
                 this.setState({
                     isTourModalOpen: true
                 });
@@ -114,21 +72,23 @@ class MainMapPage extends Component {
 
     // AFTER we close the details modal
     onModalTourDetailsClosed() {
-        this.setState({chosenTour: null});
+        //this.setState({chosenTour: null});
+        this.props.store.onTourPress(null);
     }
 
     // Go to the page contains the tour details
     goToTourDetails(e) {
-        var chosenTour = this.state.chosenTour;
+        //let chosenTour = this.state.chosenTour;
 
         // Enable if you want the modal to close
         this.refs.MainMapNav.refs.TourDetailsModal.closeModal();
         this.setState({isTourModalOpen: false});
 
-        if (chosenTour != null) {
+        //if (chosenTour) {
+        if (this.props.store.chosenTour) {
             this.props.navigator.push({
                 id: 'TourDetailsPage',
-                chosenTour: chosenTour,
+                chosenTour: this.props.store.chosenTour,
                 configureScene: Navigator.SceneConfigs.FloatFromBottom
             });
         }
@@ -138,7 +98,7 @@ class MainMapPage extends Component {
         this.setState({
             drawer
         });
-    }
+    };
 
     PushToNavigator(id) {
         this.props.navigator.push({
@@ -150,8 +110,8 @@ class MainMapPage extends Component {
     // Jump to current location
     _findMe(){
 
-        if(this.state.currRegion) {
-            this.map.animateToRegion(this.state.currRegion);
+        if(this.props.store.currRegion) {
+            this.map.animateToRegion(this.props.store.currRegion);
         }
 
         // navigator.geolocation.getCurrentPosition(
@@ -179,25 +139,29 @@ class MainMapPage extends Component {
     componentDidMount() {
         navigator.geolocation.getCurrentPosition(
             ({coords}) => {
-                const {latitude, longitude} = coords
-                this.setState({
-                    position: {
-                        latitude,
-                        longitude,
-                    },
-                    region: {
-                        latitude,
-                        longitude,
-                        latitudeDelta: 0.005,
-                        longitudeDelta: 0.001,
-                    },
-                    currRegion: {
-                        latitude,
-                        longitude,
-                        latitudeDelta: 0.005,
-                        longitudeDelta: 0.001,
-                    }
-                })
+                const {latitude, longitude} = coords;
+                this.props.store.setLocation(latitude,longitude,0.005,0.001);
+                // this.props.store.setRegion(latitude,longitude,0.005,0.001);
+                // this.props.store.setCurrRegion(latitude,longitude,0.005,0.001);
+                // this.props.store.setPosition(latitude,longitude);
+                // this.setState({
+                //     position: {
+                //         latitude,
+                //         longitude,
+                //     },
+                //     region: {
+                //         latitude,
+                //         longitude,
+                //         latitudeDelta: 0.005,
+                //         longitudeDelta: 0.001,
+                //     },
+                //     currRegion: {
+                //         latitude,
+                //         longitude,
+                //         latitudeDelta: 0.005,
+                //         longitudeDelta: 0.001,
+                //     }
+                // })
             },
             (error) => alert('Error: Are location services on?'),
             {enableHighAccuracy: true}
@@ -211,20 +175,22 @@ class MainMapPage extends Component {
                 //         long
                 //     }
                 // })
-                const {latitude, longitude} = coords
-                this.setState({
-                    position: {
-                        latitude,
-                        longitude
-                    },
-                    currRegion: {
-                        latitude,
-                        longitude,
-                        latitudeDelta: 0.005,
-                        longitudeDelta: 0.001,
-                    }
-                })
+                const {latitude, longitude} = coords;
+                this.props.store.watchPosition(latitude,longitude,0.005,0.001);
+                // this.setState({
+                //     position: {
+                //         latitude,
+                //         longitude
+                //     },
+                //     currRegion: {
+                //         latitude,
+                //         longitude,
+                //         latitudeDelta: 0.005,
+                //         longitudeDelta: 0.001,
+                //     }
+                // })
             });
+        this.props.store.getAvailableTours();
     }
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchID);
@@ -241,7 +207,7 @@ class MainMapPage extends Component {
     }
 
     renderScene(route, navigator) {
-
+        const {region} = this.props.store;
         const { height: windowHeight } = Dimensions.get('window');
         const varTop = windowHeight - 125;
         const hitSlop = {
@@ -249,7 +215,7 @@ class MainMapPage extends Component {
             bottom: 15,
             left: 15,
             right: 15,
-        }
+        };
         bbStyle = function(vheight) {
             return {
                 position: 'absolute',
@@ -259,9 +225,9 @@ class MainMapPage extends Component {
                 backgroundColor: 'transparent',
                 alignItems: 'flex-end',
             }
-        }
+        };
 
-        var navigationView = (
+        let navigationView = (
             <View style={{flex: 1, backgroundColor: '#fff'}}>
                 <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}>I'm in the Drawer!</Text>
             </View>
@@ -291,7 +257,7 @@ class MainMapPage extends Component {
                 <MapView
                     provider={this.props.provider}
                     style={styles.map}
-                    initialRegion={this.state.region}
+                    initialRegion={region}
                     toolbarEnabled={false}
                     showsUserLocation={true}
                     showsMyLocationButton={true}
@@ -304,7 +270,7 @@ class MainMapPage extends Component {
                     }}
                 >
 
-                    {this.state.tours.map(currTour => (
+                    {this.props.store.availableTours.map(currTour => (
                         <MapView.Marker
                             key={currTour.key}
                             coordinate={currTour.coordinate}
@@ -329,7 +295,7 @@ class MainMapPage extends Component {
 
                 <TourDetailsModal ref="TourDetailsModal" goToTourDetails={this.goToTourDetails.bind(this)}
                                   onModalTourDetailsClosed={this.onModalTourDetailsClosed.bind(this)}
-                                  chosenTour={this.state.chosenTour}/>
+                                  chosenTour={this.props.store.chosenTour} />
 
             </View>
 
@@ -338,7 +304,7 @@ class MainMapPage extends Component {
     }
 }
 
-var NavigationBarRouteMapper = {
+let NavigationBarRouteMapper = {
     LeftButton(route, navigator, index, navState) {
         return null;
     },
