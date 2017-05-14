@@ -1,6 +1,7 @@
 import {observable, action, computed, runInAction} from 'mobx';
 import { LATITUDE_DELTA,
          LONGITUDE_DELTA } from '../../../consts/variables';
+import _ from 'lodash';
 class Store {
 
     @observable appNavigator = null;
@@ -10,19 +11,22 @@ class Store {
     @observable region = null;
     @observable currRegion = null;
     @observable position = null;
-    @observable drawer = null;
+    @observable isTourModalOpen = false;
 
     constructor() {
         this.setAppNavigator = this.setAppNavigator.bind(this);
         this.setLoginTokens = this.setLoginTokens.bind(this);
         this.navigatorReplace = this.navigatorReplace.bind(this);
-        this.navigatorPush = this.navigatorPush.bind(this);
+        this.navigatorOpenTourModal = this.navigatorOpenTourModal.bind(this);
+        this.navigatorOpenDrawer = this.navigatorOpenDrawer.bind(this);
         this.navigatorPop = this.navigatorPop.bind(this);
         this.onTourPress = this.onTourPress.bind(this);
+        this.setLocation = this.setLocation.bind(this);
         this.setRegion = this.setRegion.bind(this);
         this.setCurrRegion = this.setCurrRegion.bind(this);
         this.setPosition = this.setPosition.bind(this);
         this.watchPosition = this.watchPosition.bind(this);
+        this.setTourModalOpen = this.setTourModalOpen.bind(this);
     }
 
     @action setAppNavigator(nav) {
@@ -37,15 +41,20 @@ class Store {
         this.appNavigator.replace( {id: screenId})
     }
 
-    // Not done yet
-    @action navigatorPush(screenId,configureScene ) {
+    @action navigatorOpenTourModal(screenId,configureScene ) {
+        this.appNavigator.push({
+            id: screenId,
+            chosenTour: this.chosenTour,
+            configureScene: configureScene
+        });
+    }
+
+    @action navigatorOpenDrawer(screenId, configureScene) {
         this.appNavigator.push({
             id: screenId,
             configureScene: configureScene
         });
     }
-
-    @action
 
     @action navigatorPop() {
         this.appNavigator.pop();
@@ -84,6 +93,7 @@ class Store {
     }
 
     @action onTourPress(tour) {
+        console.warn(_.values(tour));
         this.chosenTour = tour;
     }
 
@@ -123,9 +133,10 @@ class Store {
         this.setPosition(latitude,longitude);
     }
 
-    @action setDrawer(drawer) {
-        this.drawer = drawer;
+    @action setTourModalOpen(value) {
+        this.isTourModalOpen = value;
     }
+
 }
 
 const store = new Store();

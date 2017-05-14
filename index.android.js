@@ -111,27 +111,22 @@ export default class travelight extends Component {
             }
             if (routeId === 'EventsPage') {
                 contentView = <EventsPage
-                    navigator={navigator}
                     store={Store} />;
             }
             if (routeId === 'RecommendedPage') {
                 contentView = <RecommendedPage
-                    navigator={navigator}
                     store={Store} />;
             }
             if (routeId === 'SettingsPage') {
                 contentView = <SettingsPage
-                    navigator={navigator}
                     store={Store} />;
             }
             if (routeId === 'AboutPage') {
                 contentView = <AboutPage
-                    navigator={navigator}
                     store={Store} />;
             }
             if (routeId === 'UserPage') {
                 contentView = <UserPage
-                    navigator={navigator}
                     store={Store} />;
             }
             if (routeId === 'Exit') {

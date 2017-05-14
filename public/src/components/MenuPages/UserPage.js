@@ -8,17 +8,20 @@ import {
     TouchableOpacity,
     BackAndroid,
 } from 'react-native';
+import {observer} from 'mobx-react/native';
 
+@observer
 class UserPage extends Component {
     constructor(props) {
         super(props);
     }
 
     render() {
+        const {appNavigator} = this.props.store;
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}
-                navigator={this.props.navigator}
+                navigator={appNavigator}
                 navigationBar={
                     <Navigator.NavigationBar style={{backgroundColor: '#246dd5'}}
                                              routeMapper={NavigationBarRouteMapper} />
@@ -35,7 +38,7 @@ class UserPage extends Component {
     }
 }
 
-var NavigationBarRouteMapper = {
+const NavigationBarRouteMapper = {
     LeftButton(route, navigator, index, navState) {
         return null;
     },
@@ -59,7 +62,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
         margin: 32,
     },
 });

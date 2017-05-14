@@ -39,8 +39,7 @@ class MainMapPage extends Component {
         super(props);
 
         this.state = {
-            isTourModalOpen: false,
-            drawer: null,
+            drawer: null
         };
     }
 
@@ -52,18 +51,17 @@ class MainMapPage extends Component {
         //     chosenTour: e,
         //     isTourModalOpen: false
         // });
-        this.setState({
-            isTourModalOpen: false
-        });
+        // this.setState({
+        //     isTourModalOpen: false
+        // });
+        this.props.store.setTourModalOpen(true);
         this.props.store.onTourPress(e);
 
-        setTimeout(() => {
-            if (this.props.store.chosenTour) {
-                this.setState({
-                    isTourModalOpen: true
-                });
-            }
-        }, 500);
+        // setTimeout(() => {
+        //     if (this.props.store.chosenTour) {
+        //         this.props.store.setTourModalOpen(true);
+        //     }
+        // }, 500);
     }
 
     onOpenBurger(e) {
@@ -82,15 +80,12 @@ class MainMapPage extends Component {
 
         // Enable if you want the modal to close
         this.refs.MainMapNav.refs.TourDetailsModal.closeModal();
-        this.setState({isTourModalOpen: false});
+        // this.setState({isTourModalOpen: false});
+        this.props.store.setTourModalOpen(false);
 
         //if (chosenTour) {
         if (this.props.store.chosenTour) {
-            this.props.navigator.push({
-                id: 'TourDetailsPage',
-                chosenTour: this.props.store.chosenTour,
-                configureScene: Navigator.SceneConfigs.FloatFromBottom
-            });
+            this.props.store.navigatorOpenTourModal('TourDetailsPage', Navigator.SceneConfigs.FloatFromBottom);
         }
     }
 
@@ -101,10 +96,7 @@ class MainMapPage extends Component {
     };
 
     PushToNavigator(id) {
-        this.props.navigator.push({
-            id: id,
-            configureScene: Navigator.SceneConfigs.SwipeFromLeft
-        });
+        this.props.store.navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft);
     }
 
     // Jump to current location
@@ -193,6 +185,7 @@ class MainMapPage extends Component {
         this.props.store.getAvailableTours();
     }
     componentWillUnmount() {
+        console.warn("WillUnMount");
         navigator.geolocation.clearWatch(this.watchID);
     }
 
@@ -200,7 +193,7 @@ class MainMapPage extends Component {
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}
-                navigator={this.props.navigator}
+                navigator={this.props.store.appNavigator}
                 ref="MainMapNav"
                 />
         );
@@ -263,9 +256,9 @@ class MainMapPage extends Component {
                     showsMyLocationButton={true}
                     ref={ref => { this.map = ref; }}
                     onRegionChange={() => {
-                        if (this.state.isTourModalOpen) {
+                        if (this.props.store.isTourModalOpen) {
                             this.refs.MainMapNav.refs.TourDetailsModal.closeModal();
-                            this.setState({isTourModalOpen: false});
+                            this.props.store.setTourModalOpen(false);
                         }
                     }}
                 >
