@@ -1,8 +1,8 @@
 import {observable, action, computed, runInAction} from 'mobx';
 import { LATITUDE_DELTA,
          LONGITUDE_DELTA } from '../../../consts/variables';
-import _ from 'lodash';
-class Store {
+import React, { Component } from 'react';
+    class Store {
 
     @observable appNavigator = null;
     @observable loginTokens = null;
@@ -38,7 +38,7 @@ class Store {
     }
 
     @action navigatorReplace(screenId) {
-        this.appNavigator.replace( {id: screenId})
+        this.appNavigator.replace({id: screenId})
     }
 
     @action navigatorOpenTourModal(screenId,configureScene ) {

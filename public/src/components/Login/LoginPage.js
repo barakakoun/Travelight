@@ -17,6 +17,16 @@ import { observer } from 'mobx-react/native';
 import Login from 'react-native-login';
 import logo from '../../../assets/splash.png';
 import backgroundImage from '../../../assets/loginBackground.jpg';
+import FBSDK from 'react-native-fbsdk';
+
+import  _ from 'lodash';
+
+
+const {
+    LoginManager,
+    GraphRequest,
+    GraphRequestManager,
+} = FBSDK;
 
 const config = {
     url: 'https://auth.no-mad.net/auth',
@@ -92,9 +102,47 @@ class LoginPage extends Component {
         return (
             <View style={styles.container}>
                 <Text style={{color: 'white', fontSize: 16,}}>Welcome to Travelight!</Text>
-                <SocialIcon title='Sign In With Facebook' button type='facebook' onPress={() => this.onLogin()} />
+                <SocialIcon title='Sign In With Facebook' button type='facebook' onPress={() => this.onLoginFacebook()} />
                 <SocialIcon title='Sign In With Google' button type='google-plus-official' onPress={() => this.onLogin()} />
+                {/*<SocialIcon title="test" button type='facebook'onPress={() => this.onTest()} />*/}
             </View>
+        );
+    }
+    _responseInfoCallback(error: ?Object, result: ?Object) {
+        if (error) {
+            alert('Error fetching data: ' + JSON.stringify(error));
+        } else {
+            alert('Success fetching data: ' + JSON.stringify(result));
+        }
+    }
+    onTest()
+    {
+        const infoRequest = new GraphRequest(
+            '/me',
+            {
+                parameters: {
+                    fields: {
+                        string: 'email,name,first_name,last_name' // what you want to get
+                    }
+                   }},
+                    this._responseInfoCallback
+        );
+
+        new GraphRequestManager().addRequest(infoRequest).start();
+    }
+    onLoginFacebook() {
+        LoginManager.logInWithReadPermissions(['public_profile','email']).then(
+            function(result) {
+                if (result.isCancelled) {
+                    alert('Login was cancelled');
+                } else {
+                    this.props.store.navigatorReplace('MainMapPage');
+
+                }
+            },
+            function(error) {
+                alert('Login failed with error: ' + error);
+            }
         );
     }
 }
