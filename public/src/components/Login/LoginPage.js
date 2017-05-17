@@ -104,7 +104,7 @@ class LoginPage extends Component {
                 <Text style={{color: 'white', fontSize: 16,}}>Welcome to Travelight!</Text>
                 <SocialIcon title='Sign In With Facebook' button type='facebook' onPress={() => this.onLoginFacebook()} />
                 <SocialIcon title='Sign In With Google' button type='google-plus-official' onPress={() => this.onLogin()} />
-                /*<SocialIcon title="test" button type='facebook'onPress={() => this.onTest()} />*/
+                {/*<SocialIcon title="test" button type='facebook'onPress={() => this.onTest()} />*/}
             </View>
         );
     }

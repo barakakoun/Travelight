@@ -92,6 +92,7 @@ export default class travelight extends Component {
 
             if (routeId === 'SplashPage') {
                 contentView = <SplashPage
+                    navigator={navigator}
                     store={Store} />;
             }
             if (routeId === 'MainMapPage') {
