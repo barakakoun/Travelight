@@ -1,7 +1,20 @@
 import {observable, action, computed, runInAction} from 'mobx';
-import { LATITUDE_DELTA,
-         LONGITUDE_DELTA } from '../../../consts/variables';
-class Store {
+// import { LATITUDE_DELTA,
+//          LONGITUDE_DELTA } from '../../../consts/variables';
+import { Dimensions } from 'react-native';
+import React, { Component } from 'react';
+import {
+    View,
+    Text,
+    Image,
+    Navigator,
+} from 'react-native';
+const {width, height} = Dimensions.get('window');
+
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+    class Store {
 
     @observable appNavigator = null;
     @observable loginTokens = null;
@@ -34,7 +47,7 @@ class Store {
     }
 
     @action navigatorReplace(screenId) {
-        this.appNavigator.replace( {id: screenId})
+        this.appNavigator.replace({id: screenId})
     }
 
     // Not done yet
