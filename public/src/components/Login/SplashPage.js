@@ -13,8 +13,7 @@ import logo from '../../../assets/splash.png';
 @observer
 class SplashPage extends Component {
     componentWillMount() {
-        const { appNavigator,
-                navigatorReplace } = this.props.store;
+        const { navigatorReplace } = this.props.store;
         setTimeout(() => {
             navigatorReplace('LoginPage');
         }, 1000);

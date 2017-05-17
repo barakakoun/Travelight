@@ -54,8 +54,9 @@ class MainMapPage extends Component {
         // this.setState({
         //     isTourModalOpen: false
         // });
-        this.props.store.setTourModalOpen(true);
         this.props.store.onTourPress(e);
+        //this.props.store.setTourModalOpen(true);
+
 
         // setTimeout(() => {
         //     if (this.props.store.chosenTour) {
@@ -104,6 +105,9 @@ class MainMapPage extends Component {
 
         if(this.props.store.currRegion) {
             this.map.animateToRegion(this.props.store.currRegion);
+        }
+        else {
+
         }
 
         // navigator.geolocation.getCurrentPosition(
@@ -158,6 +162,7 @@ class MainMapPage extends Component {
             (error) => alert('Error: Are location services on?'),
             {enableHighAccuracy: true}
         );
+
         this.watchID = navigator.geolocation.watchPosition(
             ({coords}) => {
                 // const {lat, long} = coords
@@ -184,8 +189,8 @@ class MainMapPage extends Component {
             });
         this.props.store.getAvailableTours();
     }
+
     componentWillUnmount() {
-        console.warn("WillUnMount");
         navigator.geolocation.clearWatch(this.watchID);
     }
 
@@ -200,7 +205,8 @@ class MainMapPage extends Component {
     }
 
     renderScene(route, navigator) {
-        const {region} = this.props.store;
+        const {region,
+               currRegion } = this.props.store;
         const { height: windowHeight } = Dimensions.get('window');
         const varTop = windowHeight - 125;
         const hitSlop = {
@@ -241,16 +247,14 @@ class MainMapPage extends Component {
                         style={styles.mapButton}
                         onPress={ () => this._findMe() }
                     >
-
                         <Icon name="my-location" />
                     </TouchableOpacity>
                 </View>
 
-
                 <MapView
                     provider={this.props.provider}
                     style={styles.map}
-                    initialRegion={region}
+                    initialRegion={currRegion}
                     toolbarEnabled={false}
                     showsUserLocation={true}
                     showsMyLocationButton={true}
@@ -288,7 +292,8 @@ class MainMapPage extends Component {
 
                 <TourDetailsModal ref="TourDetailsModal" goToTourDetails={this.goToTourDetails.bind(this)}
                                   onModalTourDetailsClosed={this.onModalTourDetailsClosed.bind(this)}
-                                  chosenTour={this.props.store.chosenTour} />
+                                  store={this.props.store}
+                                  chosenTour={this.props.store.chosenTour ? this.props.store.chosenTour : null} />
 
             </View>
 

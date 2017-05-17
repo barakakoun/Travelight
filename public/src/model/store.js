@@ -93,8 +93,8 @@ class Store {
     }
 
     @action onTourPress(tour) {
-        console.warn(_.values(tour));
         this.chosenTour = tour;
+        this.isTourModalOpen = true;
     }
 
     @action setLocation(latitude,longitude,latitudeDelta,longitudeDelta) {

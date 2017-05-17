@@ -18,11 +18,11 @@ class AboutPage extends Component {
 
     render() {
 
-        const {appNavigator} = this.props.store;
+        //const {appNavigator} = this.props.store;
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}
-                navigator={appNavigator}
+                navigator={this.props.navigator}
                 navigationBar={
                     <Navigator.NavigationBar style={{backgroundColor: '#246dd5'}}
                                              routeMapper={NavigationBarRouteMapper} />

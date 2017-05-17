@@ -92,41 +92,48 @@ export default class travelight extends Component {
 
             if (routeId === 'SplashPage') {
                 contentView = <SplashPage
+                    navigator={Store.appNavigator}
                     store={Store} />;
             }
             if (routeId === 'MainMapPage') {
                 contentView = <MainMapPage
-                        navigator={navigator}
+                        navigator={Store.appNavigator}
                         store={Store} />;
             }
             if (routeId === 'LoginPage') {
                 contentView = <LoginPage
+                        navigator={Store.appNavigator}
                         store={Store} />;
             }
             if (routeId === 'TourDetailsPage') {
                 contentView = <TourDetailsPage
-                    navigator={navigator}
-                    chosenTour={route.chosenTour}
+                    navigator={Store.appNavigator}
+                    chosenTour={Store.chosenTour}
                     store={Store} />;
             }
             if (routeId === 'EventsPage') {
                 contentView = <EventsPage
+                    navigator={Store.appNavigator}
                     store={Store} />;
             }
             if (routeId === 'RecommendedPage') {
                 contentView = <RecommendedPage
+                    navigator={Store.appNavigator}
                     store={Store} />;
             }
             if (routeId === 'SettingsPage') {
                 contentView = <SettingsPage
+                    navigator={Store.appNavigator}
                     store={Store} />;
             }
             if (routeId === 'AboutPage') {
                 contentView = <AboutPage
+                    navigator={Store.appNavigator}
                     store={Store} />;
             }
             if (routeId === 'UserPage') {
                 contentView = <UserPage
+                    navigator={Store.appNavigator}
                     store={Store} />;
             }
             if (routeId === 'Exit') {
