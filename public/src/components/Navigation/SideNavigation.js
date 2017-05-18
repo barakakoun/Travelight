@@ -16,7 +16,9 @@ import { Avatar,
         TYPO,
         PRIMARY_COLORS } from 'react-native-material-design';
 import userLogo from '../../../assets/baraklogo.png'
+import { observer } from 'mobx-react/native';
 
+@observer
 export default class SideNavigation extends Component {
 
     constructor(props) {
@@ -25,7 +27,10 @@ export default class SideNavigation extends Component {
             route: null
         }
     }
-
+    componentWillMount()
+    {
+        this.props.store.getUserData();
+    }
     render() {
         const { route } = this.state;
 
@@ -33,8 +38,8 @@ export default class SideNavigation extends Component {
             <Drawer theme='light'>
                 <Drawer.Header backgroundColor='#4286f5' height={100}>
                     <View style={styles.header}>
-                        <Avatar size={60} image={<Image source={userLogo}/>} />
-                        <Text style={[styles.text, COLOR.paperGrey50, TYPO.paperFontSubhead]}>Kanye West</Text>
+                        <Avatar size={60} image={<Image source={{uri:this.props.store.userPhoto}}/>} />
+                        <Text style={[styles.text, COLOR.paperGrey50, TYPO.paperFontSubhead]}>{this.props.store.userName}</Text>
                     </View>
                 </Drawer.Header>
 

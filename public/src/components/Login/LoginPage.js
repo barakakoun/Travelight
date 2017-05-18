@@ -102,17 +102,17 @@ class LoginPage extends Component {
         return (
             <View style={styles.container}>
                 <Text style={{color: 'white', fontSize: 16,}}>Welcome to Travelight!</Text>
-                <SocialIcon title='Sign In With Facebook' button type='facebook' onPress={() => this.onLoginFacebook()} />
+                <SocialIcon title='Sign In With Facebook' button type='facebook' onPress={()=>{this.props.store.loginWithFacebook();}} />
                 <SocialIcon title='Sign In With Google' button type='google-plus-official' onPress={() => this.onLogin()} />
-                /*<SocialIcon title="test" button type='facebook'onPress={() => this.onTest()} />*/
+                {/*<SocialIcon title="test" button type='facebook'onPress={() => this.onTest()} />*/}
             </View>
         );
     }
     _responseInfoCallback(error: ?Object, result: ?Object) {
-        if (error) {
-            alert('Error fetching data: ' + JSON.stringify(error));
-        } else {
             alert('Success fetching data: ' + JSON.stringify(result));
+            if (error) {
+                alert('Error fetching data: ' + JSON.stringify(error));
+            } else {
         }
     }
     onTest()

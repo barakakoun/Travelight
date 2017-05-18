@@ -1,6 +1,13 @@
 import {observable, action, computed, runInAction} from 'mobx';
 import { LATITUDE_DELTA,
-         LONGITUDE_DELTA } from '../../../consts/variables';
+         LONGITUDE_DELTA } from "../../../Consts/variables";
+import FBSDK from 'react-native-fbsdk';
+const {
+    LoginManager,
+    GraphRequest,
+    GraphRequestManager,
+    AccessToken
+} = FBSDK;
 class Store {
 
     @observable appNavigator = null;
@@ -11,6 +18,9 @@ class Store {
     @observable currRegion = null;
     @observable position = null;
     @observable drawer = null;
+    @observable accessToken = null;
+    @observable userName = null;
+    @observable userPhoto = null;
 
     constructor() {
         this.setAppNavigator = this.setAppNavigator.bind(this);
@@ -23,7 +33,54 @@ class Store {
         this.setCurrRegion = this.setCurrRegion.bind(this);
         this.setPosition = this.setPosition.bind(this);
         this.watchPosition = this.watchPosition.bind(this);
+        this.getUserData = this.getUserData.bind(this);
+        this.loginWithFacebook = this.loginWithFacebook.bind(this);
     }
+    @action loginWithFacebook() {
+        LoginManager.logInWithReadPermissions(['public_profile','email']).then(
+            (result)=> {
+                if (result.isCancelled) {
+                    alert('Login was cancelled');
+                } else {
+                    AccessToken.getCurrentAccessToken().then(
+                        (data) => {
+                            let accessToken = data.accessToken;
+                            this.accessToken=accessToken;
+                            this.navigatorReplace('MainMapPage');
+                        });
+                }
+            },
+            (error)=> {
+                alert('Login failed with error: ' + error);
+            }
+        );
+    }
+    @action  getUserData(){
+        const responseInfoCallback = (error,result)=>{
+            if (error) {
+                alert('Error fetching data: ' + JSON.stringify(error));
+            } else {
+                //var jresult = JSON.parse(result);
+                this.userName = result.name;
+                var pic = result.picture.data.url;
+                this.userPhoto = pic;
+            }
+        }
+        const infoRequest = new GraphRequest(
+            '/me',
+            {
+                accessToken: this.accessToken,
+                parameters: {
+                    fields: {
+                        string: 'email,name,picture' // what you want to get
+                    }
+                }},
+            responseInfoCallback
+        );
+        new GraphRequestManager().addRequest(infoRequest).start();
+
+    }
+
 
     @action setAppNavigator(nav) {
         this.appNavigator = nav;
@@ -125,8 +182,10 @@ class Store {
 
     @action setDrawer(drawer) {
         this.drawer = drawer;
+
     }
 }
+
 
 const store = new Store();
 export default store;
