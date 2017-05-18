@@ -5,7 +5,9 @@ import {
     Button,
     StyleSheet,
 } from 'react-native';
+import {observer} from 'mobx-react/native';
 
+@observer
 class TourDetailsModal extends Component {
     constructor(props) {
         super(props);
@@ -24,14 +26,15 @@ class TourDetailsModal extends Component {
     }
 
     render() {
-        if (!this.props.chosenTour) {
+        const {chosenTour} = this.props.store;
+        if (!chosenTour) {
             return null;
         }
         return (
             <Modal style={[styles.modal, styles.modalTourDetails]} backdrop={false} backButtonClose={true}
                    backdropOpacity={0.2} position={"bottom"} ref="modalTourDetails"
                    onClosed={this.props.onModalTourDetailsClosed.bind(this)}>
-                <Text style={[styles.text, {color: "white"}]}>Tour key: {this.props.chosenTour.key.toString()}</Text>
+                <Text style={[styles.text, {color: "white"}]}>Tour key: {chosenTour.key.toString()}</Text>
                 <Button onPress={this.props.goToTourDetails.bind(this)} title="More Info" style={styles.btn}/>
             </Modal>
         );

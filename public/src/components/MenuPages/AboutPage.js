@@ -8,13 +8,17 @@ import {
     TouchableOpacity,
     BackAndroid,
 } from 'react-native';
+import {observer} from 'mobx-react/native';
 
+@observer
 class AboutPage extends Component {
     constructor(props) {
         super(props);
     }
 
     render() {
+
+        //const {appNavigator} = this.props.store;
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}

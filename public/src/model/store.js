@@ -1,5 +1,6 @@
 import {observable, action, computed, runInAction} from 'mobx';
 import { LATITUDE_DELTA,
+<<<<<<< HEAD
          LONGITUDE_DELTA } from "../../../Consts/variables";
 import FBSDK from 'react-native-fbsdk';
 const {
@@ -9,6 +10,11 @@ const {
     AccessToken
 } = FBSDK;
 class Store {
+=======
+         LONGITUDE_DELTA } from '../../../consts/variables';
+import React, { Component } from 'react';
+    class Store {
+>>>>>>> 962046cb01d06d76bfacae90be76d91ad66a8c9b
 
     @observable appNavigator = null;
     @observable loginTokens = null;
@@ -17,24 +23,34 @@ class Store {
     @observable region = null;
     @observable currRegion = null;
     @observable position = null;
+<<<<<<< HEAD
     @observable drawer = null;
     @observable accessToken = null;
     @observable userName = null;
     @observable userPhoto = null;
+=======
+    @observable isTourModalOpen = false;
+>>>>>>> 962046cb01d06d76bfacae90be76d91ad66a8c9b
 
     constructor() {
         this.setAppNavigator = this.setAppNavigator.bind(this);
         this.setLoginTokens = this.setLoginTokens.bind(this);
         this.navigatorReplace = this.navigatorReplace.bind(this);
-        this.navigatorPush = this.navigatorPush.bind(this);
+        this.navigatorOpenTourModal = this.navigatorOpenTourModal.bind(this);
+        this.navigatorOpenDrawer = this.navigatorOpenDrawer.bind(this);
         this.navigatorPop = this.navigatorPop.bind(this);
         this.onTourPress = this.onTourPress.bind(this);
+        this.setLocation = this.setLocation.bind(this);
         this.setRegion = this.setRegion.bind(this);
         this.setCurrRegion = this.setCurrRegion.bind(this);
         this.setPosition = this.setPosition.bind(this);
         this.watchPosition = this.watchPosition.bind(this);
+<<<<<<< HEAD
         this.getUserData = this.getUserData.bind(this);
         this.loginWithFacebook = this.loginWithFacebook.bind(this);
+=======
+        this.setTourModalOpen = this.setTourModalOpen.bind(this);
+>>>>>>> 962046cb01d06d76bfacae90be76d91ad66a8c9b
     }
     @action loginWithFacebook() {
         LoginManager.logInWithReadPermissions(['public_profile','email']).then(
@@ -91,18 +107,23 @@ class Store {
     }
 
     @action navigatorReplace(screenId) {
-        this.appNavigator.replace( {id: screenId})
+        this.appNavigator.replace({id: screenId})
     }
 
-    // Not done yet
-    @action navigatorPush(screenId,configureScene ) {
+    @action navigatorOpenTourModal(screenId,configureScene ) {
+        this.appNavigator.push({
+            id: screenId,
+            chosenTour: this.chosenTour,
+            configureScene: configureScene
+        });
+    }
+
+    @action navigatorOpenDrawer(screenId, configureScene) {
         this.appNavigator.push({
             id: screenId,
             configureScene: configureScene
         });
     }
-
-    @action
 
     @action navigatorPop() {
         this.appNavigator.pop();
@@ -142,6 +163,7 @@ class Store {
 
     @action onTourPress(tour) {
         this.chosenTour = tour;
+        this.isTourModalOpen = true;
     }
 
     @action setLocation(latitude,longitude,latitudeDelta,longitudeDelta) {
@@ -180,10 +202,16 @@ class Store {
         this.setPosition(latitude,longitude);
     }
 
+<<<<<<< HEAD
     @action setDrawer(drawer) {
         this.drawer = drawer;
 
+=======
+    @action setTourModalOpen(value) {
+        this.isTourModalOpen = value;
+>>>>>>> 962046cb01d06d76bfacae90be76d91ad66a8c9b
     }
+
 }
 
 

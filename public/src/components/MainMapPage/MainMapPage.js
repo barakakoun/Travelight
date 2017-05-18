@@ -39,8 +39,7 @@ class MainMapPage extends Component {
         super(props);
 
         this.state = {
-            isTourModalOpen: false,
-            drawer: null,
+            drawer: null
         };
     }
 
@@ -52,18 +51,18 @@ class MainMapPage extends Component {
         //     chosenTour: e,
         //     isTourModalOpen: false
         // });
-        this.setState({
-            isTourModalOpen: false
-        });
+        // this.setState({
+        //     isTourModalOpen: false
+        // });
         this.props.store.onTourPress(e);
+        //this.props.store.setTourModalOpen(true);
 
-        setTimeout(() => {
-            if (this.props.store.chosenTour) {
-                this.setState({
-                    isTourModalOpen: true
-                });
-            }
-        }, 500);
+
+        // setTimeout(() => {
+        //     if (this.props.store.chosenTour) {
+        //         this.props.store.setTourModalOpen(true);
+        //     }
+        // }, 500);
     }
 
     onOpenBurger(e) {
@@ -82,15 +81,12 @@ class MainMapPage extends Component {
 
         // Enable if you want the modal to close
         this.refs.MainMapNav.refs.TourDetailsModal.closeModal();
-        this.setState({isTourModalOpen: false});
+        // this.setState({isTourModalOpen: false});
+        this.props.store.setTourModalOpen(false);
 
         //if (chosenTour) {
         if (this.props.store.chosenTour) {
-            this.props.navigator.push({
-                id: 'TourDetailsPage',
-                chosenTour: this.props.store.chosenTour,
-                configureScene: Navigator.SceneConfigs.FloatFromBottom
-            });
+            this.props.store.navigatorOpenTourModal('TourDetailsPage', Navigator.SceneConfigs.FloatFromBottom);
         }
     }
 
@@ -101,10 +97,7 @@ class MainMapPage extends Component {
     };
 
     PushToNavigator(id) {
-        this.props.navigator.push({
-            id: id,
-            configureScene: Navigator.SceneConfigs.SwipeFromLeft
-        });
+        this.props.store.navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft);
     }
 
     // Jump to current location
@@ -112,6 +105,9 @@ class MainMapPage extends Component {
 
         if(this.props.store.currRegion) {
             this.map.animateToRegion(this.props.store.currRegion);
+        }
+        else {
+
         }
 
         // navigator.geolocation.getCurrentPosition(
@@ -166,6 +162,7 @@ class MainMapPage extends Component {
             (error) => alert('Error: Are location services on?'),
             {enableHighAccuracy: true}
         );
+
         this.watchID = navigator.geolocation.watchPosition(
             ({coords}) => {
                 // const {lat, long} = coords
@@ -192,6 +189,7 @@ class MainMapPage extends Component {
             });
         this.props.store.getAvailableTours();
     }
+
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchID);
     }
@@ -200,14 +198,15 @@ class MainMapPage extends Component {
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}
-                navigator={this.props.navigator}
+                navigator={this.props.store.appNavigator}
                 ref="MainMapNav"
                 />
         );
     }
 
     renderScene(route, navigator) {
-        const {region} = this.props.store;
+        const {region,
+               currRegion } = this.props.store;
         const { height: windowHeight } = Dimensions.get('window');
         const varTop = windowHeight - 125;
         const hitSlop = {
@@ -248,24 +247,22 @@ class MainMapPage extends Component {
                         style={styles.mapButton}
                         onPress={ () => this._findMe() }
                     >
-
                         <Icon name="my-location" />
                     </TouchableOpacity>
                 </View>
 
-
                 <MapView
                     provider={this.props.provider}
                     style={styles.map}
-                    initialRegion={region}
+                    initialRegion={currRegion}
                     toolbarEnabled={false}
                     showsUserLocation={true}
                     showsMyLocationButton={true}
                     ref={ref => { this.map = ref; }}
                     onRegionChange={() => {
-                        if (this.state.isTourModalOpen) {
+                        if (this.props.store.isTourModalOpen) {
                             this.refs.MainMapNav.refs.TourDetailsModal.closeModal();
-                            this.setState({isTourModalOpen: false});
+                            this.props.store.setTourModalOpen(false);
                         }
                     }}
                 >
@@ -295,7 +292,8 @@ class MainMapPage extends Component {
 
                 <TourDetailsModal ref="TourDetailsModal" goToTourDetails={this.goToTourDetails.bind(this)}
                                   onModalTourDetailsClosed={this.onModalTourDetailsClosed.bind(this)}
-                                  chosenTour={this.props.store.chosenTour} />
+                                  store={this.props.store}
+                                  chosenTour={this.props.store.chosenTour ? this.props.store.chosenTour : null} />
 
             </View>
 
