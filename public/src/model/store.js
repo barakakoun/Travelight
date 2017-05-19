@@ -1,21 +1,16 @@
 import {observable, action, computed, runInAction} from 'mobx';
 import { LATITUDE_DELTA,
-<<<<<<< HEAD
          LONGITUDE_DELTA } from "../../../Consts/variables";
 import FBSDK from 'react-native-fbsdk';
+import React, { Component } from 'react';
 const {
     LoginManager,
     GraphRequest,
     GraphRequestManager,
     AccessToken
 } = FBSDK;
-class Store {
-=======
-         LONGITUDE_DELTA } from '../../../consts/variables';
-import React, { Component } from 'react';
-    class Store {
->>>>>>> 962046cb01d06d76bfacae90be76d91ad66a8c9b
 
+class Store {
     @observable appNavigator = null;
     @observable loginTokens = null;
     @observable availableTours = [];
@@ -23,14 +18,11 @@ import React, { Component } from 'react';
     @observable region = null;
     @observable currRegion = null;
     @observable position = null;
-<<<<<<< HEAD
     @observable drawer = null;
     @observable accessToken = null;
     @observable userName = null;
     @observable userPhoto = null;
-=======
     @observable isTourModalOpen = false;
->>>>>>> 962046cb01d06d76bfacae90be76d91ad66a8c9b
 
     constructor() {
         this.setAppNavigator = this.setAppNavigator.bind(this);
@@ -45,12 +37,9 @@ import React, { Component } from 'react';
         this.setCurrRegion = this.setCurrRegion.bind(this);
         this.setPosition = this.setPosition.bind(this);
         this.watchPosition = this.watchPosition.bind(this);
-<<<<<<< HEAD
         this.getUserData = this.getUserData.bind(this);
         this.loginWithFacebook = this.loginWithFacebook.bind(this);
-=======
         this.setTourModalOpen = this.setTourModalOpen.bind(this);
->>>>>>> 962046cb01d06d76bfacae90be76d91ad66a8c9b
     }
     @action loginWithFacebook() {
         LoginManager.logInWithReadPermissions(['public_profile','email']).then(
@@ -201,15 +190,11 @@ import React, { Component } from 'react';
         this.setCurrRegion(latitude,longitude,latitudeDelta,longitudeDelta);
         this.setPosition(latitude,longitude);
     }
-
-<<<<<<< HEAD
     @action setDrawer(drawer) {
         this.drawer = drawer;
-
-=======
+    }
     @action setTourModalOpen(value) {
         this.isTourModalOpen = value;
->>>>>>> 962046cb01d06d76bfacae90be76d91ad66a8c9b
     }
 
 }
