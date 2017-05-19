@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import MainMapPage from './public/src/components/MainMapPage/MainMapPage';
+import TourMapPage from './public/src/components/TourDetails/TourMapPage';
 import SplashPage from './public/src/components/Login/SplashPage';
 import LoginPage from './public/src/components/Login/LoginPage';
 import TourDetailsPage from './public/src/components/TourDetails/TourDetailsPage';
@@ -100,6 +101,14 @@ export default class travelight extends Component {
                         navigator={Store.appNavigator}
                         store={Store} />;
             }
+            if (routeId === 'TourMapPage') {
+                contentView = <TourMapPage
+                    navigator={Store.appNavigator}
+                    tour={route.tour}
+                    coords={route.coords}
+                    store={Store}
+                />;
+            }
             if (routeId === 'LoginPage') {
                 contentView = <LoginPage
                         navigator={Store.appNavigator}
@@ -108,7 +117,6 @@ export default class travelight extends Component {
             if (routeId === 'TourDetailsPage') {
                 contentView = <TourDetailsPage
                     navigator={Store.appNavigator}
-                    chosenTour={Store.chosenTour}
                     store={Store} />;
             }
             if (routeId === 'EventsPage') {

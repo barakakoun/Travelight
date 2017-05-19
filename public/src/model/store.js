@@ -1,6 +1,6 @@
 import {observable, action, computed, runInAction} from 'mobx';
 import { LATITUDE_DELTA,
-         LONGITUDE_DELTA } from '../../../consts/variables';
+         LONGITUDE_DELTA } from '../../../Consts/variables';
 import React, { Component } from 'react';
     class Store {
 
@@ -86,6 +86,54 @@ import React, { Component } from 'react';
                     latitude: 32.0633612,
                     longitude: 34.7730913
                 },
+                latDel: LATITUDE_DELTA,
+                lonDel: LONGITUDE_DELTA
+            },
+            {
+                key: 4,
+                coordinate: {
+                    latitude: 32.078801,
+                    longitude: 34.907979
+                },
+                stations: [
+                    {
+                        key:1,
+                        coordinate: {
+                            latitude: 32.078801,
+                            longitude: 34.907979}
+                    },
+                    {
+                        key:2,
+                        coordinate: {
+                            latitude: 32.077914,
+                            longitude: 34.906416}
+                    },
+                    {
+                        key:3,
+                        coordinate: {
+                            latitude: 32.076970,
+                            longitude: 34.908218}
+                    },
+                    {
+                        key:4,
+                        coordinate: {
+                            latitude: 32.075515,
+                            longitude: 34.910937}
+                    },
+                    {
+                        key:5,
+                        coordinate: {
+                            latitude: 32.074406,
+                            longitude: 34.905964}
+                    },
+                    {
+                        key:6,
+                        coordinate: {
+                            latitude: 32.076844,
+                            longitude: 34.904783
+                        }
+                    }
+                ],
                 latDel: LATITUDE_DELTA,
                 lonDel: LONGITUDE_DELTA
             }
