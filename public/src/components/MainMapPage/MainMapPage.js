@@ -267,6 +267,7 @@ class MainMapPage extends Component {
                         if (this.props.store.isTourModalOpen) {
                             this.refs.MainMapNav.refs.TourDetailsModal.closeModal();
                             this.props.store.setTourModalOpen(false);
+                            this.onModalTourDetailsClosed();
                         }
                     }}
                 >
@@ -295,7 +296,7 @@ class MainMapPage extends Component {
                 {/*</View>*/}
 
                 <TourDetailsModal ref="TourDetailsModal" goToTourDetails={this.goToTourDetails.bind(this)}
-                                  onModalTourDetailsClosed={this.onModalTourDetailsClosed.bind(this)}
+                                  onModalTourDetailsClosed={() => this.onModalTourDetailsClosed.bind(this)}
                                   store={this.props.store}
                                   chosenTour={this.props.store.chosenTour ? this.props.store.chosenTour : null} />
 
