@@ -1,8 +1,11 @@
 import {observable, action, computed, runInAction} from 'mobx';
 import { LATITUDE_DELTA,
          LONGITUDE_DELTA } from "../../../Consts/variables";
+import {LOGINUSER} from "../../../Consts/urls";
+
 import FBSDK from 'react-native-fbsdk';
 import React, { Component } from 'react';
+import massages from "../../../Consts/messages";
 const {
     LoginManager,
     GraphRequest,
@@ -21,6 +24,9 @@ class Store {
     @observable drawer = null;
     @observable accessToken = null;
     @observable userName = null;
+    @observable firstName = null;
+    @observable lastName = null;
+    @observable email = null;
     @observable userPhoto = null;
     @observable isTourModalOpen = false;
 
@@ -41,6 +47,29 @@ class Store {
         this.loginWithFacebook = this.loginWithFacebook.bind(this);
         this.setTourModalOpen = this.setTourModalOpen.bind(this);
     }
+
+     sendFacebookLoginDataToServer(){
+        fetch(LOGINUSER,{method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                firstName: this.firstName,
+                lastName: this.lastName,
+                email: this.email,
+                method: '1'
+            })}).then((response) => response.json())
+            .then((responseJson) => {
+            if(responseJson.message == massages.loginUserSucess)
+            {
+                this.navigatorReplace('MainMapPage');
+            }
+            else {
+                alert(responseJson.message);
+            }
+        })
+    }
     @action loginWithFacebook() {
         LoginManager.logInWithReadPermissions(['public_profile','email']).then(
             (result)=> {
@@ -51,7 +80,7 @@ class Store {
                         (data) => {
                             let accessToken = data.accessToken;
                             this.accessToken=accessToken;
-                            this.navigatorReplace('MainMapPage');
+                            this.getUserData();
                         });
                 }
             },
@@ -67,8 +96,12 @@ class Store {
             } else {
                 //var jresult = JSON.parse(result);
                 this.userName = result.name;
+                this.firstName = result.first_name;
+                this.lastName = result.last_name;
+                this.email = result.email;
                 var pic = result.picture.data.url;
                 this.userPhoto = pic;
+                this.sendFacebookLoginDataToServer()
             }
         }
         const infoRequest = new GraphRequest(
@@ -77,7 +110,7 @@ class Store {
                 accessToken: this.accessToken,
                 parameters: {
                     fields: {
-                        string: 'email,name,picture' // what you want to get
+                        string: 'email,first_name,last_name,name,picture' // what you want to get
                     }
                 }},
             responseInfoCallback

@@ -27,10 +27,6 @@ export default class SideNavigation extends Component {
             route: null
         }
     }
-    componentWillMount()
-    {
-        this.props.store.getUserData();
-    }
     render() {
         const { route } = this.state;
 
