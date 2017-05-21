@@ -47,7 +47,6 @@ class Store {
         this.loginWithFacebook = this.loginWithFacebook.bind(this);
         this.setTourModalOpen = this.setTourModalOpen.bind(this);
     }
-
      sendFacebookLoginDataToServer(){
         fetch(LOGINUSER,{method: 'POST',
             headers: {
@@ -68,6 +67,9 @@ class Store {
             else {
                 alert(responseJson.message);
             }
+        }).catch((error)=>{
+            //Right now if server not on just on
+            this.navigatorReplace('MainMapPage');
         })
     }
     @action loginWithFacebook() {

@@ -27,6 +27,7 @@ export default class SideNavigation extends Component {
             route: null
         }
     }
+
     render() {
         const { route } = this.state;
 
