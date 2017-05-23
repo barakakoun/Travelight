@@ -12,15 +12,11 @@ import {
 
 import { Button, SocialIcon } from 'react-native-elements'
 import { observer } from 'mobx-react/native';
-
-// import Login from 'react-native-simple-login';
 import Login from 'react-native-login';
 import logo from '../../../assets/splash.png';
 import backgroundImage from '../../../assets/loginBackground.jpg';
 import FBSDK from 'react-native-fbsdk';
-
 import  _ from 'lodash';
-
 
 const {
     LoginManager,
@@ -43,7 +39,8 @@ class LoginPage extends Component {
     constructor(props) {
         super(props);
 
-        this.renderScene.bind(this)
+        this.renderScene = this.renderScene.bind(this);
+        this.onLogin = this.onLogin.bind(this);
     }
     componentWillMount() {
         Login.tokens()
@@ -102,21 +99,27 @@ class LoginPage extends Component {
         return (
             <View style={styles.container}>
                 <Text style={{color: 'white', fontSize: 16,}}>Welcome to Travelight!</Text>
-                <SocialIcon title='Sign In With Facebook' button type='facebook' onPress={() => this.onLoginFacebook()} />
-                <SocialIcon title='Sign In With Google' button type='google-plus-official' onPress={() => this.onLogin()} />
+                <SocialIcon title='Sign In With Facebook'
+                            button type='facebook'
+                            onPress={()=>{this.props.store.loginWithFacebook();}}
+                />
+                <SocialIcon
+                    title='Sign In With Google'
+                    button type='google-plus-official'
+                    onPress={() => {this.props.store.loginWithGoogle();}}
+                />
                 {/*<SocialIcon title="test" button type='facebook'onPress={() => this.onTest()} />*/}
             </View>
         );
     }
     _responseInfoCallback(error: ?Object, result: ?Object) {
-        if (error) {
-            alert('Error fetching data: ' + JSON.stringify(error));
-        } else {
             alert('Success fetching data: ' + JSON.stringify(result));
+            if (error) {
+                alert('Error fetching data: ' + JSON.stringify(error));
+            } else {
         }
     }
-    onTest()
-    {
+    onTest() {
         const infoRequest = new GraphRequest(
             '/me',
             {
@@ -130,6 +133,7 @@ class LoginPage extends Component {
 
         new GraphRequestManager().addRequest(infoRequest).start();
     }
+
     onLoginFacebook() {
         LoginManager.logInWithReadPermissions(['public_profile','email']).then(
             function(result) {

@@ -1,9 +1,20 @@
 import {observable, action, computed, runInAction} from 'mobx';
 import { LATITUDE_DELTA,
-         LONGITUDE_DELTA } from '../../../Consts/variables';
+         LONGITUDE_DELTA,
+         FACEBOOK_LOGIN,
+         GOOGLE_LOGIN,
+         REGULAR_LOGIN,
+        } from "../../../Consts/variables";
+import FBSDK from 'react-native-fbsdk';
 import React, { Component } from 'react';
-    class Store {
+const {
+    LoginManager,
+    GraphRequest,
+    GraphRequestManager,
+    AccessToken
+} = FBSDK;
 
+class Store {
     @observable appNavigator = null;
     @observable loginTokens = null;
     @observable availableTours = [];
@@ -11,7 +22,14 @@ import React, { Component } from 'react';
     @observable region = null;
     @observable currRegion = null;
     @observable position = null;
+    @observable accessToken = null;
+    @observable userName = null;
+    @observable userPhoto = null;
     @observable isTourModalOpen = false;
+    @observable currentUser = {
+        img: "http://www.worldofbuzz.com/wp-content/uploads/2015/04/noprofilemale.gif?x82567",
+        name: "Unknown"
+    };
 
     constructor() {
         this.setAppNavigator = this.setAppNavigator.bind(this);
@@ -26,7 +44,79 @@ import React, { Component } from 'react';
         this.setCurrRegion = this.setCurrRegion.bind(this);
         this.setPosition = this.setPosition.bind(this);
         this.watchPosition = this.watchPosition.bind(this);
+        this.getUserData = this.getUserData.bind(this);
+        this.loginWithFacebook = this.loginWithFacebook.bind(this);
+        this.loginWithGoogle = this.loginWithGoogle.bind(this);
+        this.getFacebookUserData = this.getFacebookUserData.bind(this);
         this.setTourModalOpen = this.setTourModalOpen.bind(this);
+    }
+
+    @action loginWithFacebook() {
+        LoginManager.logInWithReadPermissions(['public_profile','email']).then(
+            (result)=> {
+                if (result.isCancelled) {
+                    alert('Login was cancelled');
+                } else {
+                    AccessToken.getCurrentAccessToken().then(
+                        (data) => {
+                            this.loginType = FACEBOOK_LOGIN;
+                            this.accessToken = data.accessToken;
+                            this.navigatorReplace('MainMapPage');
+                        });
+                }
+            },
+            (error)=> {
+                alert('Login failed with error: ' + error);
+            }
+        );
+    }
+
+    @action loginWithGoogle() {
+        this.loginType = GOOGLE_LOGIN;
+        this.navigatorReplace('MainMapPage');
+    }
+
+    @action getUserData() {
+        switch (this.loginType) {
+            case FACEBOOK_LOGIN:
+                this.getFacebookUserData();
+                break;
+            case GOOGLE_LOGIN:
+                this.getGoogleUserData();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @action getFacebookUserData() {
+        const responseInfoCallback = (error,result)=>{
+            if (error) {
+                alert('Error fetching data: ' + JSON.stringify(error));
+            } else {
+                //var jresult = JSON.parse(result);
+                this.userName = result.name;
+                this.userPhoto = result.picture.data.url;
+            }
+        };
+
+        const infoRequest = new GraphRequest(
+            '/me',
+            {
+                accessToken: this.accessToken,
+                parameters: {
+                    fields: {
+                        string: 'email,name,picture' // what you want to get
+                    }
+                }},
+            responseInfoCallback
+        );
+        new GraphRequestManager().addRequest(infoRequest).start();
+    }
+
+    @action getGoogleUserData() {
+        this.currentUser.img = "https://www.wired.com/wp-content/uploads/2015/09/google-logo-1200x630.jpg";
+        this.currentUser.name = "Google"
     }
 
     @action setAppNavigator(nav) {
@@ -185,7 +275,18 @@ import React, { Component } from 'react';
         this.isTourModalOpen = value;
     }
 
+    @action logOff() {
+        this.currentUser = {
+            img: "http://www.worldofbuzz.com/wp-content/uploads/2015/04/noprofilemale.gif?x82567",
+            name: "Unknown"
+        };
+        this.loginTokens = null;
+        this.accessToken = null;
+        this.navigatorReplace('Exit');
+    }
+
 }
+
 
 const store = new Store();
 export default store;

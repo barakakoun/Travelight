@@ -16,7 +16,9 @@ import { Avatar,
         TYPO,
         PRIMARY_COLORS } from 'react-native-material-design';
 import userLogo from '../../../assets/baraklogo.png'
+import { observer } from 'mobx-react/native';
 
+@observer
 export default class SideNavigation extends Component {
 
     constructor(props) {
@@ -26,15 +28,26 @@ export default class SideNavigation extends Component {
         }
     }
 
+    componentWillMount()
+    {
+        this.props.store.getUserData();
+    }
+
     render() {
         const { route } = this.state;
+        const { currentUser,
+                navigatorReplace } = this.props.store;
 
         return (
             <Drawer theme='light'>
                 <Drawer.Header backgroundColor='#4286f5' height={100}>
                     <View style={styles.header}>
-                        <Avatar size={60} image={<Image source={userLogo}/>} />
-                        <Text style={[styles.text, COLOR.paperGrey50, TYPO.paperFontSubhead]}>Kanye West</Text>
+                        <Avatar size={60}
+                                image={<Image source={{uri:currentUser.img}}/>}
+                        />
+                        <Text style={[styles.text, COLOR.paperGrey50, TYPO.paperFontSubhead]}>
+                            {currentUser.name}
+                        </Text>
                     </View>
                 </Drawer.Header>
 
@@ -76,29 +89,34 @@ export default class SideNavigation extends Component {
                 <Divider style={{ marginTop: 8 }} />
                 <Drawer.Section
                     title="Config"
-                    items={[{
-                        icon: 'settings',
-                        value: 'Settings',
-                        // label: '10',
-                        active: route === 'checkboxes',
-                        onPress: this.props.onChangeScene.bind(this, "SettingsPage"),
-                        onLongPress: this.props.onChangeScene.bind(this, "SettingsPage")
-                    }, {
-                        icon: 'import-contacts',
-                        value: 'About',
-                        // label: '10',
-                        active: route === 'dividers',
-                        onPress: this.props.onChangeScene.bind(this, "AboutPage"),
-                        onLongPress: this.props.onChangeScene.bind(this, "AboutPage")
-                    },{
-                        icon: 'exit-to-app',
-                        // value: 'Change Theme',
-                        value: 'Exit',
-                        // label: '24',
-                        active: route === 'themes',
-                        onPress: this.props.onChangeScene.bind(this, "Exit"),
-                        onLongPress: this.props.onChangeScene.bind(this, "Exit")
-                    }]}
+                    items={
+                    [
+                        {
+                            icon: 'settings',
+                            value: 'Settings',
+                            // label: '10',
+                            active: route === 'checkboxes',
+                            onPress: this.props.onChangeScene.bind(this, "SettingsPage"),
+                            onLongPress: this.props.onChangeScene.bind(this, "SettingsPage")
+                        },
+                        {
+                            icon: 'import-contacts',
+                            value: 'About',
+                            // label: '10',
+                            active: route === 'dividers',
+                            onPress: this.props.onChangeScene.bind(this, "AboutPage"),
+                            onLongPress: this.props.onChangeScene.bind(this, "AboutPage")
+                        },
+                        {
+                            icon: 'exit-to-app',
+                            // value: 'Change Theme',
+                            value: 'Logout',
+                            // label: '24',
+                            active: route === 'themes',
+                            onPress: () => navigatorReplace("Exit"),
+                            onLongPress: () => navigatorReplace("Exit")
+                        }
+                    ]}
                 />
 
             </Drawer>

@@ -44,6 +44,7 @@ export default class travelight extends Component {
         super(props);
 
         this.handleBack.bind(this);
+        this.emptyNavigator.bind(this);
     }
 
     componentDidMount() {
@@ -57,6 +58,14 @@ export default class travelight extends Component {
         }
 
         return false; //close the app
+    }
+
+    emptyNavigator() {
+        if (Store.appNavigator) {
+            while (Store.appNavigator.getCurrentRoutes().length != 0) {
+                Store.navigatorPop();
+            }
+        }
     }
 
     render() {
@@ -145,7 +154,10 @@ export default class travelight extends Component {
                     store={Store} />;
             }
             if (routeId === 'Exit') {
-                BackAndroid.exitApp();
+                contentView = <LoginPage
+                    navigator={Store.appNavigator}
+                    store={Store} />;
+
             }
 
             return contentView;

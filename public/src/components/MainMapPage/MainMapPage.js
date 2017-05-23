@@ -240,7 +240,7 @@ class MainMapPage extends Component {
         <DrawerLayoutAndroid
             drawerWidth={200}
             drawerPosition={DrawerLayoutAndroid.positions.Left}
-            renderNavigationView={() => <SideNavigation navigator={navigator} onChangeScene={this.PushToNavigator.bind(this)}/>}
+            renderNavigationView={() => <SideNavigation store={this.props.store} navigator={navigator} onChangeScene={this.PushToNavigator.bind(this)}/>}
             ref={(drawer) => { !this.state.drawer ? this.setDrawer(drawer) : null }}>
             <View style={styles.container}>
 
