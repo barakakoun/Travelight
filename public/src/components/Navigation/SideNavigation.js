@@ -36,7 +36,8 @@ export default class SideNavigation extends Component {
     render() {
         const { route } = this.state;
         const { currentUser,
-                navigatorReplace } = this.props.store;
+                navigatorReplace,
+                userFullName } = this.props.store;
 
         return (
             <Drawer theme='light'>
@@ -46,7 +47,7 @@ export default class SideNavigation extends Component {
                                 image={<Image source={{uri:currentUser.img}}/>}
                         />
                         <Text style={[styles.text, COLOR.paperGrey50, TYPO.paperFontSubhead]}>
-                            {currentUser.name}
+                            {userFullName}
                         </Text>
                     </View>
                 </Drawer.Header>

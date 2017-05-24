@@ -39,7 +39,6 @@ class LoginPage extends Component {
     constructor(props) {
         super(props);
 
-        this.renderScene = this.renderScene.bind(this);
         this.onLogin = this.onLogin.bind(this);
     }
     componentWillMount() {
@@ -61,44 +60,17 @@ class LoginPage extends Component {
     }
 
     render() {
-        const { loginTokens } = this.props.store;
         return (
-            <View style={styles.navigatorContainer}>
-                <Image source={backgroundImage} style={styles.background} />
-                <Navigator
-                renderScene={(r, n) => this.renderScene(r,n,loginTokens)}
-                navigationBar={
-            <Navigator.NavigationBar style={{backgroundColor: '#246dd5', alignItems: 'center'}}
-                routeMapper={NavigationBarRouteMapper} />
-          } />
-            </View>
-        );
-    }
-
-    renderScene(route, navigator, loginTokens) {
-
-        return loginTokens ? this.renderAppScreen(loginTokens) : this.renderLoginScreen();
-    }
-
-    renderAppScreen(loginTokens) {
-        const details = Login.decodeToken(loginTokens.id_token);
-
-        return (
-            <View style={styles.container}>
-                <View style={styles.profile}>
-                    <Text style={styles.text}>Welcome!</Text>
-                    <Text style={styles.text}>{details.name}</Text>
-                    <Text style={styles.text}>{details.email}</Text>
-                </View>
-                <Button borderRadius={30} backgroundColor="#5cb85c" title='Logout' onPress={() => this.onLogout()} />
-            </View>
+            <Navigator
+                renderScene={(r, n) => this.renderLoginScreen()}
+            />
         );
     }
 
     renderLoginScreen() {
         return (
-            <View style={styles.container}>
-                <Text style={{color: 'white', fontSize: 16,}}>Welcome to Travelight!</Text>
+        <Image source={backgroundImage} style={styles.background}>
+                <Text style={{color: 'white', fontSize: 40,}}>Welcome to Travelight!</Text>
                 <SocialIcon title='Sign In With Facebook'
                             button type='facebook'
                             onPress={()=>{this.props.store.loginWithFacebook();}}
@@ -108,78 +80,22 @@ class LoginPage extends Component {
                     button type='google-plus-official'
                     onPress={() => {this.props.store.loginWithGoogle();}}
                 />
+
                 {/*<SocialIcon title="test" button type='facebook'onPress={() => this.onTest()} />*/}
-            </View>
+        </Image>
         );
     }
-    _responseInfoCallback(error: ?Object, result: ?Object) {
-            alert('Success fetching data: ' + JSON.stringify(result));
-            if (error) {
-                alert('Error fetching data: ' + JSON.stringify(error));
-            } else {
-        }
-    }
-    onTest() {
-        const infoRequest = new GraphRequest(
-            '/me',
-            {
-                parameters: {
-                    fields: {
-                        string: 'email,name,first_name,last_name' // what you want to get
-                    }
-                   }},
-                    this._responseInfoCallback
-        );
 
-        new GraphRequestManager().addRequest(infoRequest).start();
-    }
 
-    onLoginFacebook() {
-        LoginManager.logInWithReadPermissions(['public_profile','email']).then(
-            function(result) {
-                if (result.isCancelled) {
-                    alert('Login was cancelled');
-                } else {
-                    this.props.store.navigatorReplace('MainMapPage');
-
-                }
-            },
-            function(error) {
-                alert('Login failed with error: ' + error);
-            }
-        );
-    }
 }
-const NavigationBarRouteMapper = {
-    LeftButton(route, navigator, index, navState) {
-        return null;
-    },
-    RightButton(route, navigator, index, navState) {
-        return null;
-    },
-    Title(route, navigator, index, navState) {
-        return (
-            <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
-                <Text style={{color: 'white', margin: 10, fontSize: 16}}>
-                    מסך התחברות
-                </Text>
-            </TouchableOpacity>
-        );
-    }
-};
 
 const styles = StyleSheet.create({
-    profile: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
     text: {
         fontSize: 16,
     },
     container: {
         flex: 1,
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
         margin: 32,
     },
     // imageContainer: {
@@ -189,11 +105,11 @@ const styles = StyleSheet.create({
     //     height: null,
     // },
     background: {
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        width: 390,
-        height: 600
+        flex: 1,
+        justifyContent: 'center',
+        // remove width and height to override fixed static size
+        width: null,
+        height: null,
     },
     navigatorContainer: {
         flex: 1,

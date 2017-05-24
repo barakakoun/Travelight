@@ -125,11 +125,12 @@ class Store {
             if (error) {
                 alert('Error fetching data: ' + JSON.stringify(error));
             } else {
+                this.currentUser = result.map(this.mapFacebookDataToUser);
                 //var jresult = JSON.parse(result);
-                this.userPhoto = result.picture.data.url;
-                this.firstName = result.first_name;
-                this.lastName = result.last_name;
-                this.email = result.email;
+                // this.userPhoto = result.picture.data.url;
+                // this.firstName = result.first_name;
+                // this.lastName = result.last_name;
+                // this.email = result.email;
                 this.sendFacebookLoginDataToServer()
             }
         };
@@ -148,9 +149,24 @@ class Store {
         new GraphRequestManager().addRequest(infoRequest).start();
     }
 
+    mapFacebookDataToUser(fbUser) {
+        return ({
+            img: fbUser.data.url,
+            firstName: fbUser.first_name,
+            lastName: result.last_name,
+            email: result.email,
+        });
+    }
+
+    @computed get userFullName() {
+        return this.currentUser.firstName + " " + this.currentUser.lastName;
+    }
+
     @action getGoogleUserData() {
         this.currentUser.img = "https://www.wired.com/wp-content/uploads/2015/09/google-logo-1200x630.jpg";
-        this.currentUser.name = "Google"
+        this.currentUser.firstName = "Google";
+        this.currentUser.lastName = "Google";
+        this.currentUser.email = "gal@google.com";
     }
 
     @action setAppNavigator(nav) {
@@ -174,10 +190,12 @@ class Store {
     }
 
     @action navigatorOpenDrawer(screenId, configureScene) {
+        console.warn(this.appNavigator.getCurrentRoutes().length);
         this.appNavigator.push({
             id: screenId,
             configureScene: configureScene
         });
+        console.warn(this.appNavigator.getCurrentRoutes().length);
     }
 
     @action navigatorPop() {

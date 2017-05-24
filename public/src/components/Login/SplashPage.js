@@ -23,7 +23,7 @@ class SplashPage extends Component {
         return (
             <View style={{flex: 1, backgroundColor: '#246dd5', alignItems: 'center', justifyContent: 'center'}}>
                 <Image source={logo} />
-                <Text style={{color: 'white', fontSize: 32,}}>TRAVELIGHT!!</Text>
+                {/*<Text style={{color: 'white', fontSize: 32,}}>TRAVELIGHT!!</Text> */}
             </View>
         );
     }

@@ -22,19 +22,22 @@ class UserPage extends Component {
             drawer: null
         };
     }
+
     onOpenBurger(e) {
         this.state.drawer.openDrawer();
     }
+
     setDrawer = (drawer) => {
         this.setState({
             drawer
         });
     };
+
     PushToNavigator(id) {
         this.props.store.navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft);
     }
+
     render() {
-        //const {appNavigator} = this.props.store;
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}
@@ -44,12 +47,13 @@ class UserPage extends Component {
     }
 
     renderScene(route, navigator) {
+        const { currentUser } = this.props.store;
         return (
             <DrawerLayoutAndroid
                 drawerWidth={200}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 renderNavigationView={() => <SideNavigation store={this.props.store} navigator={navigator}
-             onChangeScene={this.PushToNavigator.bind(this)}/>}
+                                                            onChangeScene={this.PushToNavigator.bind(this)}/>}
                 ref={(drawer) => { !this.state.drawer ? this.setDrawer(drawer) : null }}>
                 <View style={styles.container}>
 
@@ -58,12 +62,12 @@ class UserPage extends Component {
                                  icon="menu"
                                  onIconPress={this.onOpenBurger.bind(this)}/>
                     <View style={styles.userphoto}>
-                    <Avatar size={60} image={<Image source={{uri:this.props.store.userPhoto}}/>} />
+                        <Avatar size={60} image={<Image source={{uri:currentUser.img}}/>} />
                     </View>
                     <View style={styles.userform}>
-                    <Text style={{color: 'white', fontSize: 24,}}> First Name : {this.props.store.firstName}</Text>
-                    <Text style={{color: 'white', fontSize: 24,}}> Last Name : {this.props.store.lastName}</Text>
-                    <Text style={{color: 'white', fontSize: 24,}}> Email : {this.props.store.email}</Text>
+                        <Text style={{color: 'white', fontSize: 24,}}> First Name : {currentUser.firstName}</Text>
+                        <Text style={{color: 'white', fontSize: 24,}}> Last Name : {currentUser.lastName}</Text>
+                        <Text style={{color: 'white', fontSize: 24,}}> Email : {currentUser.email}</Text>
                     </View>
 
                 </View>
@@ -72,39 +76,28 @@ class UserPage extends Component {
         );
     }
 }
-const NavigationBarRouteMapper = {
-    LeftButton(route, navigator, index, navState) {
-        return null;
-    },
-    RightButton(route, navigator, index, navState) {
-        return null;
-    },
-    Title(route, navigator, index, navState) {
-        return (
-            <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
-                <Text style={{color: 'white', margin: 10, fontSize: 16}}>
-                    title
-                </Text>
-            </TouchableOpacity>
-        );
-    }
-};
-
 
 const styles = StyleSheet.create({
     text: {
         fontSize: 16,
     },
     container: {
-        flex: 1,justifyContent:'center',
-
+        flex: 1,
+        justifyContent:'center',
     },
     toolbar: {
         backgroundColor: '#e9eaed',
         height: 56,
     },
-    userphoto:{alignItems: 'center',},
-    userform:{flexDirection: 'column',}
+    userphoto: {
+        flex: 1,
+        justifyContent:'flex-start',
+        },
+    userform: {
+        flex: 1,
+        justifyContent:'center',
+        flexDirection: 'column',
+    }
 });
 
 
