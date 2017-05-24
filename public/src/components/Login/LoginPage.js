@@ -71,6 +71,7 @@ class LoginPage extends Component {
         return (
         <Image source={backgroundImage} style={styles.background}>
                 <Text style={{color: 'white', fontSize: 40,}}>Welcome to Travelight!</Text>
+
                 <SocialIcon title='Sign In With Facebook'
                             button type='facebook'
                             onPress={()=>{this.props.store.loginWithFacebook();}}

@@ -10,6 +10,8 @@ export const LATITUDE = 32.080523;
 export const LONGITUDE = 34.780852;
 export const LATITUDE_DELTA = 0.0922;
 export const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+export const STATION_LATITUDE_DELTA = 0.004757;
+export const STATION_LONGITUDE_DELTA = 0.006866;
 
 //Login
 export const FACEBOOK_LOGIN = "Facebook";

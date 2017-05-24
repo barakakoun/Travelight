@@ -200,9 +200,27 @@ class TourMapPage extends Component {
         navigator.geolocation.clearWatch(this.watchID);
     }
 
-
-
     render() {
+        const {onTourPress} = this.props.store;
+        const NavigationBarRouteMapper = {
+            LeftButton(route, navigator, index, navState) {
+                return (
+                    <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
+                                      onPress={() => {navigator.parentNavigator.pop();
+                                                      onTourPress(null);}}>
+                        <Text style={{color: 'white', margin: 10,}}>
+                            left button
+                        </Text>
+                    </TouchableOpacity>
+                );
+            },
+            RightButton(route, navigator, index, navState) {
+                return null;
+            },
+            Title(route, navigator, index, navState) {
+                return null;
+            }
+        };
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}
@@ -237,7 +255,9 @@ class TourMapPage extends Component {
             }
         };
 
-        const { currRegion } = this.props.store;
+        const { currRegion,
+                chosenTour,
+                startTourPosition } = this.props.store;
 
         return (
             <View style={styles.container}>
@@ -258,7 +278,7 @@ class TourMapPage extends Component {
                 <MapView
                     provider={this.props.provider}
                     style={styles.map}
-                    initialRegion={currRegion}
+                    initialRegion={startTourPosition}
                     toolbarEnabled={false}
                     showsUserLocation={true}
                     showsMyLocationButton={true}
@@ -270,7 +290,7 @@ class TourMapPage extends Component {
                         strokeWidth={1}
                     />
 
-                    {this.props.store.chosenTour.stations.map(currStation => (
+                    {chosenTour.stations.map(currStation => (
                         <MapView.Marker
                             key={currStation.key}
                             coordinate={currStation.coordinate}
@@ -283,30 +303,7 @@ class TourMapPage extends Component {
     }
 }
 
-var NavigationBarRouteMapper = {
-    LeftButton(route, navigator, index, navState) {
-        return (
-            <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-                              onPress={() => navigator.parentNavigator.pop()}>
-                <Text style={{color: 'white', margin: 10,}}>
-                    left button
-                </Text>
-            </TouchableOpacity>
-        );
-    },
-    RightButton(route, navigator, index, navState) {
-        return null;
-    },
-    Title(route, navigator, index, navState) {
-        return (
-            <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
-                <Text style={{color: 'white', margin: 10, fontSize: 16}}>
-                    Travelight
-                </Text>
-            </TouchableOpacity>
-        );
-    }
-};
+
 
 
 TourMapPage.propTypes = {

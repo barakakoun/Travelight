@@ -4,6 +4,8 @@ import { LATITUDE_DELTA,
          FACEBOOK_LOGIN,
          GOOGLE_LOGIN,
          REGULAR_LOGIN,
+         STATION_LONGITUDE_DELTA,
+         STATION_LATITUDE_DELTA,
         } from "../../../Consts/variables";
 import {LOGINUSER} from "../../../Consts/urls";
 import FBSDK from 'react-native-fbsdk';
@@ -68,7 +70,7 @@ class Store {
                 method: '1'
             })}).then((response) => response.json())
             .then((responseJson) => {
-            if(responseJson.message == massages.loginUserSucess)
+            if(responseJson.message === massages.loginUserSucess)
             {
                 this.navigatorReplace('MainMapPage');
             }
@@ -190,12 +192,10 @@ class Store {
     }
 
     @action navigatorOpenDrawer(screenId, configureScene) {
-        console.warn(this.appNavigator.getCurrentRoutes().length);
         this.appNavigator.push({
             id: screenId,
             configureScene: configureScene
         });
-        console.warn(this.appNavigator.getCurrentRoutes().length);
     }
 
     @action navigatorPop() {
@@ -335,6 +335,19 @@ class Store {
         this.loginTokens = null;
         this.accessToken = null;
         this.navigatorReplace('Exit');
+    }
+
+    @computed get startTourPosition() {
+         if(this.chosenTour) {
+             return {
+                 latitude: this.chosenTour.stations[0].coordinate.latitude,
+                 longitude: this.chosenTour.stations[0].coordinate.longitude,
+                 latitudeDelta: STATION_LATITUDE_DELTA,
+                 longitudeDelta: STATION_LONGITUDE_DELTA
+             }
+         }
+
+         return null;
     }
 
 }

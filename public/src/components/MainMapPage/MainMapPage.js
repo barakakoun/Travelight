@@ -21,8 +21,8 @@ import MapView from 'react-native-maps';
 import TourDetailsModal from '../TourDetails/TourDetailsModal';
 import { Toolbar as MaterialToolbar, Icon } from 'react-native-material-design';
 import SideNavigation from '../Navigation/SideNavigation';
-import {observer} from 'mobx-react/native';
-
+import { observer } from 'mobx-react/native';
+import _ from 'lodash';
 
 const nativeImageSource = require('nativeImageSource');
 
@@ -189,7 +189,7 @@ class MainMapPage extends Component {
             });
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.getLocation();
         this.props.store.getAvailableTours();
     }

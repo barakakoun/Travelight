@@ -48,12 +48,17 @@ class UserPage extends Component {
 
     renderScene(route, navigator) {
         const { currentUser } = this.props.store;
+        const { navigatorOpenDrawer } = this.props.store;
+
         return (
             <DrawerLayoutAndroid
                 drawerWidth={200}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
-                renderNavigationView={() => <SideNavigation store={this.props.store} navigator={navigator}
-                                                            onChangeScene={this.PushToNavigator.bind(this)}/>}
+                enderNavigationView={() => <SideNavigation
+                    store={this.props.store}
+                    navigator={navigator}
+                    onChangeScene={(id) => {navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft)}}
+                />}
                 ref={(drawer) => { !this.state.drawer ? this.setDrawer(drawer) : null }}>
                 <View style={styles.container}>
 
