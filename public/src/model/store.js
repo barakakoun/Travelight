@@ -5,8 +5,10 @@ import { LATITUDE_DELTA,
          GOOGLE_LOGIN,
          REGULAR_LOGIN,
         } from "../../../Consts/variables";
+import {LOGINUSER} from "../../../Consts/urls";
 import FBSDK from 'react-native-fbsdk';
 import React, { Component } from 'react';
+import massages from "../../../Consts/messages";
 const {
     LoginManager,
     GraphRequest,
@@ -24,6 +26,9 @@ class Store {
     @observable position = null;
     @observable accessToken = null;
     @observable userName = null;
+    @observable firstName = null;
+    @observable lastName = null;
+    @observable email = null;
     @observable userPhoto = null;
     @observable isTourModalOpen = false;
     @observable currentUser = {
@@ -50,6 +55,31 @@ class Store {
         this.getFacebookUserData = this.getFacebookUserData.bind(this);
         this.setTourModalOpen = this.setTourModalOpen.bind(this);
     }
+     sendFacebookLoginDataToServer(){
+        fetch(LOGINUSER,{method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                firstName: this.firstName,
+                lastName: this.lastName,
+                email: this.email,
+                method: '1'
+            })}).then((response) => response.json())
+            .then((responseJson) => {
+            if(responseJson.message == massages.loginUserSucess)
+            {
+                this.navigatorReplace('MainMapPage');
+            }
+            else {
+                alert(responseJson.message);
+            }
+        }).catch((error)=>{
+            //Right now if server not on just on
+            this.navigatorReplace('MainMapPage');
+        })
+    }
 
     @action loginWithFacebook() {
         LoginManager.logInWithReadPermissions(['public_profile','email']).then(
@@ -62,6 +92,7 @@ class Store {
                             this.loginType = FACEBOOK_LOGIN;
                             this.accessToken = data.accessToken;
                             this.navigatorReplace('MainMapPage');
+                            // this.getUserData();
                         });
                 }
             },
@@ -95,8 +126,11 @@ class Store {
                 alert('Error fetching data: ' + JSON.stringify(error));
             } else {
                 //var jresult = JSON.parse(result);
-                this.userName = result.name;
                 this.userPhoto = result.picture.data.url;
+                this.firstName = result.first_name;
+                this.lastName = result.last_name;
+                this.email = result.email;
+                this.sendFacebookLoginDataToServer()
             }
         };
 
@@ -106,7 +140,7 @@ class Store {
                 accessToken: this.accessToken,
                 parameters: {
                     fields: {
-                        string: 'email,name,picture' // what you want to get
+                        string: 'email,first_name,last_name,name,picture' // what you want to get
                     }
                 }},
             responseInfoCallback
@@ -286,7 +320,6 @@ class Store {
     }
 
 }
-
 
 const store = new Store();
 export default store;

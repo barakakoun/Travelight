@@ -3,37 +3,62 @@ import React, { Component } from 'react';
 import {
     View,
     Text,
+    Image,
     Navigator,
     StyleSheet,
     TouchableOpacity,
     BackAndroid,
+    DrawerLayoutAndroid,
 } from 'react-native';
+import { Toolbar as MaterialToolbar, Icon,Avatar } from 'react-native-material-design';
+import SideNavigation from '../Navigation/SideNavigation';
 import {observer} from 'mobx-react/native';
 
 @observer
 class EventsPage extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            drawer: null
+        };
     }
-
+    onOpenBurger(e) {
+        this.state.drawer.openDrawer();
+    }
+    setDrawer = (drawer) => {
+        this.setState({
+            drawer
+        });
+    };
+    PushToNavigator(id) {
+        this.props.store.navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft);
+    }
     render() {
         //const {appNavigator} = this.props.store;
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}
-                navigator={this.props.navigator}
-                navigationBar={
-                    <Navigator.NavigationBar style={{backgroundColor: '#246dd5'}}
-                                             routeMapper={NavigationBarRouteMapper} />
-                } />
+                navigator={this.props.store.appNavigator}
+                ref="EventPage"/>
         );
     }
 
     renderScene(route, navigator) {
         return (
+            <DrawerLayoutAndroid
+                drawerWidth={200}
+                drawerPosition={DrawerLayoutAndroid.positions.Left}
+                renderNavigationView={() => <SideNavigation store={this.props.store} navigator={navigator}
+             onChangeScene={this.PushToNavigator.bind(this)}/>}
+                ref={(drawer) => { !this.state.drawer ? this.setDrawer(drawer) : null }}>
             <View  style={styles.container}>
+                <MaterialToolbar title={'User Page'}
+                                 primary={'googleBlue'}
+                                 icon="menu"
+                                 onIconPress={this.onOpenBurger.bind(this)}/>
                 <Text style={{color: 'white', fontSize: 32,}}>Events Page</Text>
             </View>
+            </DrawerLayoutAndroid>
         );
     }
 }
@@ -70,7 +95,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-end',
-        margin: 32,
+    },
+    toolbar: {
+        backgroundColor: '#e9eaed',
+        height: 56,
     },
 });
 

@@ -232,7 +232,7 @@ class MainMapPage extends Component {
 
         let navigationView = (
             <View style={{flex: 1, backgroundColor: '#fff'}}>
-                <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}>I'm in the Drawer!</Text>
+                <Text style={{margin: 10, fontSize: 15, textAlign: 'left'}}> I'm in the Drawer!</Text>
             </View>
         );
 
@@ -240,7 +240,8 @@ class MainMapPage extends Component {
         <DrawerLayoutAndroid
             drawerWidth={200}
             drawerPosition={DrawerLayoutAndroid.positions.Left}
-            renderNavigationView={() => <SideNavigation store={this.props.store} navigator={navigator} onChangeScene={this.PushToNavigator.bind(this)}/>}
+            renderNavigationView={() => <SideNavigation store={this.props.store}
+            navigator={navigator} onChangeScene={this.PushToNavigator.bind(this)}/>}
             ref={(drawer) => { !this.state.drawer ? this.setDrawer(drawer) : null }}>
             <View style={styles.container}>
 
