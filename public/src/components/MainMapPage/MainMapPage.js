@@ -16,6 +16,7 @@ import {
     DrawerLayoutAndroid,
     Alert,
     Button,
+    BackAndroid,
 } from 'react-native';
 import MapView from 'react-native-maps';
 import TourDetailsModal from '../TourDetails/TourDetailsModal';
@@ -63,6 +64,31 @@ class MainMapPage extends Component {
         //         this.props.store.setTourModalOpen(true);
         //     }
         // }, 500);
+    }
+
+    openDrawer() {
+        this.setState({
+            drawerOpen: true
+        });
+        console.log("drawer listener added");
+        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+    }
+
+    closeDrawer() {
+        this.setState({
+            drawerOpen: false
+        });
+        console.log("drawer listener removed");
+        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+    }
+
+    _handleBackPressInDrawer() {
+        if (this.state.drawerOpen) {
+            this.closeDrawer();
+            this.state.drawer.closeDrawer();
+            return true;
+        }
+        return false;
     }
 
     onOpenBurger(e) {
@@ -238,6 +264,8 @@ class MainMapPage extends Component {
 
         return (
         <DrawerLayoutAndroid
+            onDrawerOpen={this.openDrawer.bind(this)}
+            onDrawerClose={this.closeDrawer.bind(this)}
             drawerWidth={200}
             drawerPosition={DrawerLayoutAndroid.positions.Left}
             renderNavigationView={() => <SideNavigation store={this.props.store}

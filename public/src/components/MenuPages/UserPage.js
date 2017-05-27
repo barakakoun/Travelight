@@ -22,7 +22,30 @@ class UserPage extends Component {
             drawer: null
         };
     }
+    openDrawer() {
+        this.setState({
+            drawerOpen: true
+        });
+        console.log("drawer listener added");
+        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+    }
 
+    closeDrawer() {
+        this.setState({
+            drawerOpen: false
+        });
+        console.log("drawer listener removed");
+        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+    }
+
+    _handleBackPressInDrawer() {
+        if (this.state.drawerOpen) {
+            this.closeDrawer();
+            this.state.drawer.closeDrawer();
+            return true;
+        }
+        return false;
+    }
     onOpenBurger(e) {
         this.state.drawer.openDrawer();
     }
@@ -52,6 +75,8 @@ class UserPage extends Component {
 
         return (
             <DrawerLayoutAndroid
+                onDrawerOpen={this.openDrawer.bind(this)}
+                onDrawerClose={this.closeDrawer.bind(this)}
                 drawerWidth={200}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
                 enderNavigationView={() => <SideNavigation
