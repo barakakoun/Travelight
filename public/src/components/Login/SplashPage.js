@@ -14,8 +14,16 @@ import logo from '../../../assets/splash.png';
 class SplashPage extends Component {
     componentWillMount() {
         const { navigatorReplace } = this.props.store;
+        this.props.store.getUserFromStorage();
         setTimeout(() => {
+            if(this.props.store.accessToken)
+            {
+                navigatorReplace('MainMapPage')
+            }
+            else
+            {
             navigatorReplace('LoginPage');
+                }
         }, 1000);
     }
     render() {

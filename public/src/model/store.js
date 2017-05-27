@@ -10,6 +10,7 @@ import { LATITUDE_DELTA,
 import {LOGINUSER} from "../../../Consts/urls";
 import FBSDK from 'react-native-fbsdk';
 import React, { Component } from 'react';
+import {AsyncStorage} from 'react-native';
 import massages from "../../../Consts/messages";
 const {
     LoginManager,
@@ -56,6 +57,8 @@ class Store {
         this.loginWithGoogle = this.loginWithGoogle.bind(this);
         this.getFacebookUserData = this.getFacebookUserData.bind(this);
         this.setTourModalOpen = this.setTourModalOpen.bind(this);
+        this.getUserFromStorage = this.getUserFromStorage.bind(this);
+        this.mapFacebookDataToUser.bind(this);
     }
      sendFacebookLoginDataToServer(){
         fetch(LOGINUSER,{method: 'POST',
@@ -72,14 +75,25 @@ class Store {
             .then((responseJson) => {
             if(responseJson.message === massages.loginUserSucess)
             {
-                this.navigatorReplace('MainMapPage');
+                //this.navigatorReplace('MainMapPage');
             }
             else {
                 alert(responseJson.message);
             }
         }).catch((error)=>{
             //Right now if server not on just on
-            this.navigatorReplace('MainMapPage');
+            //this.navigatorReplace('MainMapPage');
+        })
+    }
+    @action getUserFromStorage()
+    {
+        AsyncStorage.multiGet(['token','user']).then((data)=>{
+            console.warn(data[0][1]);
+            if(data[0][1])
+            {
+                this.accessToken = data[0][1];
+                this.currentUser = data[1][1];
+            }
         })
     }
 
@@ -94,7 +108,7 @@ class Store {
                             this.loginType = FACEBOOK_LOGIN;
                             this.accessToken = data.accessToken;
                             this.navigatorReplace('MainMapPage');
-                            // this.getUserData();
+                             //this.getUserData();
                         });
                 }
             },
@@ -127,12 +141,14 @@ class Store {
             if (error) {
                 alert('Error fetching data: ' + JSON.stringify(error));
             } else {
-                this.currentUser = result.map(this.mapFacebookDataToUser);
+                //this.currentUser = result.map((result)=>this.mapFacebookDataToUser)
+                this.currentUser = this.mapFacebookDataToUser(result);
                 //var jresult = JSON.parse(result);
                 // this.userPhoto = result.picture.data.url;
                 // this.firstName = result.first_name;
                 // this.lastName = result.last_name;
                 // this.email = result.email;
+                AsyncStorage.multiSet([['token',this.accessToken],['user',this.currentUser]]);
                 this.sendFacebookLoginDataToServer()
             }
         };
@@ -153,10 +169,10 @@ class Store {
 
     mapFacebookDataToUser(fbUser) {
         return ({
-            img: fbUser.data.url,
+            img: fbUser.picture.data.url,
             firstName: fbUser.first_name,
-            lastName: result.last_name,
-            email: result.email,
+            lastName: fbUser.last_name,
+            email: fbUser.email,
         });
     }
 
