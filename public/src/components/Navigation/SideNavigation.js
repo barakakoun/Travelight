@@ -33,11 +33,19 @@ export default class SideNavigation extends Component {
         this.props.store.getUserData();
     }
 
+    logout(){
+        const { currentUser,
+            navigatorReplace,
+            userFullName,removeUserFromStorage } = this.props.store;
+
+        removeUserFromStorage();
+        navigatorReplace('Exit');
+    }
     render() {
         const { route } = this.state;
         const { currentUser,
                 navigatorReplace,
-                userFullName } = this.props.store;
+                userFullName,removeUserFromStorage } = this.props.store;
 
         return (
             <Drawer theme='light'>
@@ -114,7 +122,7 @@ export default class SideNavigation extends Component {
                             value: 'Logout',
                             // label: '24',
                             active: route === 'themes',
-                            onPress: () => navigatorReplace("Exit"),
+                            onPress: () => this.logout(),
                             onLongPress: () => navigatorReplace("Exit")
                         }
                     ]}

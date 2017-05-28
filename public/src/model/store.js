@@ -59,6 +59,7 @@ class Store {
         this.setTourModalOpen = this.setTourModalOpen.bind(this);
         this.getUserFromStorage = this.getUserFromStorage.bind(this);
         this.mapFacebookDataToUser.bind(this);
+        this.removeUserFromStorage = this.removeUserFromStorage.bind(this);
     }
      sendFacebookLoginDataToServer(){
         fetch(LOGINUSER,{method: 'POST',
@@ -87,14 +88,28 @@ class Store {
     }
     @action getUserFromStorage()
     {
-        AsyncStorage.multiGet(['token','user']).then((data)=>{
-            console.warn(data[0][1]);
-            if(data[0][1])
+    //     AsyncStorage.multiGet(['token','firstName','lastName','email']).then((data)=>{
+    //     console.warn(data[0][1]);
+    //     if(data[0][1])
+    //     {
+    //         this.accessToken = data[0][1];
+    //         this.currentUser.firstName = data[1][1];
+    //     }
+    // })
+        AsyncStorage.getItem('token').then((value) => {
+            if(value)
             {
-                this.accessToken = data[0][1];
-                this.currentUser = data[1][1];
+                this.accessToken = value;
+                this.loginType = FACEBOOK_LOGIN;
             }
-        })
+    });
+    }
+
+
+    @action removeUserFromStorage()
+    {
+        // AsyncStorage.multiRemove(['token','firstName','lastName','email']);
+        AsyncStorage.removeItem('token');
     }
 
     @action loginWithFacebook() {
@@ -148,7 +163,14 @@ class Store {
                 // this.firstName = result.first_name;
                 // this.lastName = result.last_name;
                 // this.email = result.email;
-                AsyncStorage.multiSet([['token',this.accessToken],['user',this.currentUser]]);
+                // AsyncStorage.multiSet([['token',this.accessToken],['firstName',this.currentUser.firstName],
+                // ['lastname',this.currentUser.lastName],['email',this.currentUser.email]],(err)=>{
+                //     if (err)
+                //     {
+                //         console.warn('something not right');
+                //     }
+                // });
+                AsyncStorage.setItem('token', this.accessToken);
                 this.sendFacebookLoginDataToServer()
             }
         };
