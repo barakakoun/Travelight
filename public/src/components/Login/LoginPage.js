@@ -81,6 +81,9 @@ class LoginPage extends Component {
                     button type='google-plus-official'
                     onPress={() => {this.props.store.loginWithGoogle();}}
                 />
+                <Text style={{fontSize: 20, justifyContent: 'center', color:'white'}} onPress={() => {console.warn('guest');}}>
+                    enter as guest
+                </Text>
 
                 {/*<SocialIcon title="test" button type='facebook'onPress={() => this.onTest()} />*/}
         </Image>

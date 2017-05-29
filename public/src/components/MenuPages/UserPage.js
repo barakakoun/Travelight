@@ -79,7 +79,7 @@ class UserPage extends Component {
                 onDrawerClose={this.closeDrawer.bind(this)}
                 drawerWidth={200}
                 drawerPosition={DrawerLayoutAndroid.positions.Left}
-                enderNavigationView={() => <SideNavigation
+                renderNavigationView={() => <SideNavigation
                     store={this.props.store}
                     navigator={navigator}
                     onChangeScene={(id) => {navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft)}}

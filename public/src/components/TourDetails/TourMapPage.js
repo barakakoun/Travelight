@@ -198,6 +198,7 @@ class TourMapPage extends Component {
 
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchID);
+        this.props.store.onTourPress(null);
     }
 
     render() {

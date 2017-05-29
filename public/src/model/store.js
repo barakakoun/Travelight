@@ -98,21 +98,23 @@ class Store {
     }
 
     @action loginWithFacebook() {
-        LoginManager.logInWithReadPermissions(['public_profile','email']).then(
-            (result)=> {
+        LoginManager.logInWithReadPermissions(['public_profile','email'])
+            .then(result => {
+                console.warn("here");
                 if (result.isCancelled) {
                     alert('Login was cancelled');
                 } else {
                     AccessToken.getCurrentAccessToken().then(
                         (data) => {
+                            console.warn(_.values(data));
                             this.loginType = FACEBOOK_LOGIN;
                             this.accessToken = data.accessToken;
                             this.navigatorReplace('MainMapPage');
                              //this.getUserData();
                         });
                 }
-            },
-            (error)=> {
+            })
+            .catch(error => {
                 alert('Login failed with error: ' + error);
             }
         );
@@ -142,7 +144,12 @@ class Store {
                 alert('Error fetching data: ' + JSON.stringify(error));
             } else {
                 //this.currentUser = result.map((result)=>this.mapFacebookDataToUser)
-                this.currentUser = this.mapFacebookDataToUser(result);
+                this.currentUser = {
+                    img: result.picture.data.url,
+                    firstName : result.first_name,
+                    lastName: result.last_name,
+                    email: result.email,
+                };
                 //var jresult = JSON.parse(result);
                 // this.userPhoto = result.picture.data.url;
                 // this.firstName = result.first_name;
