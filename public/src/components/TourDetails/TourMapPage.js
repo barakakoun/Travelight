@@ -161,7 +161,7 @@ class TourMapPage extends Component {
                 //     }
                 // })
             },
-            (error) => alert('Error: Are location services on?'),
+            (error) => {},
             {enableHighAccuracy: true}
         );
 
@@ -209,9 +209,7 @@ class TourMapPage extends Component {
                     <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
                                       onPress={() => {navigator.parentNavigator.pop();
                                                       onTourPress(null);}}>
-                        <Text style={{color: 'white', margin: 10,}}>
-                            left button
-                        </Text>
+                        <Icon name="keyboard-backspace" style={{color: 'white', margin: 10,}} />
                     </TouchableOpacity>
                 );
             },
@@ -258,7 +256,170 @@ class TourMapPage extends Component {
 
         const { currRegion,
                 chosenTour,
-                startTourPosition } = this.props.store;
+                startTourPosition,
+                tourStations } = this.props.store;
+
+        const mapNight = [
+            {
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "color": "#242f3e"
+                    }
+                ]
+            },
+            {
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#746855"
+                    }
+                ]
+            },
+            {
+                "elementType": "labels.text.stroke",
+                "stylers": [
+                    {
+                        "color": "#242f3e"
+                    }
+                ]
+            },
+            {
+                "featureType": "administrative.locality",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#d59563"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#d59563"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.park",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "color": "#263c3f"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.park",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#6b9a76"
+                    }
+                ]
+            },
+            {
+                "featureType": "road",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "color": "#38414e"
+                    }
+                ]
+            },
+            {
+                "featureType": "road",
+                "elementType": "geometry.stroke",
+                "stylers": [
+                    {
+                        "color": "#212a37"
+                    }
+                ]
+            },
+            {
+                "featureType": "road",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#9ca5b3"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.highway",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "color": "#746855"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.highway",
+                "elementType": "geometry.stroke",
+                "stylers": [
+                    {
+                        "color": "#1f2835"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.highway",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#f3d19c"
+                    }
+                ]
+            },
+            {
+                "featureType": "transit",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "color": "#2f3948"
+                    }
+                ]
+            },
+            {
+                "featureType": "transit.station",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#d59563"
+                    }
+                ]
+            },
+            {
+                "featureType": "water",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "color": "#17263c"
+                    }
+                ]
+            },
+            {
+                "featureType": "water",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#515c6d"
+                    }
+                ]
+            },
+            {
+                "featureType": "water",
+                "elementType": "labels.text.stroke",
+                "stylers": [
+                    {
+                        "color": "#17263c"
+                    }
+                ]
+            }
+        ];
 
         return (
             <View style={styles.container}>
@@ -280,6 +441,7 @@ class TourMapPage extends Component {
                     provider={this.props.provider}
                     style={styles.map}
                     initialRegion={startTourPosition}
+                    customMapStyle={new Date().getHours() >= 17 || new Date().getHours() <= 8  ? mapNight : null}
                     toolbarEnabled={false}
                     showsUserLocation={true}
                     showsMyLocationButton={true}
@@ -288,10 +450,12 @@ class TourMapPage extends Component {
 
                     <MapView.Polyline
                         coordinates={this.props.coords}
-                        strokeWidth={1}
+                        strokeWidth={3}
+                        strokeColor="#74a4f2"
+                        geodesic={false}
                     />
 
-                    {chosenTour.stations.map(currStation => (
+                    {tourStations.map(currStation => (
                         <MapView.Marker
                             key={currStation.key}
                             coordinate={currStation.coordinate}
@@ -303,9 +467,6 @@ class TourMapPage extends Component {
         );
     }
 }
-
-
-
 
 TourMapPage.propTypes = {
     provider: MapView.ProviderPropType,
@@ -353,5 +514,7 @@ const styles = StyleSheet.create({
         height: 56,
     },
 });
+
+
 
 module.exports = TourMapPage;

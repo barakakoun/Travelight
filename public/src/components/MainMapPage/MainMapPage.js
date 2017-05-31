@@ -98,20 +98,19 @@ class MainMapPage extends Component {
     // AFTER we close the details modal
     onModalTourDetailsClosed() {
         //this.setState({chosenTour: null});
-        this.props.store.onTourPress(null);
+        // this.props.store.onTourPress(null);
+        this.props.store.resetChosenTour();
     }
 
     // Go to the page contains the tour details
     goToTourDetails(e) {
-        //let chosenTour = this.state.chosenTour;
 
         // Enable if you want the modal to close
         this.refs.MainMapNav.refs.TourDetailsModal.closeModal();
-        // this.setState({isTourModalOpen: false});
         this.props.store.setTourModalOpen(false);
 
-        //if (chosenTour) {
         if (this.props.store.chosenTour) {
+            this.props.store.getTourStations();
             this.props.store.navigatorOpenTourModal('TourDetailsPage', Navigator.SceneConfigs.FloatFromBottom);
         }
     }
@@ -185,7 +184,7 @@ class MainMapPage extends Component {
                 //     }
                 // })
             },
-            (error) => alert('Error: Are location services on?'),
+            (error) => {},
             {enableHighAccuracy: true}
         );
 
@@ -262,6 +261,168 @@ class MainMapPage extends Component {
             </View>
         );
 
+        const mapNight = [
+            {
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "color": "#242f3e"
+                    }
+                ]
+            },
+            {
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#746855"
+                    }
+                ]
+            },
+            {
+                "elementType": "labels.text.stroke",
+                "stylers": [
+                    {
+                        "color": "#242f3e"
+                    }
+                ]
+            },
+            {
+                "featureType": "administrative.locality",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#d59563"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#d59563"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.park",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "color": "#263c3f"
+                    }
+                ]
+            },
+            {
+                "featureType": "poi.park",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#6b9a76"
+                    }
+                ]
+            },
+            {
+                "featureType": "road",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "color": "#38414e"
+                    }
+                ]
+            },
+            {
+                "featureType": "road",
+                "elementType": "geometry.stroke",
+                "stylers": [
+                    {
+                        "color": "#212a37"
+                    }
+                ]
+            },
+            {
+                "featureType": "road",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#9ca5b3"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.highway",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "color": "#746855"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.highway",
+                "elementType": "geometry.stroke",
+                "stylers": [
+                    {
+                        "color": "#1f2835"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.highway",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#f3d19c"
+                    }
+                ]
+            },
+            {
+                "featureType": "transit",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "color": "#2f3948"
+                    }
+                ]
+            },
+            {
+                "featureType": "transit.station",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#d59563"
+                    }
+                ]
+            },
+            {
+                "featureType": "water",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "color": "#17263c"
+                    }
+                ]
+            },
+            {
+                "featureType": "water",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                    {
+                        "color": "#515c6d"
+                    }
+                ]
+            },
+            {
+                "featureType": "water",
+                "elementType": "labels.text.stroke",
+                "stylers": [
+                    {
+                        "color": "#17263c"
+                    }
+                ]
+            }
+        ];
+
         return (
         <DrawerLayoutAndroid
             onDrawerOpen={this.openDrawer.bind(this)}
@@ -289,6 +450,7 @@ class MainMapPage extends Component {
                     style={styles.map}
                     initialRegion={currRegion}
                     toolbarEnabled={false}
+                    customMapStyle={new Date().getHours() >= 17 || new Date().getHours() <= 8  ? mapNight : null}
                     showsUserLocation={true}
                     showsMyLocationButton={true}
                     ref={ref => { this.map = ref; }}

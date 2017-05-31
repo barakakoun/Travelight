@@ -10,7 +10,7 @@ import {
     BackAndroid,
     DrawerLayoutAndroid,
 } from 'react-native';
-import { Toolbar as MaterialToolbar, Icon,Avatar } from 'react-native-material-design';
+import { Toolbar as MaterialToolbar, Icon, Avatar } from 'react-native-material-design';
 import SideNavigation from '../Navigation/SideNavigation';
 import {observer} from 'mobx-react/native';
 
@@ -87,12 +87,12 @@ class UserPage extends Component {
                 ref={(drawer) => { !this.state.drawer ? this.setDrawer(drawer) : null }}>
                 <View style={styles.container}>
 
-                <MaterialToolbar title={'User Page'}
+                    <MaterialToolbar title={'User Page'}
                                  primary={'googleBlue'}
                                  icon="menu"
                                  onIconPress={this.onOpenBurger.bind(this)}/>
                     <View style={styles.userphoto}>
-                        <Avatar size={60} image={<Image source={{uri:currentUser.img}}/>} />
+                        <Avatar size={150} image={<Image source={{uri:currentUser.img}}/>} />
                     </View>
                     <View style={styles.userform}>
                         <Text style={{color: 'white', fontSize: 24,}}> First Name : {currentUser.firstName}</Text>
@@ -121,12 +121,18 @@ const styles = StyleSheet.create({
     },
     userphoto: {
         flex: 1,
-        justifyContent:'flex-start',
-        },
+        justifyContent:'center',
+        alignItems: 'center'
+    },
     userform: {
         flex: 1,
         justifyContent:'center',
         flexDirection: 'column',
+        alignItems: 'center'
+    },
+    img: {
+        height: '110',
+        width: '110'
     }
 });
 

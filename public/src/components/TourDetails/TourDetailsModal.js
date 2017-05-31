@@ -4,8 +4,12 @@ import {
     Text,
     Button,
     StyleSheet,
+    Image,
+    View,
 } from 'react-native';
 import {observer} from 'mobx-react/native';
+import { Col, Row, Grid } from 'react-native-easy-grid';
+import { Avatar } from 'react-native-material-design';
 
 @observer
 class TourDetailsModal extends Component {
@@ -34,8 +38,9 @@ class TourDetailsModal extends Component {
             <Modal style={[styles.modal, styles.modalTourDetails]} backdrop={false} backButtonClose={true}
                    backdropOpacity={0.2} position={"bottom"} ref="modalTourDetails"
                    onClosed={this.props.onModalTourDetailsClosed.bind(this)}>
-                <Text style={[styles.text, {color: "white"}]}>Tour key: {chosenTour.key.toString()}</Text>
-                <Button onPress={this.props.goToTourDetails.bind(this)} title="More Info" style={styles.btn}/>
+                    <Avatar size={150} image={<Image source={{uri:chosenTour.img}}/>} />
+                    <Text style={[styles.text, {color: "white"}]}>{chosenTour.name}</Text>
+                    <Button onPress={this.props.goToTourDetails.bind(this)} title="More Info" style={styles.btn}/>
             </Modal>
         );
 
@@ -49,7 +54,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     modalTourDetails: {
-        height: 150,
+        height: 250,
         backgroundColor: "#3B5998"
     },
     text: {

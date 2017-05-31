@@ -24,6 +24,7 @@ class Store {
     @observable loginTokens = null;
     @observable availableTours = [];
     @observable chosenTour = null;
+    @observable tourStations = [];
     @observable region = null;
     @observable currRegion = null;
     @observable position = null;
@@ -61,7 +62,8 @@ class Store {
         this.mapFacebookDataToUser.bind(this);
         this.removeUserFromStorage = this.removeUserFromStorage.bind(this);
     }
-     sendFacebookLoginDataToServer(){
+
+    sendFacebookLoginDataToServer(){
         fetch(LOGINUSER,{method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -86,8 +88,8 @@ class Store {
             //this.navigatorReplace('MainMapPage');
         })
     }
-    @action getUserFromStorage()
-    {
+
+    @action getUserFromStorage() {
     //     AsyncStorage.multiGet(['token','firstName','lastName','email']).then((data)=>{
     //     console.warn(data[0][1]);
     //     if(data[0][1])
@@ -105,9 +107,7 @@ class Store {
     });
     }
 
-
-    @action removeUserFromStorage()
-    {
+    @action removeUserFromStorage() {
         // AsyncStorage.multiRemove(['token','firstName','lastName','email']);
         AsyncStorage.removeItem('token');
     }
@@ -251,80 +251,134 @@ class Store {
         this.availableTours = [
             {
                 key: 1,
+                name: 'The history of Rabin Square',
+                description: 'Get to know Rabin Square from the beginning to present. get to know the full history of formerly kings of Israel square',
+                duration: '1.30',
+                accessible: true,
+                distance: '2',
+                reviews: 5,
+                rating: 4.5,
                 coordinate: {
                     latitude: 32.0802627,
                     longitude: 34.7808783
                 },
                 latDel: LATITUDE_DELTA,
-                lonDel: LONGITUDE_DELTA
+                lonDel: LONGITUDE_DELTA,
+                img: 'http://www.mapa.co.il/WWWTemp/UDP/105936_800_600.jpeg'
             },
             {
                 key: 2,
+                name: 'Dizingoff street as you never seen before',
+                description: 'Dizengoff Street is a major street in central Tel Aviv, named after Tel Avivs first mayor, Meir Dizengoff.',
+                duration: '1.30',
+                accessible: false,
+                distance: '1.5',
+                reviews: 9,
+                rating: 3.7,
                 coordinate: {
                     latitude: 32.0745575,
                     longitude: 34.7772692
                 },
                 latDel: LATITUDE_DELTA,
-                lonDel: LONGITUDE_DELTA
+                lonDel: LONGITUDE_DELTA,
+                img: 'http://www.sea-hotel.co.il/sites/sea/UserContent/images/Attractions/%D7%93%D7%99%D7%96%D7%99%D7%A0%D7%92%D7%95%D7%A3%20%D7%A1%D7%A0%D7%98%D7%A8.jpg'
             },
             {
                 key: 3,
+                name: 'Beautiful tour in Rothschild Boulevard',
+                description: 'Rothschild Boulevard is one of the principal streets in the center of Tel Aviv, Israel, beginning in Neve Tzedek at its southwestern edge and running north to Habima Theatre.',
+                duration: '2',
+                accessible: true,
+                distance: '3.2',
+                reviews: 20,
+                rating: 5,
                 coordinate: {
                     latitude: 32.0633612,
                     longitude: 34.7730913
                 },
                 latDel: LATITUDE_DELTA,
-                lonDel: LONGITUDE_DELTA
+                lonDel: LONGITUDE_DELTA,
+                img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/PikiWiki_Israel_8331_rotshild_blvd._tel-aviv.jpg/800px-PikiWiki_Israel_8331_rotshild_blvd._tel-aviv.jpg'
             },
             {
                 key: 4,
+                name: 'History of Petach Tikva',
+                description: 'Learn about Petach Tikva. a city that grew in the last few years',
+                duration: '0.50',
+                accessible: false,
+                distance: '1.5',
+                reviews: 0,
+                rating: 0,
                 coordinate: {
                     latitude: 32.078801,
                     longitude: 34.907979
                 },
-                stations: [
-                    {
-                        key:1,
-                        coordinate: {
-                            latitude: 32.078801,
-                            longitude: 34.907979}
-                    },
-                    {
-                        key:2,
-                        coordinate: {
-                            latitude: 32.077914,
-                            longitude: 34.906416}
-                    },
-                    {
-                        key:3,
-                        coordinate: {
-                            latitude: 32.076970,
-                            longitude: 34.908218}
-                    },
-                    {
-                        key:4,
-                        coordinate: {
-                            latitude: 32.075515,
-                            longitude: 34.910937}
-                    },
-                    {
-                        key:5,
-                        coordinate: {
-                            latitude: 32.074406,
-                            longitude: 34.905964}
-                    },
-                    {
-                        key:6,
-                        coordinate: {
-                            latitude: 32.076844,
-                            longitude: 34.904783
-                        }
-                    }
-                ],
                 latDel: LATITUDE_DELTA,
-                lonDel: LONGITUDE_DELTA
+                lonDel: LONGITUDE_DELTA,
+                img: 'http://images1.ynet.co.il/xnet//PicServer2/pic/012012/154037/31_735.jpg'
             }
         ];
+    }
+
+    @action getTourStations() {
+         // Get tour stations by this.chosenTour.key
+
+        this.tourStations = [
+            {
+                key:1,
+                name: 'station 1',
+                coordinate: {
+                    latitude: 32.078801,
+                    longitude: 34.907979 },
+                img: 'https://www.stationonecoffeehouse.ca/sites/all/themes/tributary/logo.png'
+            },
+            {
+                key:2,
+                name: 'station 2',
+                coordinate: {
+                    latitude: 32.077914,
+                    longitude: 34.906416},
+                img: 'http://station2richmond.com/wp-content/uploads/2017/01/retina-logo-1.png'
+            },
+            {
+                key:3,
+                name: 'station 3',
+                coordinate: {
+                    latitude: 32.076970,
+                    longitude: 34.908218},
+                img: 'http://static1.squarespace.com/static/5373e99ae4b0297decd47b98/t/557eef98e4b0d40fa1ac11f7/1489091006453/?format=1500w'
+            },
+            {
+                key:4,
+                name: 'station 4',
+                coordinate: {
+                    latitude: 32.075515,
+                    longitude: 34.910937},
+                img: 'https://media-cdn.tripadvisor.com/media/photo-s/07/04/4e/36/station-4-beach-bar.jpg'
+            },
+            {
+                key:5,
+                name: 'station 5',
+                coordinate: {
+                    latitude: 32.074406,
+                    longitude: 34.905964},
+                img: 'http://station5.dk/wp-content/uploads/2014/12/Station5_logo2.png'
+            },
+            {
+                key:6,
+                name: 'station 6',
+                coordinate: {
+                    latitude: 32.076844,
+                    longitude: 34.904783
+                },
+                img: 'https://pbs.twimg.com/profile_images/751094091002179584/CeEyWUd6.jpg'
+            }
+        ]
+    }
+
+    @action resetChosenTour() {
+        this.chosenTour = null;
+        this.tourStations = [];
     }
 
     @action onTourPress(tour) {
@@ -383,10 +437,10 @@ class Store {
     }
 
     @computed get startTourPosition() {
-         if(this.chosenTour) {
+         if(this.tourStations) {
              return {
-                 latitude: this.chosenTour.stations[0].coordinate.latitude,
-                 longitude: this.chosenTour.stations[0].coordinate.longitude,
+                 latitude: this.tourStations[0].coordinate.latitude,
+                 longitude: this.tourStations[0].coordinate.longitude,
                  latitudeDelta: STATION_LATITUDE_DELTA,
                  longitudeDelta: STATION_LONGITUDE_DELTA
              }
