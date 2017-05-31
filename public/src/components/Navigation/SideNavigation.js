@@ -15,7 +15,6 @@ import { Avatar,
         COLOR,
         TYPO,
         PRIMARY_COLORS } from 'react-native-material-design';
-import userLogo from '../../../assets/baraklogo.png'
 import { observer } from 'mobx-react/native';
 
 @observer
