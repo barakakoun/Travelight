@@ -24,6 +24,7 @@ var nativeImageSource = require('nativeImageSource');
 
 import Store from './public/src/model/store';
 import { observer } from 'mobx-react/native';
+import _ from 'lodash';
 
 const { width, height } = Dimensions.get('window');
 

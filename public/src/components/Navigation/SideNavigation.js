@@ -15,7 +15,6 @@ import { Avatar,
         COLOR,
         TYPO,
         PRIMARY_COLORS } from 'react-native-material-design';
-import userLogo from '../../../assets/baraklogo.png'
 import { observer } from 'mobx-react/native';
 
 @observer
@@ -135,7 +134,10 @@ export default class SideNavigation extends Component {
 
 const styles = {
     header: {
-        paddingTop: 16
+        paddingTop: 16,
+        flex:1,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     text: {
         marginTop: 0
