@@ -12,6 +12,7 @@ import FBSDK from 'react-native-fbsdk';
 import React, { Component } from 'react';
 import {AsyncStorage} from 'react-native';
 import massages from "../../../Consts/messages";
+import Sound from 'react-native-sound';
 const {
     LoginManager,
     GraphRequest,
@@ -24,6 +25,7 @@ class Store {
     @observable loginTokens = null;
     @observable availableTours = [];
     @observable chosenTour = null;
+    @observable chosenStation = null;
     @observable region = null;
     @observable currRegion = null;
     @observable position = null;
@@ -34,6 +36,8 @@ class Store {
     @observable email = null;
     @observable userPhoto = null;
     @observable isTourModalOpen = false;
+    @observable isStationModelOpen = false;
+    @observable audio = null;
     @observable currentUser = {
         img: "http://www.worldofbuzz.com/wp-content/uploads/2015/04/noprofilemale.gif?x82567",
         name: "Unknown"
@@ -47,6 +51,7 @@ class Store {
         this.navigatorOpenDrawer = this.navigatorOpenDrawer.bind(this);
         this.navigatorPop = this.navigatorPop.bind(this);
         this.onTourPress = this.onTourPress.bind(this);
+        this.onStationPress = this.onStationPress.bind(this);
         this.setLocation = this.setLocation.bind(this);
         this.setRegion = this.setRegion.bind(this);
         this.setCurrRegion = this.setCurrRegion.bind(this);
@@ -57,9 +62,16 @@ class Store {
         this.loginWithGoogle = this.loginWithGoogle.bind(this);
         this.getFacebookUserData = this.getFacebookUserData.bind(this);
         this.setTourModalOpen = this.setTourModalOpen.bind(this);
+        this.setStationModalOpen = this.setStationModalOpen.bind(this);
         this.getUserFromStorage = this.getUserFromStorage.bind(this);
         this.mapFacebookDataToUser.bind(this);
-        this.removeUserFromStorage = this.removeUserFromStorage.bind(this);
+        this.setAudio = this.setAudio.bind(this);
+        this.playAudio = this.playAudio.bind(this);
+        this.stopAudio = this.stopAudio.bind(this);
+        this.pauseAudio = this.pauseAudio.bind(this);
+        this.releaseAudio = this.releaseAudio.bind(this);
+        //this.removeUserFromStorage = this.removeUserFromStorage.bind(this);
+        this.logoutUser = this.logoutUser.bind(this);
     }
      sendFacebookLoginDataToServer(){
         fetch(LOGINUSER,{method: 'POST',
@@ -104,9 +116,20 @@ class Store {
             }
     });
     }
-
-
-    @action removeUserFromStorage()
+    initUser()
+    {
+        this.currentUser.firstName = '';
+        this.currentUser.lastName='';
+        this.currentUser.email='';
+        this.currentUser.name='';
+        this.currentUser.img=null;
+    }
+    @action logoutUser()
+    {
+        this.initUser();
+        this.removeUserFromStorage();
+    }
+    removeUserFromStorage()
     {
         // AsyncStorage.multiRemove(['token','firstName','lastName','email']);
         AsyncStorage.removeItem('token');
@@ -150,7 +173,6 @@ class Store {
                 break;
         }
     }
-
     @action getFacebookUserData() {
         const responseInfoCallback = (error,result)=>{
             if (error) {
@@ -280,38 +302,55 @@ class Store {
                         key:1,
                         coordinate: {
                             latitude: 32.078801,
-                            longitude: 34.907979}
+                            longitude: 34.907979},
+                        img:'http://cdn.pcwallart.com/images/bar-refaeli-victorias-secret-wallpaper-3.jpg',
+                        name:'bar station',
+                        audio:'1',
+                        info:'1'
+
                     },
                     {
                         key:2,
                         coordinate: {
                             latitude: 32.077914,
-                            longitude: 34.906416}
+                            longitude: 34.906416},
+                        img:'http://cdn.pcwallart.com/images/bar-refaeli-victorias-secret-wallpaper-3.jpg',
+                        name:'bar station',
+                        audio:'1'
                     },
                     {
                         key:3,
                         coordinate: {
                             latitude: 32.076970,
-                            longitude: 34.908218}
+                            longitude: 34.908218},
+                        img:'http://cdn.pcwallart.com/images/bar-refaeli-victorias-secret-wallpaper-3.jpg',
+                        name:'bar station',
+                        info:'1'
                     },
                     {
                         key:4,
                         coordinate: {
                             latitude: 32.075515,
-                            longitude: 34.910937}
+                            longitude: 34.910937},
+                        img:'http://cdn.pcwallart.com/images/bar-refaeli-victorias-secret-wallpaper-3.jpg',
+                        name:'bar station'
                     },
                     {
                         key:5,
                         coordinate: {
                             latitude: 32.074406,
-                            longitude: 34.905964}
+                            longitude: 34.905964},
+                        img:'http://cdn.pcwallart.com/images/bar-refaeli-victorias-secret-wallpaper-3.jpg',
+                        name:'bar station'
                     },
                     {
                         key:6,
                         coordinate: {
                             latitude: 32.076844,
                             longitude: 34.904783
-                        }
+                        },
+                        img:'http://cdn.pcwallart.com/images/bar-refaeli-victorias-secret-wallpaper-3.jpg',
+                        name:'bar station'
                     }
                 ],
                 latDel: LATITUDE_DELTA,
@@ -325,6 +364,11 @@ class Store {
         this.isTourModalOpen = true;
     }
 
+    @action onStationPress(station)
+    {
+        this.chosenStation = station;
+        this.isStationModelOpen = true;
+    }
     @action setLocation(latitude,longitude,latitudeDelta,longitudeDelta) {
         this.setRegion(latitude,longitude,latitudeDelta,longitudeDelta);
         this.setCurrRegion(latitude,longitude,latitudeDelta,longitudeDelta);
@@ -365,6 +409,11 @@ class Store {
         this.isTourModalOpen = value;
     }
 
+    @action setStationModalOpen(value) {
+        this.isTourModalOpen = value;
+    }
+
+
     @action logOff() {
         this.currentUser = {
             img: "http://www.worldofbuzz.com/wp-content/uploads/2015/04/noprofilemale.gif?x82567",
@@ -375,6 +424,37 @@ class Store {
         this.navigatorReplace('Exit');
     }
 
+    @action setAudio(){
+         this.audio = new Sound('kalimba.mp3',Sound.MAIN_BUNDLE,(error)=>{
+             if (error) {
+                 console.warn('failed to load the sound', error);
+             }
+         });
+    }
+
+    @action playAudio(){
+        this.audio.play((success)=>{
+            if(!success)
+            {
+                console.warn('cant play');
+            }
+        })
+    }
+
+    @action stopAudio(){
+        this.audio.stop();
+    }
+
+    @action pauseAudio()
+    {
+        this.audio.pause();
+    }
+
+    @action releaseAudio(){
+        this.audio.stop();
+        this.audio.release();
+        this.audio=null;
+    }
     @computed get startTourPosition() {
          if(this.chosenTour) {
              return {

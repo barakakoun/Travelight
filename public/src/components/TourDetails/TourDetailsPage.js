@@ -22,7 +22,6 @@ class TourDetailsPage extends Component {
     }
 
     startTour(tour) {
-        console.warn(this.props.store);
         if(tour) {
             if (tour.stations) {
                 let url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + tour.coordinate.latitude.toString() + ","
@@ -51,7 +50,6 @@ class TourDetailsPage extends Component {
                     .then(responseJson => {
                         // Alert.alert(responseJson.toString());
                         if (responseJson.routes.length) {
-
                             this.props.store.appNavigator.replace({
                                 id: 'TourMapPage',
                                 tour: tour,

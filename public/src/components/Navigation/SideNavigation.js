@@ -36,9 +36,9 @@ export default class SideNavigation extends Component {
     logout(){
         const { currentUser,
             navigatorReplace,
-            userFullName,removeUserFromStorage } = this.props.store;
+            userFullName,logoutUser } = this.props.store;
 
-        removeUserFromStorage();
+        logoutUser();
         navigatorReplace('Exit');
     }
     render() {

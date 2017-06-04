@@ -11,7 +11,7 @@ import {
     Button,
 } from 'react-native';
 import MapView from 'react-native-maps';
-import TourDetailsModal from './TourDetailsModal';
+import StationModel from '../StationDetails/StationModel';
 import { Toolbar as MaterialToolbar, Icon } from 'react-native-material-design';
 var nativeImageSource = require('nativeImageSource');
 
@@ -35,7 +35,6 @@ class TourMapPage extends Component {
     constructor(props) {
         super(props);
         this.getLocation = this.getLocation.bind(this);
-
         // Alert.alert(this.state.coords.length.toString());
         // var tour = this.props.tour;
         //
@@ -124,6 +123,13 @@ class TourMapPage extends Component {
     //     return poly;
     // }
 
+    onStationModalClosed() {
+        this.props.store.onStationPress(null);
+    }
+
+    onStationPress(e,chosenTour) {
+        this.props.store.onStationPress(e);
+    }
     // Jump to current location
     _findMe(){
         if(this.props.store.currRegion) {
@@ -155,10 +161,10 @@ class TourMapPage extends Component {
                 //     },
                 //     currRegion: {
                 //         latitude,
-                //         longitude,
+                //         longitude,//     }
                 //         latitudeDelta: 0.005,
                 //         longitudeDelta: 0.001,
-                //     }
+
                 // })
             },
             (error) => alert('Error: Are location services on?'),
@@ -201,13 +207,13 @@ class TourMapPage extends Component {
     }
 
     render() {
-        const {onTourPress} = this.props.store;
+        const {onStationPress} = this.props.store;
         const NavigationBarRouteMapper = {
             LeftButton(route, navigator, index, navState) {
                 return (
                     <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
                                       onPress={() => {navigator.parentNavigator.pop();
-                                                      onTourPress(null);}}>
+                                                      onStationPress(null);}}>
                         <Text style={{color: 'white', margin: 10,}}>
                             left button
                         </Text>
@@ -283,6 +289,13 @@ class TourMapPage extends Component {
                     showsUserLocation={true}
                     showsMyLocationButton={true}
                     ref={ref => { this.map = ref; }}
+                    onRegionChange={() => {
+                        if (this.props.store.isStationModelOpen) {
+                            this.refs.TourMapNav.refs.StationModel.closeModal();
+                            this.props.store.setStationModalOpen(false);
+                            this.onStationModalClosed();
+                        }
+                    }}
                 >
 
                     <MapView.Polyline
@@ -295,9 +308,14 @@ class TourMapPage extends Component {
                             key={currStation.key}
                             coordinate={currStation.coordinate}
                             pinColor={"green"}
+                            onPress={this.onStationPress.bind(this,currStation)}
                         />
                     ))}
                 </MapView>
+
+                <StationModel ref="StationModel" store={this.props.store}
+                              onStationModalClosed={() => this.onStationModalClosed.bind(this)}
+                              chosenStation={this.props.store.chosenStation ? this.props.store.chosenStation : null}/>
             </View>
         );
     }
