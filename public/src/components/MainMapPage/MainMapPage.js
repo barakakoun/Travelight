@@ -224,6 +224,8 @@ class MainMapPage extends Component {
     }
 
     render() {
+        const {availableTours} = this.props.store;
+
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}
@@ -235,7 +237,8 @@ class MainMapPage extends Component {
 
     renderScene(route, navigator) {
         const {region,
-               currRegion } = this.props.store;
+               currRegion,
+               availableTours } = this.props.store;
         const { height: windowHeight } = Dimensions.get('window');
         const varTop = windowHeight - 125;
         const hitSlop = {
@@ -244,6 +247,7 @@ class MainMapPage extends Component {
             left: 15,
             right: 15,
         };
+
         bbStyle = function(vheight) {
             return {
                 position: 'absolute',
@@ -463,7 +467,7 @@ class MainMapPage extends Component {
                     }}
                 >
 
-                    {this.props.store.availableTours.map(currTour => (
+                    {availableTours.map(currTour => (
                         <MapView.Marker
                             key={currTour.key}
                             coordinate={currTour.coordinate}

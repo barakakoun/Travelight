@@ -13,7 +13,8 @@ var tours = require('./api/tour/index');
 var users = require('./api/user/index');
 app.use('/tours',tours);
 app.use('/users',users);
-app.listen('3000')
+app.listen('3000');
+console.log("listening on port 3000");
 // app.close(function () {
 //     db.closeDB(db.connection)
 // })

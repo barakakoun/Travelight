@@ -165,7 +165,7 @@ class TourDetailsPage extends Component {
                 <View style={styles.oneUnderOne}>
                     <View style={styles.twoSides}>
                         <View style={styles.oneByOne}>
-                            <Icon name="timer" style={styles.icon}/>
+                            <Icon name="timer" color="#FFFFFF" style={styles.icon}/>
                             <Text style={{fontSize: 20, color: 'white'}}>
                                 {chosenTour.duration}
                             </Text>
@@ -173,7 +173,7 @@ class TourDetailsPage extends Component {
                         <Text style={{fontSize: 15, color: 'white'}}>
                             {chosenTour.distance} Km
                         </Text>
-                        <Icon name='directions-walk' style={styles.icon} />
+                        <Icon name='directions-walk' color="#FFFFFF" style={styles.icon} />
 
                     </View>
                     <View style={styles.twoSides}>
@@ -194,7 +194,7 @@ class TourDetailsPage extends Component {
                             </Text>
                         </View>
                         {chosenTour.accessible ?
-                            <Icon name="accessible" style={styles.icon}/> : null
+                            <Icon name="accessible" color="#FFFFFF" style={styles.icon}/> : null
                         }
                     </View>
 
@@ -217,7 +217,7 @@ const NavigationBarRouteMapper = {
         return (
             <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
                               onPress={() => navigator.parentNavigator.pop()}>
-                <Icon name="keyboard-backspace" style={{color: 'white', margin: 10,}} />
+                <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 10,}} />
             </TouchableOpacity>
         );
     },
@@ -276,7 +276,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start'
     },
     icon: {
-        color: 'white',
         marginRight: 10,
         marginLeft: 10
     }
