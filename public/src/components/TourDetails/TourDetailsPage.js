@@ -62,7 +62,6 @@ class TourDetailsPage extends Component {
                     .then(responseJson => {
                         // Alert.alert(responseJson.toString());
                         if (responseJson.routes.length) {
-
                             this.props.store.appNavigator.replace({
                                 id: 'TourMapPage',
                                 tour: chosenTour,

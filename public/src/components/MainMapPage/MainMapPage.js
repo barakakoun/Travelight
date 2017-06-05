@@ -17,6 +17,7 @@ import {
     Alert,
     Button,
     BackAndroid,
+    AsyncStorage,
 } from 'react-native';
 import MapView from 'react-native-maps';
 import TourDetailsModal from '../TourDetails/TourDetailsModal';
@@ -221,6 +222,8 @@ class MainMapPage extends Component {
 
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchID);
+
+
     }
 
     render() {
