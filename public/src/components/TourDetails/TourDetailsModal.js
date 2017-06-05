@@ -31,11 +31,10 @@ class TourDetailsModal extends Component {
 
     render() {
         const {chosenTour} = this.props.store;
+        console.warn("Render Details modal");
         if (!chosenTour) {
-            console.warn("No tour selected");
             return null;
         }
-        console.warn("Tour selected");
         return (
             <Modal style={[styles.modal, styles.modalTourDetails]} backdrop={false} backButtonClose={true}
                    backdropOpacity={0.2} position={"bottom"} ref="modalTourDetails"

@@ -24,6 +24,7 @@ class StationModel extends Component {
             this.refs.modalStation.open();
         }
     }
+
     closeModal() {
         if (this.refs.modalStation) {
             this.props.store.releaseAudio();
@@ -32,8 +33,8 @@ class StationModel extends Component {
             this.props.store.onStationPress(null);
         }
     }
-    loadAudioIcon()
-    {
+
+    loadAudioIcon() {
         const {chosenStation} = this.props.store;
          if(chosenStation.audio)
         {
@@ -41,14 +42,15 @@ class StationModel extends Component {
         }
 
     }
-    loadInfoIcon()
-    {
+
+    loadInfoIcon() {
         const {chosenStation} = this.props.store;
         if(chosenStation.info)
         {
             return (<Icon name="info" color="rgba(0,0,0,.9)" size={45}/>);
         }
     }
+
     render() {
         const {chosenStation} = this.props.store;
         if (!chosenStation) {
@@ -72,7 +74,7 @@ class StationModel extends Component {
                         {this.loadAudioIcon()}
                     </View>
                     <View style={styles.player}>
-                        <Button name="replay" color="rgba(0,0,0,.9)" backgroundColor="rgba(255,255,255,0.5)" size={45} onPress={()=>{
+                        <Button name="reply" color="rgba(0,0,0,.9)" backgroundColor="rgba(255,255,255,0.5)" size={45} onPress={()=>{
                             this.props.store.playAudio();
                         }}/>
                         <Button name="play" color="rgba(0,0,0,.9)" backgroundColor="rgba(255,255,255,0.5)" size={45} onPress={()=>{

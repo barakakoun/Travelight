@@ -62,7 +62,7 @@ export default class SideNavigation extends Component {
                 <Drawer.Section
                     items={[{
                         icon: 'face',
-                        value: 'User',
+                        value: 'My Profile',
                         // active: !route || route === 'welcome',
                         onPress: this.props.onChangeScene.bind(this, "UserPage"),
                         onLongPress: this.props.onChangeScene.bind(this, "UserPage")
@@ -84,14 +84,6 @@ export default class SideNavigation extends Component {
                         // label: '8',
                         onPress: this.props.onChangeScene.bind(this, "EventsPage"),
                         onLongPress: this.props.onChangeScene.bind(this, "EventsPage")
-                    }, {
-                        icon: 'label',
-                        // value: 'Icon Toggles',
-                        value: 'barak',
-                        // label: 'NEW',
-                        active: route === 'icon-toggles',
-                        // onPress: this.props.onChangeScene.bind(this, "navigatorName"),
-                        // onLongPress: this.props.onChangeScene.bind(this, "navigatorName")
                     }]}
                 />
                 <Divider style={{ marginTop: 8 }} />

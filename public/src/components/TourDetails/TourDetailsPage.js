@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { Toolbar as MaterialToolbar, Icon, Divider } from 'react-native-material-design';
 import { Col, Row, Grid } from 'react-native-easy-grid';
+import { observable } from 'mobx';
 import {observer} from 'mobx-react/native';
 import Swiper from 'react-native-swiper';
 import Stars from 'react-native-stars-rating';
@@ -24,16 +25,28 @@ const { width } = Dimensions.get('window');
 
 @observer
 class TourDetailsPage extends Component {
+    @observable isStartTour = false;
     constructor(props) {
         super(props);
 
         this.startTour = this.startTour.bind(this);
+        this.exitPage = this.exitPage.bind(this);
+    }
+
+    componentWillUnmount() {
+        if(!this.isStartTour) {
+            this.exitPage();
+        }
+    }
+
+    exitPage() {
+        this.props.store.resetChosenTour();
+        this.props.store.appNavigator.pop()
     }
 
     startTour() {
         const { chosenTour,
                 tourStations } = this.props.store;
-        console.warn(_.values(this.props.store.chosenTour));
         if(chosenTour) {
             if (tourStations) {
                 let url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + chosenTour.coordinate.latitude.toString() + ","
@@ -62,6 +75,7 @@ class TourDetailsPage extends Component {
                     .then(responseJson => {
                         // Alert.alert(responseJson.toString());
                         if (responseJson.routes.length) {
+                            this.isStartTour = true;
                             this.props.store.appNavigator.replace({
                                 id: 'TourMapPage',
                                 tour: chosenTour,

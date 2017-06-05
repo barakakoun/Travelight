@@ -9,10 +9,15 @@ import {
     TouchableOpacity,
     BackAndroid,
     DrawerLayoutAndroid,
+    Dimensions
 } from 'react-native';
 import { Toolbar as MaterialToolbar, Icon,Avatar } from 'react-native-material-design';
 import SideNavigation from '../Navigation/SideNavigation';
 import {observer} from 'mobx-react/native';
+
+const { height, width } = Dimensions.get('window');
+
+import comingsoon from '../../../assets/comingsoon.png';
 
 @observer
 class EventsPage extends Component {
@@ -87,7 +92,11 @@ class EventsPage extends Component {
                                  primary={'googleBlue'}
                                  icon="menu"
                                  onIconPress={this.onOpenBurger.bind(this)}/>
-                <Text style={{color: 'white', fontSize: 32,}}>Events Page</Text>
+                <Image
+                    resizeMode='stretch'
+                    style={styles.image}
+                    source={comingsoon}
+                />
             </View>
             </DrawerLayoutAndroid>
         );
@@ -123,7 +132,13 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 16,
     },
+    image: {
+        width,
+        height,
+        flex: 1
+    },
     container: {
+        backgroundColor: '#FFFFFF',
         flex: 1,
         justifyContent: 'flex-end',
     },

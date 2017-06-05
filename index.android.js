@@ -53,6 +53,7 @@ export default class travelight extends Component {
     }
 
     handleBack() {
+        console.warn("HandleBack");
         if (Store.appNavigator && Store.appNavigator.getCurrentRoutes().length > 1){
             Store.navigatorPop();
             return true; //avoid closing the app

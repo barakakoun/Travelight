@@ -278,7 +278,6 @@ class Store {
         fetch(URL_TOURS_ENDPOINT)
             .then(response => response.json())
             .then(result => {
-                console.warn(JSON.stringify(result));
                 this.availableTours = result;
             })
             .catch(error => { console.warn(error); });

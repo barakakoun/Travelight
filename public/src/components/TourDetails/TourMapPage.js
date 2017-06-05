@@ -35,6 +35,7 @@ class TourMapPage extends Component {
     constructor(props) {
         super(props);
         this.getLocation = this.getLocation.bind(this);
+
         // Alert.alert(this.state.coords.length.toString());
         // var tour = this.props.tour;
         //
@@ -213,12 +214,8 @@ class TourMapPage extends Component {
             LeftButton(route, navigator, index, navState) {
                 return (
                     <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-                                      onPress={() => {navigator.parentNavigator.pop();
-                                                     onStationPress(null);}}>
-                        <Text style={{color: 'white', margin: 10,}}>
-                            left button
-                        </Text>
-                        <Icon name="keyboard-backspace" style={{color: 'white', margin: 10,}} />
+                                      onPress={() => navigator.parentNavigator.pop()}>
+                        <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 10,}} />
                     </TouchableOpacity>
                 );
             },
@@ -234,10 +231,6 @@ class TourMapPage extends Component {
                 renderScene={this.renderScene.bind(this)}
                 navigator={this.props.navigator}
                 ref="TourMapNav"
-                navigationBar={
-                    <Navigator.NavigationBar style={{backgroundColor: '#246dd5'}}
-                                             routeMapper={NavigationBarRouteMapper} />
-                }
             />
         );
     }
@@ -432,7 +425,10 @@ class TourMapPage extends Component {
 
         return (
             <View style={styles.container}>
-
+                <MaterialToolbar title={chosenTour.name}
+                                 primary={'googleBlue'}
+                                 icon="keyboard-backspace"
+                                 onIconPress={() => navigator.parentNavigator.pop()}/>
                 <View style={bbStyle(varTop)}>
                     <TouchableOpacity
                         hitSlop = {hitSlop}
