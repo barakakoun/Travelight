@@ -290,28 +290,29 @@ class Store {
             this.availableTours = [
                 {
                     key: 1,
-                    name: 'The history of Rabin Square',
-                    description: 'Get to know Rabin Square from the beginning to present. get to know the full history of formerly kings of Israel square',
+                    name: 'The Heart Of Tel Aviv',
+                    description: 'Get to know why Tel Aviv is called "The city that never stops",' +
+                   'Walk the street and see where the magic happens. This tour is for everyone who wants to feel the heart of Tel Aviv beating inside of them',
                     duration: '1.30',
                     accessible: true,
                     distance: '2',
-                    reviews: 5,
+                    reviews: 13,
                     rating: 4.5,
                     coordinate: {
-                        latitude: 32.073576,
-                        longitude: 34.781836
+                        latitude: 32.075326,
+                        longitude: 34.775259
                     },
-                    img: 'http://www.mapa.co.il/WWWTemp/UDP/105936_800_600.jpeg'
+                    img: 'https://lh6.googleusercontent.com/-GypE5jzX-Ak/UPPRsgs8evI/AAAAAAAAIGY/s7pCJLnEYdY/s320/sarona.jpg'
                 },
                 {
                     key: 2,
                     name: 'Israel\'s Beautiful coastline & Tel Aviv harbor ',
                     description: 'Represents the beautiful coastline of Tel Aviv-Yafo and the Mediterranean character of the city. The path runs along the Tel Aviv coastline - from the Jaffa corridor to the Tel Aviv port and the lighthouse in the north.',
-                    duration: '1.30',
+                    duration: '1.5',
                     accessible: false,
-                    distance: '1.5',
-                    reviews: 9,
-                    rating: 3.7,
+                    distance: '2.5',
+                    reviews: 32,
+                    rating: 5,
                     coordinate: {
                         latitude: 32.055031,
                         longitude: 34.754356
@@ -362,57 +363,48 @@ class Store {
                     this.tourStations =  [
                     {
                         key: 1,
-                        name: 'station 1',
+                        name: 'Dizengoff Center',
                         coordinate: {
-                            latitude: 32.078801,
-                            longitude: 34.907979
+                            latitude: 32.074840,
+                            longitude: 34.775946
                         },
-                        img: 'https://www.stationonecoffeehouse.ca/sites/all/themes/tributary/logo.png'
+                        img: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Dizengof_Center_Tel_Aviv.jpg'
                     },
                     {
                         key: 2,
-                        name: 'station 2',
+                        name: 'Sarona compound',
                         coordinate: {
-                            latitude: 32.077914,
-                            longitude: 34.906416
+                            latitude: 32.073299,
+                            longitude: 34.787055
                         },
-                        img: 'http://station2richmond.com/wp-content/uploads/2017/01/retina-logo-1.png'
+                        img: 'http://images.globes.co.il/images/NewGlobes/big_image_800/2016/sarona-800.2016125T152619.jpg'
                     },
                     {
                         key: 3,
-                        name: 'station 3',
+                        name: 'London Ministore',
                         coordinate: {
-                            latitude: 32.076970,
-                            longitude: 34.908218
+                            latitude: 32.075196,
+                            longitude: 34.781718
                         },
-                        img: 'http://static1.squarespace.com/static/5373e99ae4b0297decd47b98/t/557eef98e4b0d40fa1ac11f7/1489091006453/?format=1500w'
+                        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/London_Ministores%2C_tel_aviv.jpg/1280px-London_Ministores%2C_tel_aviv.jpg'
                     },
                     {
                         key: 4,
-                        name: 'station 4',
+                        name: 'Rabin Square',
                         coordinate: {
-                            latitude: 32.075515,
-                            longitude: 34.910937
+                            latitude: 32.079714,
+                            longitude: 34.781176
                         },
-                        img: 'https://media-cdn.tripadvisor.com/media/photo-s/07/04/4e/36/station-4-beach-bar.jpg'
+                        img: 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Rabin_Squre_eco_pool.jpg'
                     },
                     {
                         key: 5,
-                        name: 'station 5',
+                        name: 'The memorial to Yitzhak Rabin',
                         coordinate: {
-                            latitude: 32.074406,
-                            longitude: 34.905964
+                            latitude: 32.081937,
+                            longitude: 34.781240
                         },
-                        img: 'http://station5.dk/wp-content/uploads/2014/12/Station5_logo2.png'
-                    },
-                    {
-                        key: 6,
-                        name: 'station 6',
-                        coordinate: {
-                            latitude: 32.076844,
-                            longitude: 34.904783
-                        },
-                        img: 'https://pbs.twimg.com/profile_images/751094091002179584/CeEyWUd6.jpg'
+                        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Memorial_of_Israeli_Prime_Minister_Yitzchak_Rabin.jpg/400px-Memorial_of_Israeli_Prime_Minister_Yitzchak_Rabin.jpg'
                     }
                 ];
                     break;
@@ -531,64 +523,6 @@ class Store {
                     this.tourStations = [];
                     break;
             }
-
-            console.warn(this.tourStations.length);
-            // this.tourStations = [
-            //     {
-            //         key: 1,
-            //         name: 'station 1',
-            //         coordinate: {
-            //             latitude: 32.078801,
-            //             longitude: 34.907979
-            //         },
-            //         img: 'https://www.stationonecoffeehouse.ca/sites/all/themes/tributary/logo.png'
-            //     },
-            //     {
-            //         key: 2,
-            //         name: 'station 2',
-            //         coordinate: {
-            //             latitude: 32.077914,
-            //             longitude: 34.906416
-            //         },
-            //         img: 'http://station2richmond.com/wp-content/uploads/2017/01/retina-logo-1.png'
-            //     },
-            //     {
-            //         key: 3,
-            //         name: 'station 3',
-            //         coordinate: {
-            //             latitude: 32.076970,
-            //             longitude: 34.908218
-            //         },
-            //         img: 'http://static1.squarespace.com/static/5373e99ae4b0297decd47b98/t/557eef98e4b0d40fa1ac11f7/1489091006453/?format=1500w'
-            //     },
-            //     {
-            //         key: 4,
-            //         name: 'station 4',
-            //         coordinate: {
-            //             latitude: 32.075515,
-            //             longitude: 34.910937
-            //         },
-            //         img: 'https://media-cdn.tripadvisor.com/media/photo-s/07/04/4e/36/station-4-beach-bar.jpg'
-            //     },
-            //     {
-            //         key: 5,
-            //         name: 'station 5',
-            //         coordinate: {
-            //             latitude: 32.074406,
-            //             longitude: 34.905964
-            //         },
-            //         img: 'http://station5.dk/wp-content/uploads/2014/12/Station5_logo2.png'
-            //     },
-            //     {
-            //         key: 6,
-            //         name: 'station 6',
-            //         coordinate: {
-            //             latitude: 32.076844,
-            //             longitude: 34.904783
-            //         },
-            //         img: 'https://pbs.twimg.com/profile_images/751094091002179584/CeEyWUd6.jpg'
-            //     }
-            // ];
         }
     }
 
@@ -664,6 +598,7 @@ class Store {
     @action setAudio(){
          this.audio = new Sound('kalimba.mp3',Sound.MAIN_BUNDLE,(error)=>{
              if (error) {
+                 alert('Oops! failed to load the sound');
                  console.warn('failed to load the sound', error);
              }
          });
@@ -673,7 +608,7 @@ class Store {
         this.audio.play((success)=>{
             if(!success)
             {
-                console.warn('cant play');
+                alert('Oops! failed to load the sound');
             }
         })
     }
