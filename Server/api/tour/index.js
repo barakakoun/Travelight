@@ -1,11 +1,12 @@
 /**
  * Created by dell on 30/03/2017.
  */
-var controller = require('./tour.controller');
-var express = require ('express');
-var bodyparser = require('body-parser');
-var router = express.Router();
-router.get('/',controller.test);
+const controller = require('./tour.controller');
+const express = require ('express');
+const bodyparser = require('body-parser');
+const router = express.Router();
+
+router.get('/',controller.getTours);
 router.get('/:tourId/details',controller.getTourDetails);
 router.post('/create',controller.create);
 router.post('/:tourId/update',controller.update);
