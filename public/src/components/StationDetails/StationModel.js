@@ -8,10 +8,10 @@ import {
     StyleSheet,
     View,
     Image,
-
+    Dimensions,
 } from 'react-native';
 import {observer} from 'mobx-react/native';
-
+const { width } = Dimensions.get('window');
 @observer
 class StationModel extends Component {
 
@@ -47,7 +47,7 @@ class StationModel extends Component {
         const {chosenStation} = this.props.store;
         if(chosenStation.info)
         {
-            return (<Icon name="info" color="rgba(0,0,0,.9)" size={45}/>);
+            return (<Icon name="info" style={styles.info} color="rgba(0,0,0,.9)" size={45}/>);
         }
     }
 
@@ -63,18 +63,23 @@ class StationModel extends Component {
             <Modal style={[styles.modal, styles.modelStation]} backdrop={false}  backButtonClose={true} transparent={true}
                    backdropOpacity={0.2} onClosed={()=>this.closeModal()} ref="modalStation">
                 <View style={styles.container} >
+                    {this.loadInfoIcon()}
                     <View style={styles.name}>
                         <Text style={styles.text}>{chosenStation.name}</Text>
                     </View>
                     <View style={styles.image}>
-                        <Avatar size={90} image={<Image source={{uri:chosenStation.img}}/>} />
+                        <Image style={styles.img}
+                            resizeMode='stretch'
+                            source={{uri: chosenStation.img.toString()}}
+                        />
                     </View>
-                    <View style={styles.icons}>
+                    { /* <View style={styles.icons}>
                         {this.loadInfoIcon()}
                         {this.loadAudioIcon()}
-                    </View>
+                    </View> */ }
                     <View style={styles.player}>
                         <Button name="reply" color="rgba(0,0,0,.9)" backgroundColor="rgba(255,255,255,0.5)" size={45} onPress={()=>{
+                            this.props.store.stopAudio();
                             this.props.store.playAudio();
                         }}/>
                         <Button name="play" color="rgba(0,0,0,.9)" backgroundColor="rgba(255,255,255,0.5)" size={45} onPress={()=>{
@@ -103,34 +108,32 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        justifyContent:'center',
-        alignItems:'flex-start'
     },
     image:{
-        flex: 1,
-        justifyContent:'center',
+        flex: 2,
+        justifyContent:'flex-start',
         alignItems:'center'
     },
-    name:{
-            flex: 1,
-            justifyContent:'center',
-            alignItems:'flex-start'
+    img:{
+        width,
+        flex:1
     },
-    text:{
+    name:{
+        flex: 1,
+        justifyContent:'flex-start',
+        alignItems:'center'
+    },
+    text: {
         color: "black",
         fontSize: 22,
     },
-    icons:{
-        flex:1,
-        justifyContent:'space-between',
-        flexDirection: 'row',
-        alignItems:'flex-end'
-
-},
+    info: {
+        justifyContent:'flex-start',
+    },
     player:{
         flex:1,
         alignItems:'flex-end',
-        justifyContent:'space-between',
+        justifyContent:'center',
         flexDirection:'row'
     }
 });
