@@ -27,7 +27,7 @@ class StationModel extends Component {
 
     closeModal() {
         if (this.refs.modalStation) {
-            this.props.store.releaseAudio();
+            this.props.store.stopAudio();
             this.refs.modalStation.close();
             this.props.store.setStationModalOpen(false);
             this.props.store.onStationPress(null);
@@ -77,6 +77,7 @@ class StationModel extends Component {
                         {this.loadInfoIcon()}
                         {this.loadAudioIcon()}
                     </View> */ }
+                    {chosenStation.audio ?
                     <View style={styles.player}>
                         <Button name="reply" color="rgba(0,0,0,.9)" backgroundColor="rgba(255,255,255,0.5)" size={45} onPress={()=>{
                             this.props.store.stopAudio();
@@ -91,7 +92,8 @@ class StationModel extends Component {
                         <Button name="stop" color="rgba(0,0,0,.9)" backgroundColor="rgba(255,255,255,0.5)" size={45} onPress={()=>{
                               this.props.store.stopAudio();
                         }}/>
-                    </View>
+                    </View> : null
+                    }
                 </View>
             </Modal>
         );

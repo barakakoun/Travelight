@@ -34,14 +34,11 @@ class Store {
     @observable currRegion = null;
     @observable position = null;
     @observable accessToken = null;
-    @observable userName = null;
     @observable firstName = null;
     @observable lastName = null;
     @observable email = null;
-    @observable userPhoto = null;
     @observable isTourModalOpen = false;
     @observable isStationModelOpen = false;
-    @observable audio = null;
     @observable currentUser = {
         img: "http://www.worldofbuzz.com/wp-content/uploads/2015/04/noprofilemale.gif?x82567",
         name: "Unknown"
@@ -334,21 +331,21 @@ class Store {
                     },
                     img: 'http://www.universities-colleges.org.il/upload/1530_364x968.jpg'
                 },
-                // {
-                //     key: 4,
-                //     name: 'History of Petach Tikva',
-                //     description: 'Learn about Petach Tikva. a city that grew in the last few years',
-                //     duration: '0.50',
-                //     accessible: false,
-                //     distance: '1.5',
-                //     reviews: 0,
-                //     rating: 0,
-                //     coordinate: {
-                //         latitude: 32.078801,
-                //         longitude: 34.907979
-                //     },
-                //     img: 'http://images1.ynet.co.il/xnet//PicServer2/pic/012012/154037/31_735.jpg'
-                // }
+                {
+                    key: 4,
+                    name: 'The old and new Jerusalem',
+                    description: 'A walking tour through the highlights of one of the most sacred and majestic spots in the world!',
+                    duration: '0.50',
+                    accessible: false,
+                    distance: '1.5',
+                    reviews: 0,
+                    rating: 0,
+                    coordinate: {
+                        latitude: 31.776714,
+                        longitude: 35.234525
+                    },
+                    img: 'http://israel-tour-guide.com/wp-content/uploads/2014/12/1-Jewish-Quarter-from-Mt.-of-Olives.jpg'
+                }
             ];
         }
     }
@@ -368,7 +365,8 @@ class Store {
                             latitude: 32.074840,
                             longitude: 34.775946
                         },
-                        img: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Dizengof_Center_Tel_Aviv.jpg'
+                        img: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Dizengof_Center_Tel_Aviv.jpg',
+                        audio: new Sound('station1.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 2,
@@ -377,7 +375,8 @@ class Store {
                             latitude: 32.073299,
                             longitude: 34.787055
                         },
-                        img: 'http://images.globes.co.il/images/NewGlobes/big_image_800/2016/sarona-800.2016125T152619.jpg'
+                        img: 'http://images.globes.co.il/images/NewGlobes/big_image_800/2016/sarona-800.2016125T152619.jpg',
+                        audio: new Sound('station2.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 3,
@@ -386,7 +385,8 @@ class Store {
                             latitude: 32.075196,
                             longitude: 34.781718
                         },
-                        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/London_Ministores%2C_tel_aviv.jpg/1280px-London_Ministores%2C_tel_aviv.jpg'
+                        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/London_Ministores%2C_tel_aviv.jpg/1280px-London_Ministores%2C_tel_aviv.jpg',
+                        audio: new Sound('station3.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 4,
@@ -395,7 +395,8 @@ class Store {
                             latitude: 32.079714,
                             longitude: 34.781176
                         },
-                        img: 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Rabin_Squre_eco_pool.jpg'
+                        img: 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Rabin_Squre_eco_pool.jpg',
+                        audio: new Sound('station4.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 5,
@@ -404,7 +405,8 @@ class Store {
                             latitude: 32.081937,
                             longitude: 34.781240
                         },
-                        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Memorial_of_Israeli_Prime_Minister_Yitzchak_Rabin.jpg/400px-Memorial_of_Israeli_Prime_Minister_Yitzchak_Rabin.jpg'
+                        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Memorial_of_Israeli_Prime_Minister_Yitzchak_Rabin.jpg/400px-Memorial_of_Israeli_Prime_Minister_Yitzchak_Rabin.jpg',
+                        audio: new Sound('station5.mp3',Sound.MAIN_BUNDLE)
                     }
                 ];
                     break;
@@ -417,7 +419,8 @@ class Store {
                             latitude: 32.055499,
                             longitude: 34.756486
                         },
-                        img: 'https://images1.calcalist.co.il/PicServer2/20122005/118617/AMIT_l.jpg'
+                        img: 'https://images1.calcalist.co.il/PicServer2/20122005/118617/AMIT_l.jpg',
+                        audio: new Sound('station1.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 2,
@@ -426,7 +429,8 @@ class Store {
                             latitude: 32.073837,
                             longitude: 34.765507
                         },
-                        img: 'https://images1.calcalist.co.il/PicServer2/20122005/188354/CAL0009129_l.jpg'
+                        img: 'https://images1.calcalist.co.il/PicServer2/20122005/188354/CAL0009129_l.jpg',
+                        audio: new Sound('station2.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 3,
@@ -435,7 +439,8 @@ class Store {
                             latitude: 32.073960,
                             longitude: 34.764584
                         },
-                        img: 'http://www.israelhayom.co.il/sites/default/files/styles/566x349/public/images/articles/2016/08/03/14701835615544_b.jpg'
+                        img: 'http://www.israelhayom.co.il/sites/default/files/styles/566x349/public/images/articles/2016/08/03/14701835615544_b.jpg',
+                        audio: new Sound('station3.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 4,
@@ -444,7 +449,8 @@ class Store {
                             latitude: 32.089911,
                             longitude: 34.772031
                         },
-                        img: 'http://www.nrg.co.il/images/archive/465x349/1/071/952.jpg'
+                        img: 'http://www.nrg.co.il/images/archive/465x349/1/071/952.jpg',
+                        audio: new Sound('station4.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 5,
@@ -453,7 +459,8 @@ class Store {
                             latitude: 32.096460,
                             longitude: 34.772611
                         },
-                        img: 'http://kinderland.co.il/wp-content/uploads/2015/04/19343-namal.jpg'
+                        img: 'http://kinderland.co.il/wp-content/uploads/2015/04/19343-namal.jpg',
+                        audio: new Sound('station5.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 6,
@@ -462,7 +469,8 @@ class Store {
                             latitude: 32.104054,
                             longitude: 34.776745
                         },
-                        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Reading_Power_Station022.jpg/250px-Reading_Power_Station022.jpg'
+                        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Reading_Power_Station022.jpg/250px-Reading_Power_Station022.jpg',
+                        audio: new Sound('station6.mp3',Sound.MAIN_BUNDLE)
                     },
                 ];
                     break;
@@ -474,7 +482,8 @@ class Store {
                             coordinate: {
                                 latitude: 31.970070,
                                 longitude: 34.772808 },
-                            img: 'http://in.bgu.ac.il/alumni/DocLib/Pages/hatava-academon/academon.bmp'
+                            img: 'http://in.bgu.ac.il/alumni/DocLib/Pages/hatava-academon/academon.bmp',
+                            audio: new Sound('station1.mp3',Sound.MAIN_BUNDLE)
                         },
                         {
                             key:2,
@@ -482,7 +491,8 @@ class Store {
                             coordinate: {
                                 latitude: 31.970070,
                                 longitude: 34.772808},
-                            img: 'https://www.kaptest.com/blog/lsat-the-180/wp-content/uploads/sites/11/2016/03/iStock_000087169105_Small-e1457387991459.jpg'
+                            img: 'https://www.kaptest.com/blog/lsat-the-180/wp-content/uploads/sites/11/2016/03/iStock_000087169105_Small-e1457387991459.jpg',
+                            audio: new Sound('station2.mp3',Sound.MAIN_BUNDLE)
                         },
                         {
                             key:3,
@@ -490,7 +500,8 @@ class Store {
                             coordinate: {
                                 latitude: 31.970480,
                                 longitude: 34.772014},
-                            img: 'http://www.archijob.co.il/archijob_projects/projects/PR285/4.jpg'
+                            img: 'http://www.archijob.co.il/archijob_projects/projects/PR285/4.jpg',
+                            audio: new Sound('station3.mp3',Sound.MAIN_BUNDLE)
                         },
                         {
                             key:4,
@@ -498,7 +509,8 @@ class Store {
                             coordinate: {
                                 latitude: 31.970834,
                                 longitude: 34.771660},
-                            img: 'https://static.wixstatic.com/media/b8a557_232a4480efc845e6b1e80450a2a52616.jpg_srz_668_440_85_22_0.50_1.20_0.00_jpg_srz'
+                            img: 'https://static.wixstatic.com/media/b8a557_232a4480efc845e6b1e80450a2a52616.jpg_srz_668_440_85_22_0.50_1.20_0.00_jpg_srz',
+                            audio: new Sound('station4.mp3',Sound.MAIN_BUNDLE)
                         },
                         {
                             key:5,
@@ -506,7 +518,8 @@ class Store {
                             coordinate: {
                                 latitude: 31.970880,
                                 longitude: 34.771360},
-                            img: 'http://www.news1.co.il/uploadimages/NEWS1-749111354351044.jpg'
+                            img: 'http://www.news1.co.il/uploadimages/NEWS1-749111354351044.jpg',
+                            audio: new Sound('station5.mp3',Sound.MAIN_BUNDLE)
                         },
                         {
                             key:6,
@@ -515,9 +528,59 @@ class Store {
                                 latitude: 31.970143,
                                 longitude: 34.771617
                             },
-                            img: 'http://www.ilimudim.co.il/files/8491.jpg'
+                            img: 'http://www.ilimudim.co.il/files/8491.jpg',
+                            audio: new Sound('station6.mp3',Sound.MAIN_BUNDLE)
                         }
-                    ]
+                    ];
+                    break;
+                case 4:
+                    this.tourStations = [
+                        {
+                            key:1,
+                            name: 'Via Dolorosa',
+                            coordinate: {
+                                latitude: 31.780182,
+                                longitude: 35.232126},
+                            audio: new Sound('station1.mp3',Sound.MAIN_BUNDLE),
+                            img: 'http://cdn.c.photoshelter.com/img-get2/I0000O3ynRRbGbRI/fit=1000x750/Station-five-of-the-Via-Dolorosa-in-the-Old-City-of-Jerusalem-000032-275.jpg'
+                        },
+                        {
+                            key:2,
+                            name: 'Western Wall',
+                            coordinate: {
+                                latitude: 31.970070,
+                                longitude: 34.772808},
+                            audio: new Sound('station2.mp3',Sound.MAIN_BUNDLE),
+                            img: 'https://www.itraveljerusalem.com/wp-content/uploads/2016/07/atr-western-wall-2.jpg'
+                        },
+                        {
+                            key:3,
+                            name: 'Alrov Mamilla Avenue',
+                            coordinate: {
+                                latitude: 31.779283,
+                                longitude: 35.223841},
+                            audio: new Sound('station3.mp3',Sound.MAIN_BUNDLE),
+                            img: 'https://images1.calcalist.co.il/PicServer2/20122005/312181/CAL000290-L.jpg'
+                        },
+                        {
+                            key:4,
+                            name: 'Jerusalem Historical City Hall Building',
+                            coordinate: {
+                                latitude: 31.970834,
+                                longitude: 35.224689},
+                            audio: new Sound('station4.mp3',Sound.MAIN_BUNDLE),
+                            img: 'https://upload.wikimedia.org/wikipedia/commons/3/36/Jerusalem_Historical_City_Hall_Building_2.JPG'
+                        },
+                        {
+                            key:5,
+                            name: 'Machane Yehudah Market',
+                            coordinate: {
+                                latitude: 31.785212,
+                                longitude: 35.210817},
+                            audio: new Sound('station5.mp3',Sound.MAIN_BUNDLE),
+                            img: 'https://media-cdn.tripadvisor.com/media/photo-s/0a/0c/8c/07/mahane-yehuda-market.jpg'
+                        },
+                    ];
                     break;
                 default:
                     this.tourStations = [];
@@ -605,26 +668,33 @@ class Store {
     }
 
     @action playAudio(){
-        this.audio.play((success)=>{
-            if(!success)
-            {
-                alert('Oops! failed to load the sound');
-            }
-        })
+        if (this.chosenStation.audio) {
+            this.chosenStation.audio.play(success => {
+                if (!success) {
+                    alert('Oops! failed to load the sound');
+                }
+            })
+        }
     }
 
     @action stopAudio(){
-        this.audio.stop();
+        if (this.chosenStation.audio) {
+            this.chosenStation.audio.stop();
+        }
     }
 
     @action pauseAudio() {
-        this.audio.pause();
+        if (this.chosenStation.audio) {
+            this.chosenStation.audio.pause();
+        }
     }
 
     @action releaseAudio(){
-        this.audio.stop();
-        this.audio.release();
-        this.audio=null;
+        if (this.chosenStation.audio) {
+            this.chosenStation.audio.stop();
+            this.chosenStation.audio.release();
+            this.chosenStation.audio = null;
+        }
     }
 
     @computed get startTourPosition() {

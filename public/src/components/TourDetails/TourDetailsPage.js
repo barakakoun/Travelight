@@ -150,8 +150,8 @@ class TourDetailsPage extends Component {
                 tourStations } = this.props.store;
         return (
             <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: '#FFFFFF'}}>
-                <Swiper style={{        marginTop: 60,
-                    marginBottom: 10}} height={280}
+                <Swiper style={{marginTop: 60, marginBottom: 10}}
+                        height={280}
                         activeDot={<View style={{backgroundColor: '#0000FF', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}} />}
                         showsButtons={true}
                         nextButton={<Text style={{backgroundColor: 'transparent', fontSize: 38, color:'#0000FF'}}>›</Text>}
@@ -257,7 +257,6 @@ const styles = StyleSheet.create({
     },
     wrapper: {
         marginTop: 60,
-        marginBottom: 10
     },
 
     slide: {
@@ -277,21 +276,21 @@ const styles = StyleSheet.create({
         flex: 1
     },
     oneByOne: {
-        backgroundColor: '#0000FF',
+        backgroundColor: '#5592f4',
         flex:1,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'flex-start'
     },
     twoSides: {
-        backgroundColor: '#0000FF',
+        backgroundColor: '#5592f4',
         flex:1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start'
     },
     oneUnderOne: {
-        backgroundColor: '#0000FF',
+        backgroundColor: '#5592f4',
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'flex-start'
