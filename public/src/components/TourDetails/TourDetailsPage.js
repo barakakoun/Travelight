@@ -47,6 +47,8 @@ class TourDetailsPage extends Component {
     startTour() {
         const { chosenTour,
                 tourStations } = this.props.store;
+        console.warn(chosenTour);
+        console.warn(tourStations.length);
         if(chosenTour) {
             if (tourStations) {
                 let url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + chosenTour.coordinate.latitude.toString() + ","
@@ -83,7 +85,7 @@ class TourDetailsPage extends Component {
                             });
                         }
                     }).catch(e => {
-                    console.warn(e)
+                    console.warn(e);
                 });
             }
         }
@@ -134,6 +136,7 @@ class TourDetailsPage extends Component {
     }
 
     render() {
+        const {tourStations} = this.props.store;
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}
@@ -148,15 +151,13 @@ class TourDetailsPage extends Component {
         const { chosenTour,
                 tourStations } = this.props.store;
         return (
-            <View style={{flex: 1, justifyContent: 'flex-start'}}>
-                <Text style={{color: 'white', fontSize: 32, marginTop: 60, marginBottom: 10}}>
-                    {chosenTour.name}
-                </Text>
-                <Swiper style={styles.wrapper} height={180}
-                        activeDot={<View style={{backgroundColor: '#FFFFFF', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}} />}
+            <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: '#FFFFFF'}}>
+                <Swiper style={{        marginTop: 60,
+                    marginBottom: 10}} height={280}
+                        activeDot={<View style={{backgroundColor: '#0000FF', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}} />}
                         showsButtons={true}
-                        nextButton={<Text style={{backgroundColor: 'transparent', fontSize: 38, color:'white'}}>›</Text>}
-                        prevButton={<Text style={{backgroundColor: 'transparent', fontSize: 38, color:'white'}}>‹</Text>}
+                        nextButton={<Text style={{backgroundColor: 'transparent', fontSize: 38, color:'#0000FF'}}>›</Text>}
+                        prevButton={<Text style={{backgroundColor: 'transparent', fontSize: 38, color:'#0000FF'}}>‹</Text>}
                         loop
                 >
                     {
@@ -176,6 +177,9 @@ class TourDetailsPage extends Component {
                 </Swiper>
                 <Divider style={{ marginBottom: 10 }}/>
                 <View style={styles.oneUnderOne}>
+                    <Text style={{color: 'white', fontSize: 24, marginBottom: 10}}>
+                        {chosenTour.name}
+                    </Text>
                     <View style={styles.twoSides}>
                         <View style={styles.oneByOne}>
                             <Icon name="timer" color="#FFFFFF" style={styles.icon}/>
@@ -191,7 +195,7 @@ class TourDetailsPage extends Component {
                     </View>
                     <View style={styles.twoSides}>
                         <View style={styles.oneByOne}>
-                            <Text style={{marginRight: 2}}>
+                            <Text style={{marginRight: 2, color:'white'}}>
                                 {chosenTour.rating}
                             </Text>
                             <Stars
@@ -202,7 +206,7 @@ class TourDetailsPage extends Component {
                                 rate={chosenTour.rating}
                                 size={20}
                             />
-                            <Text style={{marginLeft: 10}}>
+                            <Text style={{marginLeft: 10, color:'white'}}>
                                  { chosenTour.reviews } reviews
                             </Text>
                         </View>
@@ -254,6 +258,8 @@ const styles = StyleSheet.create({
         color: "white",
     },
     wrapper: {
+        marginTop: 60,
+        marginBottom: 10
     },
 
     slide: {
@@ -268,22 +274,26 @@ const styles = StyleSheet.create({
     },
 
     image: {
+        marginTop: 60,
         width,
         flex: 1
     },
     oneByOne: {
+        backgroundColor: '#0000FF',
         flex:1,
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'flex-start'
     },
     twoSides: {
+        backgroundColor: '#0000FF',
         flex:1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start'
     },
     oneUnderOne: {
+        backgroundColor: '#0000FF',
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'flex-start'

@@ -31,7 +31,6 @@ class TourDetailsModal extends Component {
 
     render() {
         const {chosenTour} = this.props.store;
-        console.warn("Render Details modal");
         if (!chosenTour) {
             return null;
         }

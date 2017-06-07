@@ -486,13 +486,6 @@ class MainMapPage extends Component {
                                  icon="menu"
                                  onIconPress={this.onOpenBurger.bind(this)}/>
 
-                {/*<View style={styles.buttonContainer}>*/}
-                    {/*<Button*/}
-                        {/*onPress={this.onOpenBurger.bind(this)}*/}
-                        {/*title="hey"*/}
-                    {/*/>*/}
-                {/*</View>*/}
-
                 <TourDetailsModal ref="TourDetailsModal" goToTourDetails={this.goToTourDetails.bind(this)}
                                   onModalTourDetailsClosed={() => this.onModalTourDetailsClosed.bind(this)}
                                   store={this.props.store}

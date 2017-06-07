@@ -17,3 +17,6 @@ export const STATION_LONGITUDE_DELTA = 0.006866;
 export const FACEBOOK_LOGIN = "Facebook";
 export const GOOGLE_LOGIN = "Google";
 export const REGULAR_LOGIN = "Regular";
+
+//Other
+export const GET_FROM_SERVER = false;

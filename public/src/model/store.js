@@ -6,6 +6,7 @@ import { LATITUDE_DELTA,
          REGULAR_LOGIN,
          STATION_LONGITUDE_DELTA,
          STATION_LATITUDE_DELTA,
+        GET_FROM_SERVER,
         } from "../../../Consts/variables";
 import { LOGINUSER,
          URL_TOURS_ENDPOINT } from "../../../Consts/urls";
@@ -90,6 +91,7 @@ class Store {
                 method: '1'
             })}).then((response) => response.json())
             .then((responseJson) => {
+            console.warn("After facebook login");
             if(responseJson.message === massages.loginUserSucess)
             {
                 //this.navigatorReplace('MainMapPage');
@@ -121,21 +123,20 @@ class Store {
     });
     }
 
-    initUser()
-    {
+    initUser() {
         this.currentUser.firstName = '';
         this.currentUser.lastName='';
         this.currentUser.email='';
         this.currentUser.name='';
         this.currentUser.img=null;
     }
-    @action logoutUser()
-    {
+
+    @action logoutUser() {
         this.initUser();
         this.removeUserFromStorage();
     }
-    removeUserFromStorage()
-    {
+
+    removeUserFromStorage() {
         // AsyncStorage.multiRemove(['token','firstName','lastName','email']);
         AsyncStorage.removeItem('token');
     }
@@ -143,7 +144,7 @@ class Store {
     @action loginWithFacebook() {
         LoginManager.logInWithReadPermissions(['public_profile','email'])
             .then(result => {
-                console.warn("here");
+                console.warn(JSON.stringify(result, null, 3));
                 if (result.isCancelled) {
                     alert('Login was cancelled');
                 } else {
@@ -180,6 +181,7 @@ class Store {
                 break;
         }
     }
+
     @action getFacebookUserData() {
         const responseInfoCallback = (error,result)=>{
             if (error) {
@@ -275,68 +277,319 @@ class Store {
     }
     
     @action getAvailableTours() {
-        fetch(URL_TOURS_ENDPOINT)
-            .then(response => response.json())
-            .then(result => {
-                this.availableTours = result;
-            })
-            .catch(error => { console.warn(error); });
+        if(GET_FROM_SERVER) {
+            fetch(URL_TOURS_ENDPOINT)
+                .then(response => response.json())
+                .then(result => {
+                    this.availableTours = result;
+                })
+                .catch(error => {
+                    console.warn(error);
+                });
+        } else {
+            this.availableTours = [
+                {
+                    key: 1,
+                    name: 'The history of Rabin Square',
+                    description: 'Get to know Rabin Square from the beginning to present. get to know the full history of formerly kings of Israel square',
+                    duration: '1.30',
+                    accessible: true,
+                    distance: '2',
+                    reviews: 5,
+                    rating: 4.5,
+                    coordinate: {
+                        latitude: 32.073576,
+                        longitude: 34.781836
+                    },
+                    img: 'http://www.mapa.co.il/WWWTemp/UDP/105936_800_600.jpeg'
+                },
+                {
+                    key: 2,
+                    name: 'Israel\'s Beautiful coastline & Tel Aviv harbor ',
+                    description: 'Represents the beautiful coastline of Tel Aviv-Yafo and the Mediterranean character of the city. The path runs along the Tel Aviv coastline - from the Jaffa corridor to the Tel Aviv port and the lighthouse in the north.',
+                    duration: '1.30',
+                    accessible: false,
+                    distance: '1.5',
+                    reviews: 9,
+                    rating: 3.7,
+                    coordinate: {
+                        latitude: 32.055031,
+                        longitude: 34.754356
+                    },
+                    img: 'http://images1.ynet.co.il//PicServer3/2013/08/12/4793977/47939300990100408242no.jpg'
+                },
+                {
+                    key: 3,
+                    name: 'Educational tour in College of Management Academic Studies',
+                    description: 'The College of Management Academic Studies is the pioneer of academic colleges in Israel',
+                    duration: '2',
+                    accessible: true,
+                    distance: '3.2',
+                    reviews: 20,
+                    rating: 5,
+                    coordinate: {
+                        latitude: 31.969742,
+                        longitude: 34.772797
+                    },
+                    img: 'http://www.universities-colleges.org.il/upload/1530_364x968.jpg'
+                },
+                // {
+                //     key: 4,
+                //     name: 'History of Petach Tikva',
+                //     description: 'Learn about Petach Tikva. a city that grew in the last few years',
+                //     duration: '0.50',
+                //     accessible: false,
+                //     distance: '1.5',
+                //     reviews: 0,
+                //     rating: 0,
+                //     coordinate: {
+                //         latitude: 32.078801,
+                //         longitude: 34.907979
+                //     },
+                //     img: 'http://images1.ynet.co.il/xnet//PicServer2/pic/012012/154037/31_735.jpg'
+                // }
+            ];
+        }
     }
 
     @action getTourStations() {
          // Get tour stations by this.chosenTour.key
-
-        this.tourStations = [
-            {
-                key:1,
-                name: 'station 1',
-                coordinate: {
-                    latitude: 32.078801,
-                    longitude: 34.907979 },
-                img: 'https://www.stationonecoffeehouse.ca/sites/all/themes/tributary/logo.png'
-            },
-            {
-                key:2,
-                name: 'station 2',
-                coordinate: {
-                    latitude: 32.077914,
-                    longitude: 34.906416},
-                img: 'http://station2richmond.com/wp-content/uploads/2017/01/retina-logo-1.png'
-            },
-            {
-                key:3,
-                name: 'station 3',
-                coordinate: {
-                    latitude: 32.076970,
-                    longitude: 34.908218},
-                img: 'http://static1.squarespace.com/static/5373e99ae4b0297decd47b98/t/557eef98e4b0d40fa1ac11f7/1489091006453/?format=1500w'
-            },
-            {
-                key:4,
-                name: 'station 4',
-                coordinate: {
-                    latitude: 32.075515,
-                    longitude: 34.910937},
-                img: 'https://media-cdn.tripadvisor.com/media/photo-s/07/04/4e/36/station-4-beach-bar.jpg'
-            },
-            {
-                key:5,
-                name: 'station 5',
-                coordinate: {
-                    latitude: 32.074406,
-                    longitude: 34.905964},
-                img: 'http://station5.dk/wp-content/uploads/2014/12/Station5_logo2.png'
-            },
-            {
-                key:6,
-                name: 'station 6',
-                coordinate: {
-                    latitude: 32.076844,
-                    longitude: 34.904783
-                },
-                img: 'https://pbs.twimg.com/profile_images/751094091002179584/CeEyWUd6.jpg'
+        if(GET_FROM_SERVER) {
+            //TODO: GET FROM SERVER
+        } else {
+            switch(this.chosenTour.key) {
+                case 1:
+                    this.tourStations =  [
+                    {
+                        key: 1,
+                        name: 'station 1',
+                        coordinate: {
+                            latitude: 32.078801,
+                            longitude: 34.907979
+                        },
+                        img: 'https://www.stationonecoffeehouse.ca/sites/all/themes/tributary/logo.png'
+                    },
+                    {
+                        key: 2,
+                        name: 'station 2',
+                        coordinate: {
+                            latitude: 32.077914,
+                            longitude: 34.906416
+                        },
+                        img: 'http://station2richmond.com/wp-content/uploads/2017/01/retina-logo-1.png'
+                    },
+                    {
+                        key: 3,
+                        name: 'station 3',
+                        coordinate: {
+                            latitude: 32.076970,
+                            longitude: 34.908218
+                        },
+                        img: 'http://static1.squarespace.com/static/5373e99ae4b0297decd47b98/t/557eef98e4b0d40fa1ac11f7/1489091006453/?format=1500w'
+                    },
+                    {
+                        key: 4,
+                        name: 'station 4',
+                        coordinate: {
+                            latitude: 32.075515,
+                            longitude: 34.910937
+                        },
+                        img: 'https://media-cdn.tripadvisor.com/media/photo-s/07/04/4e/36/station-4-beach-bar.jpg'
+                    },
+                    {
+                        key: 5,
+                        name: 'station 5',
+                        coordinate: {
+                            latitude: 32.074406,
+                            longitude: 34.905964
+                        },
+                        img: 'http://station5.dk/wp-content/uploads/2014/12/Station5_logo2.png'
+                    },
+                    {
+                        key: 6,
+                        name: 'station 6',
+                        coordinate: {
+                            latitude: 32.076844,
+                            longitude: 34.904783
+                        },
+                        img: 'https://pbs.twimg.com/profile_images/751094091002179584/CeEyWUd6.jpg'
+                    }
+                ];
+                    break;
+                case 2:
+                    this.tourStations = [
+                    {
+                        key: 1,
+                        name: 'Jappa Clock Square',
+                        coordinate: {
+                            latitude: 32.055499,
+                            longitude: 34.756486
+                        },
+                        img: 'https://images1.calcalist.co.il/PicServer2/20122005/118617/AMIT_l.jpg'
+                    },
+                    {
+                        key: 2,
+                        name: 'The Opera Tower',
+                        coordinate: {
+                            latitude: 32.073837,
+                            longitude: 34.765507
+                        },
+                        img: 'https://images1.calcalist.co.il/PicServer2/20122005/188354/CAL0009129_l.jpg'
+                    },
+                    {
+                        key: 3,
+                        name: 'Jerusalem Beach',
+                        coordinate: {
+                            latitude: 32.073960,
+                            longitude: 34.764584
+                        },
+                        img: 'http://www.israelhayom.co.il/sites/default/files/styles/566x349/public/images/articles/2016/08/03/14701835615544_b.jpg'
+                    },
+                    {
+                        key: 4,
+                        name: 'Independence Park',
+                        coordinate: {
+                            latitude: 32.089911,
+                            longitude: 34.772031
+                        },
+                        img: 'http://www.nrg.co.il/images/archive/465x349/1/071/952.jpg'
+                    },
+                    {
+                        key: 5,
+                        name: 'Tel Aviv Harbor',
+                        coordinate: {
+                            latitude: 32.096460,
+                            longitude: 34.772611
+                        },
+                        img: 'http://kinderland.co.il/wp-content/uploads/2015/04/19343-namal.jpg'
+                    },
+                    {
+                        key: 6,
+                        name: 'Tel Aviv\'s Lighthouse',
+                        coordinate: {
+                            latitude: 32.104054,
+                            longitude: 34.776745
+                        },
+                        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Reading_Power_Station022.jpg/250px-Reading_Power_Station022.jpg'
+                    },
+                ];
+                    break;
+                case 3:
+                    this.tourStations = [
+                        {
+                            key:1,
+                            name: 'Acadamon',
+                            coordinate: {
+                                latitude: 31.970070,
+                                longitude: 34.772808 },
+                            img: 'http://in.bgu.ac.il/alumni/DocLib/Pages/hatava-academon/academon.bmp'
+                        },
+                        {
+                            key:2,
+                            name: 'Law School',
+                            coordinate: {
+                                latitude: 31.970070,
+                                longitude: 34.772808},
+                            img: 'https://www.kaptest.com/blog/lsat-the-180/wp-content/uploads/sites/11/2016/03/iStock_000087169105_Small-e1457387991459.jpg'
+                        },
+                        {
+                            key:3,
+                            name: 'The Library',
+                            coordinate: {
+                                latitude: 31.970480,
+                                longitude: 34.772014},
+                            img: 'http://www.archijob.co.il/archijob_projects/projects/PR285/4.jpg'
+                        },
+                        {
+                            key:4,
+                            name: 'Fabiano',
+                            coordinate: {
+                                latitude: 31.970834,
+                                longitude: 34.771660},
+                            img: 'https://static.wixstatic.com/media/b8a557_232a4480efc845e6b1e80450a2a52616.jpg_srz_668_440_85_22_0.50_1.20_0.00_jpg_srz'
+                        },
+                        {
+                            key:5,
+                            name: 'School of Computer Science',
+                            coordinate: {
+                                latitude: 31.970880,
+                                longitude: 34.771360},
+                            img: 'http://www.news1.co.il/uploadimages/NEWS1-749111354351044.jpg'
+                        },
+                        {
+                            key:6,
+                            name: 'School of Business Administration',
+                            coordinate: {
+                                latitude: 31.970143,
+                                longitude: 34.771617
+                            },
+                            img: 'http://www.ilimudim.co.il/files/8491.jpg'
+                        }
+                    ]
+                    break;
+                default:
+                    this.tourStations = [];
+                    break;
             }
-        ]
+
+            console.warn(this.tourStations.length);
+            // this.tourStations = [
+            //     {
+            //         key: 1,
+            //         name: 'station 1',
+            //         coordinate: {
+            //             latitude: 32.078801,
+            //             longitude: 34.907979
+            //         },
+            //         img: 'https://www.stationonecoffeehouse.ca/sites/all/themes/tributary/logo.png'
+            //     },
+            //     {
+            //         key: 2,
+            //         name: 'station 2',
+            //         coordinate: {
+            //             latitude: 32.077914,
+            //             longitude: 34.906416
+            //         },
+            //         img: 'http://station2richmond.com/wp-content/uploads/2017/01/retina-logo-1.png'
+            //     },
+            //     {
+            //         key: 3,
+            //         name: 'station 3',
+            //         coordinate: {
+            //             latitude: 32.076970,
+            //             longitude: 34.908218
+            //         },
+            //         img: 'http://static1.squarespace.com/static/5373e99ae4b0297decd47b98/t/557eef98e4b0d40fa1ac11f7/1489091006453/?format=1500w'
+            //     },
+            //     {
+            //         key: 4,
+            //         name: 'station 4',
+            //         coordinate: {
+            //             latitude: 32.075515,
+            //             longitude: 34.910937
+            //         },
+            //         img: 'https://media-cdn.tripadvisor.com/media/photo-s/07/04/4e/36/station-4-beach-bar.jpg'
+            //     },
+            //     {
+            //         key: 5,
+            //         name: 'station 5',
+            //         coordinate: {
+            //             latitude: 32.074406,
+            //             longitude: 34.905964
+            //         },
+            //         img: 'http://station5.dk/wp-content/uploads/2014/12/Station5_logo2.png'
+            //     },
+            //     {
+            //         key: 6,
+            //         name: 'station 6',
+            //         coordinate: {
+            //             latitude: 32.076844,
+            //             longitude: 34.904783
+            //         },
+            //         img: 'https://pbs.twimg.com/profile_images/751094091002179584/CeEyWUd6.jpg'
+            //     }
+            // ];
+        }
     }
 
     @action resetChosenTour() {
@@ -349,11 +602,11 @@ class Store {
         this.isTourModalOpen = true;
     }
 
-    @action onStationPress(station)
-    {
+    @action onStationPress(station) {
         this.chosenStation = station;
         this.isStationModelOpen = true;
     }
+
     @action setLocation(latitude,longitude,latitudeDelta,longitudeDelta) {
         this.setRegion(latitude,longitude,latitudeDelta,longitudeDelta);
         this.setCurrRegion(latitude,longitude,latitudeDelta,longitudeDelta);
@@ -398,7 +651,6 @@ class Store {
         this.isTourModalOpen = value;
     }
 
-
     @action logOff() {
         this.currentUser = {
             img: "http://www.worldofbuzz.com/wp-content/uploads/2015/04/noprofilemale.gif?x82567",
@@ -430,8 +682,7 @@ class Store {
         this.audio.stop();
     }
 
-    @action pauseAudio()
-    {
+    @action pauseAudio() {
         this.audio.pause();
     }
 
@@ -440,6 +691,7 @@ class Store {
         this.audio.release();
         this.audio=null;
     }
+
     @computed get startTourPosition() {
          if(this.tourStations) {
              return {
