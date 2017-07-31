@@ -311,8 +311,8 @@ class Store {
                     reviews: 32,
                     rating: 5,
                     coordinate: {
-                        latitude: 32.055031,
-                        longitude: 34.754356
+                        latitude: 32.055499,
+                        longitude: 34.756486
                     },
                     img: 'http://images1.ynet.co.il//PicServer3/2013/08/12/4793977/47939300990100408242no.jpg'
                 },
@@ -361,10 +361,7 @@ class Store {
                     {
                         key: 1,
                         name: 'Dizengoff Center',
-                        coordinate: {
-                            latitude: 32.074840,
-                            longitude: 34.775946
-                        },
+                        coordinate: this.availableTours[0].coordinate,
                         img: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Dizengof_Center_Tel_Aviv.jpg',
                         audio: new Sound('station1.mp3',Sound.MAIN_BUNDLE)
                     },
@@ -415,10 +412,7 @@ class Store {
                     {
                         key: 1,
                         name: 'Jappa Clock Square',
-                        coordinate: {
-                            latitude: 32.055499,
-                            longitude: 34.756486
-                        },
+                        coordinate: this.availableTours[1].coordinate,
                         img: 'https://images1.calcalist.co.il/PicServer2/20122005/118617/AMIT_l.jpg',
                         audio: new Sound('station1.mp3',Sound.MAIN_BUNDLE)
                     },
@@ -479,9 +473,7 @@ class Store {
                         {
                             key:1,
                             name: 'Acadamon',
-                            coordinate: {
-                                latitude: 31.970070,
-                                longitude: 34.772808 },
+                            coordinate: this.availableTours[2].coordinate,
                             img: 'http://in.bgu.ac.il/alumni/DocLib/Pages/hatava-academon/academon.bmp',
                             audio: new Sound('station1.mp3',Sound.MAIN_BUNDLE)
                         },
@@ -489,7 +481,7 @@ class Store {
                             key:2,
                             name: 'Law School',
                             coordinate: {
-                                latitude: 31.970070,
+                                latitude: 31.970480,
                                 longitude: 34.772808},
                             img: 'https://www.kaptest.com/blog/lsat-the-180/wp-content/uploads/sites/11/2016/03/iStock_000087169105_Small-e1457387991459.jpg',
                             audio: new Sound('station2.mp3',Sound.MAIN_BUNDLE)
@@ -538,9 +530,7 @@ class Store {
                         {
                             key:1,
                             name: 'Via Dolorosa',
-                            coordinate: {
-                                latitude: 31.780182,
-                                longitude: 35.232126},
+                            coordinate: this.availableTours[3].coordinate,
                             audio: new Sound('station1.mp3',Sound.MAIN_BUNDLE),
                             img: 'http://cdn.c.photoshelter.com/img-get2/I0000O3ynRRbGbRI/fit=1000x750/Station-five-of-the-Via-Dolorosa-in-the-Old-City-of-Jerusalem-000032-275.jpg'
                         },
@@ -596,12 +586,24 @@ class Store {
 
     @action onTourPress(tour) {
         this.chosenTour = tour;
-        this.isTourModalOpen = true;
+        this.isTourModalOpen = false;
+
+        setTimeout(() => {
+            if (this.chosenTour!=null) {
+                this.isTourModalOpen = true;
+            }
+        }, 500);
     }
 
     @action onStationPress(station) {
         this.chosenStation = station;
-        this.isStationModelOpen = true;
+        this.isStationModelOpen = false;
+
+        // setTimeout(() => {
+        //     if (this.chosenStation!=null) {
+        //         this.isStationModelOpen = true;
+        //     }
+        // }, 500);
     }
 
     @action setLocation(latitude,longitude,latitudeDelta,longitudeDelta) {

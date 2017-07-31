@@ -24,6 +24,27 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 import {observer} from 'mobx-react/native';
 
+const images = [
+    require('../../../assets/stations/station_1.png'),
+    require('../../../assets/stations/station_2.png'),
+    require('../../../assets/stations/station_3.png'),
+    require('../../../assets/stations/station_4.png'),
+    require('../../../assets/stations/station_5.png'),
+    require('../../../assets/stations/station_6.png'),
+    require('../../../assets/stations/station_7.png'),
+    require('../../../assets/stations/station_8.png'),
+    require('../../../assets/stations/station_9.png'),
+    require('../../../assets/stations/station_10.png'),
+    require('../../../assets/stations/station_11.png'),
+    require('../../../assets/stations/station_12.png'),
+    require('../../../assets/stations/station_13.png'),
+    require('../../../assets/stations/station_14.png'),
+    require('../../../assets/stations/station_15.png'),
+    require('../../../assets/stations/station_16.png'),
+];
+
+
+
 @observer
 class TourMapPage extends Component {
 
@@ -260,6 +281,7 @@ class TourMapPage extends Component {
                 chosenTour,
                 startTourPosition,
                 tourStations } = this.props.store;
+        const firstIndex = tourStations[0].key;
 
         const mapNight = [
             {
@@ -463,7 +485,7 @@ class TourMapPage extends Component {
                     <MapView.Polyline
                         coordinates={this.props.coords}
                         strokeWidth={3}
-                        strokeColor="#74a4f2"
+                        strokeColor="rgba(0, 150, 136, 0.9)"
                         geodesic={false}
                     />
 
@@ -471,7 +493,7 @@ class TourMapPage extends Component {
                         <MapView.Marker
                             key={currStation.key}
                             coordinate={currStation.coordinate}
-                            pinColor={"green"}
+                            image={images[currStation.key - 1]}
                             onPress={this.onStationPress.bind(this,currStation)}
                         />
                     ))}

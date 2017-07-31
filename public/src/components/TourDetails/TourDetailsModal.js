@@ -30,13 +30,13 @@ class TourDetailsModal extends Component {
     }
 
     render() {
-        const {chosenTour} = this.props.store;
+        var {chosenTour} = this.props.store;
         if (!chosenTour) {
             return null;
         }
         return (
             <Modal style={[styles.modal, styles.modalTourDetails]} backdrop={false} backButtonClose={true}
-                   backdropOpacity={0.2} position={"bottom"} ref="modalTourDetails"
+                   position={"bottom"} ref="modalTourDetails"
                    onClosed={this.props.onModalTourDetailsClosed.bind(this)}>
                     <Avatar size={150} image={<Image source={{uri:chosenTour.img}}/>} />
                     <Text style={[styles.text, {color: "white"}]}>{chosenTour.name}</Text>

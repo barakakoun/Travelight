@@ -185,7 +185,7 @@ class MainMapPage extends Component {
                 //     }
                 // })
             },
-            (error) => {},
+            (error) => Alert.alert("Error: Are location services on?"),
             {enableHighAccuracy: true}
         );
 
@@ -220,6 +220,14 @@ class MainMapPage extends Component {
         this.props.store.getAvailableTours();
     }
 
+    componentDidMount() {
+        setTimeout(() => {
+            // this.map.animateToRegion(this.props.store.currRegion, 1);
+            this.map.fitToElements(false);
+        }, 50);
+        // this._findMe();
+    }
+
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchID);
 
@@ -240,7 +248,6 @@ class MainMapPage extends Component {
 
     renderScene(route, navigator) {
         const {region,
-               currRegion,
                availableTours } = this.props.store;
         const { height: windowHeight } = Dimensions.get('window');
         const varTop = windowHeight - 125;
@@ -250,6 +257,8 @@ class MainMapPage extends Component {
             left: 15,
             right: 15,
         };
+
+        var currRegion = this.props.store.currRegion;
 
         bbStyle = function(vheight) {
             return {
