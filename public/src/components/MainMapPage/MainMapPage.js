@@ -43,6 +43,10 @@ class MainMapPage extends Component {
             drawer: null
         };
         this.getLocation = this.getLocation.bind(this);
+
+        this._handleBackPressExit = this._handleBackPressExit.bind(this);
+
+        this._handleBackPressInDrawer = this._handleBackPressInDrawer.bind(this);
     }
 
     // When we press on a map marker (which represent tour)
@@ -72,7 +76,7 @@ class MainMapPage extends Component {
             drawerOpen: true
         });
         console.log("drawer listener added");
-        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressInDrawer);
     }
 
     closeDrawer() {
@@ -80,7 +84,7 @@ class MainMapPage extends Component {
             drawerOpen: false
         });
         console.log("drawer listener removed");
-        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressInDrawer);
     }
 
     _handleBackPressInDrawer() {
@@ -103,7 +107,7 @@ class MainMapPage extends Component {
         this.props.store.resetChosenTour();
     }
 
-    // Go to the page contains the tour details
+    // Called when the user choose "more info" in the TourDetailsModal
     goToTourDetails(e) {
 
         // Enable if you want the modal to close
@@ -111,6 +115,7 @@ class MainMapPage extends Component {
         this.props.store.setTourModalOpen(false);
 
         if (this.props.store.chosenTour) {
+            BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressExit);
             this.props.store.getTourStations();
             this.props.store.navigatorOpenTourModal('TourDetailsPage', Navigator.SceneConfigs.FloatFromBottom);
         }
@@ -225,13 +230,29 @@ class MainMapPage extends Component {
             // this.map.animateToRegion(this.props.store.currRegion, 1);
             this.map.fitToElements(false);
         }, 50);
+
+        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressExit);
         // this._findMe();
+    }
+
+    _handleBackPressExit() {
+        Alert.alert(
+            'Alert Title',
+            'Sure you wanna exit?',
+            [
+                {text: 'Yes', onPress: () => BackAndroid.exitApp()},
+                {text: 'No', onPress: () => console.log('Cancel Exit'), style: 'cancel'},
+            ]
+        );
+
+        return true;
     }
 
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchID);
+        Alert.alert("hry");
 
-
+        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressExit);
     }
 
     render() {

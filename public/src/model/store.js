@@ -15,6 +15,7 @@ import React, { Component } from 'react';
 import {AsyncStorage} from 'react-native';
 import massages from "../../../Consts/messages";
 import Sound from 'react-native-sound';
+
 const {
     LoginManager,
     GraphRequest,

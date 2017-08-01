@@ -76,6 +76,7 @@ class TourDetailsPage extends Component {
                         // Alert.alert(responseJson.toString());
                         if (responseJson.routes.length) {
                             this.isStartTour = true;
+                            this.props.store.appNavigator.pop();
                             this.props.store.appNavigator.replace({
                                 id: 'TourMapPage',
                                 tour: chosenTour,

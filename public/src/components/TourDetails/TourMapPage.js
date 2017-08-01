@@ -9,6 +9,7 @@ import {
     AppRegistry,
     Alert,
     Button,
+    BackAndroid,
 } from 'react-native';
 import MapView from 'react-native-maps';
 import StationModel from '../StationDetails/StationModel';
@@ -57,6 +58,9 @@ class TourMapPage extends Component {
         super(props);
         this.getLocation = this.getLocation.bind(this);
 
+        this._handleBackPress = this._handleBackPress.bind(this);
+
+
         // Alert.alert(this.state.coords.length.toString());
         // var tour = this.props.tour;
         //
@@ -102,6 +106,20 @@ class TourMapPage extends Component {
         //     tour: this.props.tour,
         //     coords: this.props.coords,
         // };
+    }
+
+    _handleBackPress() {
+        Alert.alert(
+            'Alert Title',
+            'Sure you wanna stop tour?',
+            [
+                {text: 'Yes', onPress: () => this.props.store.navigatorReplace("MainMapPage")},
+                {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            ],
+            { cancelable: false }
+        );
+
+        return true;
     }
 
     // decode(encoded) {
@@ -220,22 +238,26 @@ class TourMapPage extends Component {
     }
 
     componentDidMount() {
-
         this.getLocation();
+
+        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
     }
 
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchID);
         this.props.store.onTourPress(null);
+        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPress);
+
     }
 
     render() {
         const {onStationPress} = this.props.store;
         const NavigationBarRouteMapper = {
             LeftButton(route, navigator, index, navState) {
+                Alert.alert("left button");
                 return (
                     <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-                                      onPress={() => navigator.parentNavigator.pop()}>
+                                      onPress={() => navigator.parentNavigator.replace({id: "MainMapPage"})}>
                         <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 10,}} />
                     </TouchableOpacity>
                 );
@@ -450,7 +472,7 @@ class TourMapPage extends Component {
                 <MaterialToolbar title={chosenTour.name}
                                  primary={'googleBlue'}
                                  icon="keyboard-backspace"
-                                 onIconPress={() => navigator.parentNavigator.pop()}/>
+                                 onIconPress={() => navigator.parentNavigator.replace({id: "MainMapPage"})}/>
                 <View style={bbStyle(varTop)}>
                     <TouchableOpacity
                         hitSlop = {hitSlop}
