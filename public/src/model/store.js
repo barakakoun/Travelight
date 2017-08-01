@@ -30,7 +30,9 @@ class Store {
     @observable availableTours = [];
     @observable chosenTour = null;
     @observable chosenStation = null;
+    @observable tourKeyForRanking = null;
     @observable tourStations = [];
+    @observable counter = 0;
     @observable region = null;
     @observable currRegion = null;
     @observable position = null;
@@ -40,6 +42,7 @@ class Store {
     @observable email = null;
     @observable isTourModalOpen = false;
     @observable isStationModelOpen = false;
+    @observable isRankModalOpen = false;
     @observable currentUser = {
         img: "http://www.worldofbuzz.com/wp-content/uploads/2015/04/noprofilemale.gif?x82567",
         name: "Unknown"
@@ -54,8 +57,10 @@ class Store {
         this.navigatorPop = this.navigatorPop.bind(this);
         this.onTourPress = this.onTourPress.bind(this);
         this.onStationPress = this.onStationPress.bind(this);
+        this.onRankIconPress = this.onRankIconPress.bind(this);
         this.setLocation = this.setLocation.bind(this);
         this.setRegion = this.setRegion.bind(this);
+        this.setCounter = this.setCounter.bind(this);
         this.setCurrRegion = this.setCurrRegion.bind(this);
         this.setPosition = this.setPosition.bind(this);
         this.watchPosition = this.watchPosition.bind(this);
@@ -65,6 +70,7 @@ class Store {
         this.getFacebookUserData = this.getFacebookUserData.bind(this);
         this.setTourModalOpen = this.setTourModalOpen.bind(this);
         this.setStationModalOpen = this.setStationModalOpen.bind(this);
+        this.setRankModalOpen = this.setRankModalOpen.bind(this);
         this.getUserFromStorage = this.getUserFromStorage.bind(this);
         this.mapFacebookDataToUser.bind(this);
         this.setAudio = this.setAudio.bind(this);
@@ -607,6 +613,19 @@ class Store {
         // }, 500);
     }
 
+    @action onRankIconPress(tourKey) {
+        this.tourKeyForRanking = tourKey;
+        this.isRankModalOpen = false;
+
+        // setTimeout(() => {
+        //     if (this.chosenStation!=null) {
+        //         this.isStationModelOpen = true;
+        //     }
+        // }, 500);
+    }
+
+
+
     @action setLocation(latitude,longitude,latitudeDelta,longitudeDelta) {
         this.setRegion(latitude,longitude,latitudeDelta,longitudeDelta);
         this.setCurrRegion(latitude,longitude,latitudeDelta,longitudeDelta);
@@ -620,6 +639,10 @@ class Store {
             latitudeDelta,
             longitudeDelta
         }
+    }
+
+    @action setCounter(value) {
+        this.counter = value;
     }
 
     @action setCurrRegion(latitude,longitude,latitudeDelta,longitudeDelta) {
@@ -648,7 +671,11 @@ class Store {
     }
 
     @action setStationModalOpen(value) {
-        this.isTourModalOpen = value;
+        this.isStationModelOpen = value;
+    }
+
+    @action setRankModalOpen(value) {
+        this.isRankModalOpen = value;
     }
 
     @action logOff() {

@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import MapView from 'react-native-maps';
 import StationModel from '../StationDetails/StationModel';
+import RankModal from './RankModal';
 import { Toolbar as MaterialToolbar, Icon } from 'react-native-material-design';
 var nativeImageSource = require('nativeImageSource');
 
@@ -167,9 +168,18 @@ class TourMapPage extends Component {
         this.props.store.onStationPress(null);
     }
 
-    onStationPress(e,chosenTour) {
+    onRankModalClosed() {
+        this.props.store.onRankIconPress(null);
+    }
+
+    onStationPress(e,currStation) {
         this.props.store.onStationPress(e);
     }
+
+    onRankIconPress(e, tourKeyForRanking) {
+        this.props.store.onRankIconPress(e);
+    }
+
     // Jump to current location
     _findMe(){
         if(this.props.store.currRegion) {
@@ -250,6 +260,16 @@ class TourMapPage extends Component {
 
     }
 
+    increment() {
+        Alert.alert(this.counter.toString());
+        // Alert.alert(this.props.toString());
+        Alert.alert(this.props.store.counter.toString());
+        this.props.store.setCounter(this.props.store.counter+1);
+        // this.setState({
+        //     counter: this.state.counter + 1
+        // });
+    }
+
     render() {
         const {onStationPress} = this.props.store;
         const NavigationBarRouteMapper = {
@@ -280,6 +300,7 @@ class TourMapPage extends Component {
 
     renderScene(route, navigator) {
 
+
         const { height: windowHeight } = Dimensions.get('window');
         const varTop = windowHeight - 125;
         const hitSlop = {
@@ -302,7 +323,10 @@ class TourMapPage extends Component {
         const { currRegion,
                 chosenTour,
                 startTourPosition,
-                tourStations } = this.props.store;
+                tourStations,
+                counter} = this.props.store;
+
+
         const firstIndex = tourStations[0].key;
 
         const mapNight = [
@@ -467,12 +491,23 @@ class TourMapPage extends Component {
             }
         ];
 
+        const actions = [{
+            icon: 'warning',
+            badge: { value: counter, animate: true },
+            onPress: () => this.props.store.setCounter(counter+1),
+        }, {
+            icon: 'star',
+            onPress: () => this.props.store.onRankIconPress(this.props.store.chosenTour.key),
+        }];
+
         return (
             <View style={styles.container}>
                 <MaterialToolbar title={chosenTour.name}
                                  primary={'googleBlue'}
                                  icon="keyboard-backspace"
-                                 onIconPress={() => navigator.parentNavigator.replace({id: "MainMapPage"})}/>
+                                 onIconPress={() => navigator.parentNavigator.replace({id: "MainMapPage"})}
+                                 actions={actions}
+                />
                 <View style={bbStyle(varTop)}>
                     <TouchableOpacity
                         hitSlop = {hitSlop}
@@ -524,6 +559,10 @@ class TourMapPage extends Component {
                 <StationModel ref="StationModel" store={this.props.store}
                               onStationModalClosed={() => this.onStationModalClosed.bind(this)}
                               chosenStation={this.props.store.chosenStation ? this.props.store.chosenStation : null}/>
+
+                <RankModal ref="RankModal" store={this.props.store}
+                              onRankModalClosed={() => this.onRankModalClosed.bind(this)}
+                           tourKeyForRanking={this.props.store.tourKeyForRanking ? this.props.store.tourKeyForRanking : null}/>
             </View>
         );
     }

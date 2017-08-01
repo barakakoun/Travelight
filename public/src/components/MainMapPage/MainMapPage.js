@@ -250,7 +250,6 @@ class MainMapPage extends Component {
 
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchID);
-        Alert.alert("hry");
 
         BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressExit);
     }

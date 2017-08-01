@@ -60,7 +60,7 @@ class StationModel extends Component {
         //const url = 'http://lacavewebradio.chickenkiller.com:8000/stream.mp3';
         this.props.store.setAudio();
         return (
-            <Modal style={[styles.modal, styles.modelStation]} backdrop={true}  backButtonClose={true} transparent={true}
+            <Modal style={[styles.modal, styles.modelStation]} backdrop={true}  backButtonClose={true} swipeToClose={false} transparent={true}
                    backdropOpacity={0.5} onClosed={()=>this.closeModal()} ref="modalStation">
                 <View style={styles.container} >
                     {this.loadInfoIcon()}
