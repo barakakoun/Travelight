@@ -168,9 +168,10 @@ class TourMapPage extends Component {
         this.props.store.onStationPress(null);
     }
 
-    onRankModalClosed() {
-        this.props.store.onRankIconPress(null);
-    }
+    // onRankModalClosed() {
+    //     // this.refs.TourMapNav.refs.RankModal.closeModal();
+    //     // this.props.store.onRankIconPress(null);
+    // }
 
     onStationPress(e,currStation) {
         this.props.store.onStationPress(e);
@@ -190,11 +191,52 @@ class TourMapPage extends Component {
         }
     }
 
+    paintCloseMarker() {
+        // Alert.alert(this.props.store.position.latitude.toString() + " " + this.props.store.position.longitude.toString());
+        //
+        // var minDistance;
+        // this.props.store.tourStations.forEach((station) => {
+        //     if (product.name.indexOf(this.props.filterText) === -1 || (!product.stocked && this.props.inStockOnly)) {
+        //         return;
+        //     }
+        //     if (product.category !== lastCategory) {
+        //         rows.push(<ProductCategoryRow category={product.category} key={product.category} />);
+        //     }
+        //     rows.push(<ProductRow product={product} key={product.name} />);
+        //     lastCategory = product.category;
+        // });
+
+    }
+
+    calculateDistance(pointA, pointB) {
+
+        const lat1 = pointA.latitude;
+        const lon1 = pointA.longitude;
+
+        const lat2 = pointB.latitude;
+        const lon2 = pointB.longitude;
+
+        const R = 6371e3; // earth radius in meters
+        const φ1 = lat1 * (Math.PI / 180);
+        const φ2 = lat2 * (Math.PI / 180);
+        const Δφ = (lat2 - lat1) * (Math.PI / 180);
+        const Δλ = (lon2 - lon1) * (Math.PI / 180);
+
+        const a = (Math.sin(Δφ / 2) * Math.sin(Δφ / 2)) +
+            ((Math.cos(φ1) * Math.cos(φ2)) * (Math.sin(Δλ / 2) * Math.sin(Δλ / 2)));
+
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        const distance = R * c;
+        return distance; // in meters
+    }
+
     getLocation() {
         navigator.geolocation.getCurrentPosition(
             ({coords}) => {
                 const {latitude, longitude} = coords;
                 this.props.store.setLocation(latitude,longitude,0.005,0.001);
+                this.paintCloseMarker();
                 // this.props.store.setRegion(latitude,longitude,0.005,0.001);
                 // this.props.store.setCurrRegion(latitude,longitude,0.005,0.001);
                 // this.props.store.setPosition(latitude,longitude);
@@ -232,6 +274,7 @@ class TourMapPage extends Component {
                 // })
                 const {latitude, longitude} = coords;
                 this.props.store.watchPosition(latitude,longitude,0.005,0.001);
+                this.paintCloseMarker();
                 // this.setState({
                 //     position: {
                 //         latitude,
@@ -245,10 +288,19 @@ class TourMapPage extends Component {
                 //     }
                 // })
             });
+
+    }
+
+    componentWillMount() {
+        this.getLocation();
     }
 
     componentDidMount() {
-        this.getLocation();
+
+        setTimeout(() => {
+            // this.map.animateToRegion(this.props.store.currRegion, 1);
+            this.map.fitToElements(true);
+        }, 200);
 
         BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
     }
@@ -277,8 +329,8 @@ class TourMapPage extends Component {
                 Alert.alert("left button");
                 return (
                     <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-                                      onPress={() => navigator.parentNavigator.replace({id: "MainMapPage"})}>
-                        <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 10,}} />
+                                      onPress={() => this._handleBackPress()}>
+                        <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 3,}} />
                     </TouchableOpacity>
                 );
             },
@@ -491,11 +543,13 @@ class TourMapPage extends Component {
             }
         ];
 
-        const actions = [{
-            icon: 'warning',
-            badge: { value: counter, animate: true },
-            onPress: () => this.props.store.setCounter(counter+1),
-        }, {
+        const actions = [
+        //     {
+        //     icon: 'warning',
+        //     badge: { value: counter, animate: true },
+        //     onPress: () => this.props.store.setCounter(counter+1),
+        // },
+            {
             icon: 'star',
             onPress: () => this.props.store.onRankIconPress(this.props.store.chosenTour.key),
         }];
@@ -505,7 +559,8 @@ class TourMapPage extends Component {
                 <MaterialToolbar title={chosenTour.name}
                                  primary={'googleBlue'}
                                  icon="keyboard-backspace"
-                                 onIconPress={() => navigator.parentNavigator.replace({id: "MainMapPage"})}
+                                 onIconPress={() => this._handleBackPress()}
+                                 // onIconPress={() => navigator.parentNavigator.replace({id: "MainMapPage"})}
                                  actions={actions}
                 />
                 <View style={bbStyle(varTop)}>
@@ -561,7 +616,7 @@ class TourMapPage extends Component {
                               chosenStation={this.props.store.chosenStation ? this.props.store.chosenStation : null}/>
 
                 <RankModal ref="RankModal" store={this.props.store}
-                              onRankModalClosed={() => this.onRankModalClosed.bind(this)}
+                              // onRankModalClosed={() => this.onRankModalClosed.bind(this)}
                            tourKeyForRanking={this.props.store.tourKeyForRanking ? this.props.store.tourKeyForRanking : null}/>
             </View>
         );
