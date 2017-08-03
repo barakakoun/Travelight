@@ -536,6 +536,7 @@ class Store {
                             audio: new Sound('t4s1.mp3',Sound.MAIN_BUNDLE),
                             // coordinate: this.availableTours[3].coordinate,
                             // audio: new Sound('station1.mp3',Sound.MAIN_BUNDLE),
+
                             img: 'http://cdn.c.photoshelter.com/img-get2/I0000O3ynRRbGbRI/fit=1000x750/Station-five-of-the-Via-Dolorosa-in-the-Old-City-of-Jerusalem-000032-275.jpg'
                         },
                         {
@@ -620,6 +621,8 @@ class Store {
         //     }
         // }, 500);
     }
+
+
 
     @action setLocation(latitude,longitude,latitudeDelta,longitudeDelta) {
         this.setRegion(latitude,longitude,latitudeDelta,longitudeDelta);
