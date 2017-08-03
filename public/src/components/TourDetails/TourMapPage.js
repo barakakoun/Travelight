@@ -9,9 +9,11 @@ import {
     AppRegistry,
     Alert,
     Button,
+    BackAndroid,
 } from 'react-native';
 import MapView from 'react-native-maps';
 import StationModel from '../StationDetails/StationModel';
+import RankModal from './RankModal';
 import { Toolbar as MaterialToolbar, Icon } from 'react-native-material-design';
 var nativeImageSource = require('nativeImageSource');
 
@@ -24,6 +26,27 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 import {observer} from 'mobx-react/native';
 
+const images = [
+    require('../../../assets/stations/station_1.png'),
+    require('../../../assets/stations/station_2.png'),
+    require('../../../assets/stations/station_3.png'),
+    require('../../../assets/stations/station_4.png'),
+    require('../../../assets/stations/station_5.png'),
+    require('../../../assets/stations/station_6.png'),
+    require('../../../assets/stations/station_7.png'),
+    require('../../../assets/stations/station_8.png'),
+    require('../../../assets/stations/station_9.png'),
+    require('../../../assets/stations/station_10.png'),
+    require('../../../assets/stations/station_11.png'),
+    require('../../../assets/stations/station_12.png'),
+    require('../../../assets/stations/station_13.png'),
+    require('../../../assets/stations/station_14.png'),
+    require('../../../assets/stations/station_15.png'),
+    require('../../../assets/stations/station_16.png'),
+];
+
+
+
 @observer
 class TourMapPage extends Component {
 
@@ -35,6 +58,9 @@ class TourMapPage extends Component {
     constructor(props) {
         super(props);
         this.getLocation = this.getLocation.bind(this);
+
+        this._handleBackPress = this._handleBackPress.bind(this);
+
 
         // Alert.alert(this.state.coords.length.toString());
         // var tour = this.props.tour;
@@ -83,6 +109,20 @@ class TourMapPage extends Component {
         // };
     }
 
+    _handleBackPress() {
+        Alert.alert(
+            'Alert Title',
+            'Sure you wanna stop tour?',
+            [
+                {text: 'Yes', onPress: () => this.props.store.navigatorReplace("MainMapPage")},
+                {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            ],
+            { cancelable: false }
+        );
+
+        return true;
+    }
+
     // decode(encoded) {
     //     if (!encoded) {
     //         return [];
@@ -128,9 +168,18 @@ class TourMapPage extends Component {
         this.props.store.onStationPress(null);
     }
 
-    onStationPress(e,chosenTour) {
+    onRankModalClosed() {
+        this.props.store.onRankIconPress(null);
+    }
+
+    onStationPress(e,currStation) {
         this.props.store.onStationPress(e);
     }
+
+    onRankIconPress(e, tourKeyForRanking) {
+        this.props.store.onRankIconPress(e);
+    }
+
     // Jump to current location
     _findMe(){
         if(this.props.store.currRegion) {
@@ -199,22 +248,36 @@ class TourMapPage extends Component {
     }
 
     componentDidMount() {
-
         this.getLocation();
+
+        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
     }
 
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchID);
         this.props.store.onTourPress(null);
+        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPress);
+
+    }
+
+    increment() {
+        Alert.alert(this.counter.toString());
+        // Alert.alert(this.props.toString());
+        Alert.alert(this.props.store.counter.toString());
+        this.props.store.setCounter(this.props.store.counter+1);
+        // this.setState({
+        //     counter: this.state.counter + 1
+        // });
     }
 
     render() {
         const {onStationPress} = this.props.store;
         const NavigationBarRouteMapper = {
             LeftButton(route, navigator, index, navState) {
+                Alert.alert("left button");
                 return (
                     <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-                                      onPress={() => navigator.parentNavigator.pop()}>
+                                      onPress={() => navigator.parentNavigator.replace({id: "MainMapPage"})}>
                         <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 10,}} />
                     </TouchableOpacity>
                 );
@@ -236,6 +299,7 @@ class TourMapPage extends Component {
     }
 
     renderScene(route, navigator) {
+
 
         const { height: windowHeight } = Dimensions.get('window');
         const varTop = windowHeight - 125;
@@ -259,7 +323,11 @@ class TourMapPage extends Component {
         const { currRegion,
                 chosenTour,
                 startTourPosition,
-                tourStations } = this.props.store;
+                tourStations,
+                counter} = this.props.store;
+
+
+        const firstIndex = tourStations[0].key;
 
         const mapNight = [
             {
@@ -423,12 +491,23 @@ class TourMapPage extends Component {
             }
         ];
 
+        const actions = [{
+            icon: 'warning',
+            badge: { value: counter, animate: true },
+            onPress: () => this.props.store.setCounter(counter+1),
+        }, {
+            icon: 'star',
+            onPress: () => this.props.store.onRankIconPress(this.props.store.chosenTour.key),
+        }];
+
         return (
             <View style={styles.container}>
                 <MaterialToolbar title={chosenTour.name}
                                  primary={'googleBlue'}
                                  icon="keyboard-backspace"
-                                 onIconPress={() => navigator.parentNavigator.pop()}/>
+                                 onIconPress={() => navigator.parentNavigator.replace({id: "MainMapPage"})}
+                                 actions={actions}
+                />
                 <View style={bbStyle(varTop)}>
                     <TouchableOpacity
                         hitSlop = {hitSlop}
@@ -463,7 +542,7 @@ class TourMapPage extends Component {
                     <MapView.Polyline
                         coordinates={this.props.coords}
                         strokeWidth={3}
-                        strokeColor="#74a4f2"
+                        strokeColor="rgba(0, 150, 136, 0.9)"
                         geodesic={false}
                     />
 
@@ -471,7 +550,7 @@ class TourMapPage extends Component {
                         <MapView.Marker
                             key={currStation.key}
                             coordinate={currStation.coordinate}
-                            pinColor={"green"}
+                            image={images[currStation.key - 1]}
                             onPress={this.onStationPress.bind(this,currStation)}
                         />
                     ))}
@@ -480,6 +559,10 @@ class TourMapPage extends Component {
                 <StationModel ref="StationModel" store={this.props.store}
                               onStationModalClosed={() => this.onStationModalClosed.bind(this)}
                               chosenStation={this.props.store.chosenStation ? this.props.store.chosenStation : null}/>
+
+                <RankModal ref="RankModal" store={this.props.store}
+                              onRankModalClosed={() => this.onRankModalClosed.bind(this)}
+                           tourKeyForRanking={this.props.store.tourKeyForRanking ? this.props.store.tourKeyForRanking : null}/>
             </View>
         );
     }

@@ -60,8 +60,8 @@ class StationModel extends Component {
         //const url = 'http://lacavewebradio.chickenkiller.com:8000/stream.mp3';
         this.props.store.setAudio();
         return (
-            <Modal style={[styles.modal, styles.modelStation]} backdrop={false}  backButtonClose={true} transparent={true}
-                   backdropOpacity={0.2} onClosed={()=>this.closeModal()} ref="modalStation">
+            <Modal style={[styles.modal, styles.modelStation]} backdrop={true}  backButtonClose={true} swipeToClose={false} transparent={true}
+                   backdropOpacity={0.5} onClosed={()=>this.closeModal()} ref="modalStation">
                 <View style={styles.container} >
                     {this.loadInfoIcon()}
                     <View style={styles.name}>
@@ -105,8 +105,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     modelStation:{
-        height: 300,
-        backgroundColor: "rgba(255,255,255,0.5)"
+        height: 400,
+        width: 300,
+        backgroundColor: "rgba(255,255,255,1)"
     },
     container: {
         flex: 1,

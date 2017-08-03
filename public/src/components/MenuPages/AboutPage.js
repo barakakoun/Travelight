@@ -89,7 +89,19 @@ class AboutPage extends Component {
                                  primary={'googleBlue'}
                                  icon="menu"
                                  onIconPress={this.onOpenBurger.bind(this)}/>
-                <Text style={{color: 'white', fontSize: 32,}}>About Page</Text>
+                <Text style={{color: 'white', fontSize: 32,  marginTop: 60 }}>Travelight</Text>
+                <Text style={{color: 'white', fontSize: 26, marginBottom: 20}}>Tour Guide In Your Pocket!</Text>
+                <Text style={{color:'white', fontSize: 18, marginLeft: 2}}>
+                    Our application will replace the human tour guide in a way that allows you to
+                    travel freely in all the city’s tour sites using your smartphones .{"\n"}
+                    {"\n"}
+                    By a chosen location, you will be able to view all the tours provided by our
+                    team, and travel to every site you want.{"\n"}
+                    {"\n"}
+                    You will be able to consume the service using any media source: videos,
+                    audios, photographs, etc. accompanied by in-depth explanation which equals to
+                    those that have been given by human tour guides.
+                </Text>
             </View>
             </DrawerLayoutAndroid>
         );
@@ -120,7 +132,8 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
     },
     toolbar: {
         backgroundColor: '#e9eaed',

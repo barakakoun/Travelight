@@ -76,6 +76,7 @@ class TourDetailsPage extends Component {
                         // Alert.alert(responseJson.toString());
                         if (responseJson.routes.length) {
                             this.isStartTour = true;
+                            this.props.store.appNavigator.pop();
                             this.props.store.appNavigator.replace({
                                 id: 'TourMapPage',
                                 tour: chosenTour,
@@ -162,6 +163,7 @@ class TourDetailsPage extends Component {
                         tourStations.map((station,index) => (
                             <View style={styles.slide} key={index}>
                                 <Image
+                                    key={index}
                                     resizeMode='stretch'
                                     style={styles.image}
                                     source={{uri: station.img.toString()}}
@@ -204,9 +206,11 @@ class TourDetailsPage extends Component {
                                 rate={chosenTour.rating}
                                 size={20}
                             />
-                            <Text style={{marginLeft: 10, color:'white'}}>
-                                 { chosenTour.reviews } reviews
-                            </Text>
+                            <TouchableOpacity onPress={() => {}}>
+                                <Text style={{marginLeft: 10, color:'white'}}>
+                                     { chosenTour.reviews } reviews
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                         {chosenTour.accessible ?
                             <Icon name="accessible" color="#FFFFFF" style={styles.icon}/> : null

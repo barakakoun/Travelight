@@ -9,12 +9,14 @@ import { LATITUDE_DELTA,
         GET_FROM_SERVER,
         } from "../../../Consts/variables";
 import { LOGINUSER,
-         URL_TOURS_ENDPOINT } from "../../../Consts/urls";
+         URL_TOURS_ENDPOINT,
+         URL_REVIEWS_TOUR, } from "../../../Consts/urls";
 import FBSDK from 'react-native-fbsdk';
 import React, { Component } from 'react';
 import {AsyncStorage} from 'react-native';
 import massages from "../../../Consts/messages";
 import Sound from 'react-native-sound';
+
 const {
     LoginManager,
     GraphRequest,
@@ -29,7 +31,9 @@ class Store {
     @observable availableTours = [];
     @observable chosenTour = null;
     @observable chosenStation = null;
+    @observable tourKeyForRanking = null;
     @observable tourStations = [];
+    @observable counter = 0;
     @observable region = null;
     @observable currRegion = null;
     @observable position = null;
@@ -39,6 +43,7 @@ class Store {
     @observable email = null;
     @observable isTourModalOpen = false;
     @observable isStationModelOpen = false;
+    @observable isRankModalOpen = false;
     @observable currentUser = {
         img: "http://www.worldofbuzz.com/wp-content/uploads/2015/04/noprofilemale.gif?x82567",
         name: "Unknown"
@@ -53,8 +58,10 @@ class Store {
         this.navigatorPop = this.navigatorPop.bind(this);
         this.onTourPress = this.onTourPress.bind(this);
         this.onStationPress = this.onStationPress.bind(this);
+        this.onRankIconPress = this.onRankIconPress.bind(this);
         this.setLocation = this.setLocation.bind(this);
         this.setRegion = this.setRegion.bind(this);
+        this.setCounter = this.setCounter.bind(this);
         this.setCurrRegion = this.setCurrRegion.bind(this);
         this.setPosition = this.setPosition.bind(this);
         this.watchPosition = this.watchPosition.bind(this);
@@ -64,6 +71,7 @@ class Store {
         this.getFacebookUserData = this.getFacebookUserData.bind(this);
         this.setTourModalOpen = this.setTourModalOpen.bind(this);
         this.setStationModalOpen = this.setStationModalOpen.bind(this);
+        this.setRankModalOpen = this.setRankModalOpen.bind(this);
         this.getUserFromStorage = this.getUserFromStorage.bind(this);
         this.mapFacebookDataToUser.bind(this);
         this.setAudio = this.setAudio.bind(this);
@@ -73,6 +81,7 @@ class Store {
         this.releaseAudio = this.releaseAudio.bind(this);
         //this.removeUserFromStorage = this.removeUserFromStorage.bind(this);
         this.logoutUser = this.logoutUser.bind(this);
+        this.getTourReviews = this.getTourReviews.bind(this);
     }
 
     sendFacebookLoginDataToServer(){
@@ -311,8 +320,8 @@ class Store {
                     reviews: 32,
                     rating: 5,
                     coordinate: {
-                        latitude: 32.055031,
-                        longitude: 34.754356
+                        latitude: 32.055499,
+                        longitude: 34.756486
                     },
                     img: 'http://images1.ynet.co.il//PicServer3/2013/08/12/4793977/47939300990100408242no.jpg'
                 },
@@ -361,10 +370,7 @@ class Store {
                     {
                         key: 1,
                         name: 'Dizengoff Center',
-                        coordinate: {
-                            latitude: 32.074840,
-                            longitude: 34.775946
-                        },
+                        coordinate: this.availableTours[0].coordinate,
                         img: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Dizengof_Center_Tel_Aviv.jpg',
                         audio: new Sound('t1s1.mp3',Sound.MAIN_BUNDLE)
                     },
@@ -411,14 +417,12 @@ class Store {
                 ];
                     break;
                 case 2:
-                    this.tourStations = [
+                    this.
+                        tourStations = [
                     {
                         key: 1,
                         name: 'Jappa Clock Square',
-                        coordinate: {
-                            latitude: 32.055499,
-                            longitude: 34.756486
-                        },
+                        coordinate: this.availableTours[1].coordinate,
                         img: 'https://images1.calcalist.co.il/PicServer2/20122005/118617/AMIT_l.jpg',
                         audio: new Sound('t2s1.mp3',Sound.MAIN_BUNDLE)
                     },
@@ -469,9 +473,7 @@ class Store {
                         {
                             key:1,
                             name: 'Acadamon',
-                            coordinate: {
-                                latitude: 31.970070,
-                                longitude: 34.772808 },
+                            coordinate: this.availableTours[2].coordinate,
                             img: 'http://in.bgu.ac.il/alumni/DocLib/Pages/hatava-academon/academon.bmp',
                             audio: new Sound('t3s1.mp3',Sound.MAIN_BUNDLE)
                         },
@@ -479,7 +481,7 @@ class Store {
                             key:2,
                             name: 'Law School',
                             coordinate: {
-                                latitude: 31.970070,
+                                latitude: 31.970480,
                                 longitude: 34.772808},
                             img: 'https://www.kaptest.com/blog/lsat-the-180/wp-content/uploads/sites/11/2016/03/iStock_000087169105_Small-e1457387991459.jpg',
                             audio: new Sound('t3s2.mp3',Sound.MAIN_BUNDLE)
@@ -532,6 +534,8 @@ class Store {
                                 latitude: 31.780182,
                                 longitude: 35.232126},
                             audio: new Sound('t4s1.mp3',Sound.MAIN_BUNDLE),
+                            // coordinate: this.availableTours[3].coordinate,
+                            // audio: new Sound('station1.mp3',Sound.MAIN_BUNDLE),
                             img: 'http://cdn.c.photoshelter.com/img-get2/I0000O3ynRRbGbRI/fit=1000x750/Station-five-of-the-Via-Dolorosa-in-the-Old-City-of-Jerusalem-000032-275.jpg'
                         },
                         {
@@ -586,12 +590,35 @@ class Store {
 
     @action onTourPress(tour) {
         this.chosenTour = tour;
-        this.isTourModalOpen = true;
+        this.isTourModalOpen = false;
+
+        setTimeout(() => {
+            if (this.chosenTour!=null) {
+                this.isTourModalOpen = true;
+            }
+        }, 500);
     }
 
     @action onStationPress(station) {
         this.chosenStation = station;
-        this.isStationModelOpen = true;
+        this.isStationModelOpen = false;
+
+        // setTimeout(() => {
+        //     if (this.chosenStation!=null) {
+        //         this.isStationModelOpen = true;
+        //     }
+        // }, 500);
+    }
+
+    @action onRankIconPress(tourKey) {
+        this.tourKeyForRanking = tourKey;
+        this.isRankModalOpen = false;
+
+        // setTimeout(() => {
+        //     if (this.chosenStation!=null) {
+        //         this.isStationModelOpen = true;
+        //     }
+        // }, 500);
     }
 
     @action setLocation(latitude,longitude,latitudeDelta,longitudeDelta) {
@@ -607,6 +634,10 @@ class Store {
             latitudeDelta,
             longitudeDelta
         }
+    }
+
+    @action setCounter(value) {
+        this.counter = value;
     }
 
     @action setCurrRegion(latitude,longitude,latitudeDelta,longitudeDelta) {
@@ -635,7 +666,11 @@ class Store {
     }
 
     @action setStationModalOpen(value) {
-        this.isTourModalOpen = value;
+        this.isStationModelOpen = value;
+    }
+
+    @action setRankModalOpen(value) {
+        this.isRankModalOpen = value;
     }
 
     @action logOff() {
@@ -692,6 +727,18 @@ class Store {
          }
 
          return null;
+    }
+
+    @action getTourReviews() {
+        const url = `${URL_REVIEWS_TOUR}${this.chosenTour.key}`;
+        fetch(url)
+            .then(response => response.json())
+            .then(result => {
+                this.availableTours = result;
+            })
+            .catch(error => {
+                console.warn(error);
+            });
     }
 
 }
