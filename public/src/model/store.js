@@ -366,7 +366,7 @@ class Store {
                             longitude: 34.775946
                         },
                         img: 'https://upload.wikimedia.org/wikipedia/commons/4/4c/Dizengof_Center_Tel_Aviv.jpg',
-                        audio: new Sound('station1.mp3',Sound.MAIN_BUNDLE)
+                        audio: new Sound('t1s1.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 2,
@@ -376,7 +376,7 @@ class Store {
                             longitude: 34.787055
                         },
                         img: 'http://images.globes.co.il/images/NewGlobes/big_image_800/2016/sarona-800.2016125T152619.jpg',
-                        audio: new Sound('station2.mp3',Sound.MAIN_BUNDLE)
+                        audio: new Sound('t1s2.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 3,
@@ -386,7 +386,7 @@ class Store {
                             longitude: 34.781718
                         },
                         img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/London_Ministores%2C_tel_aviv.jpg/1280px-London_Ministores%2C_tel_aviv.jpg',
-                        audio: new Sound('station3.mp3',Sound.MAIN_BUNDLE)
+                        audio: new Sound('t1s3.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 4,
@@ -396,7 +396,7 @@ class Store {
                             longitude: 34.781176
                         },
                         img: 'https://upload.wikimedia.org/wikipedia/commons/c/c4/Rabin_Squre_eco_pool.jpg',
-                        audio: new Sound('station4.mp3',Sound.MAIN_BUNDLE)
+                        audio: new Sound('t1s4.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 5,
@@ -406,7 +406,7 @@ class Store {
                             longitude: 34.781240
                         },
                         img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Memorial_of_Israeli_Prime_Minister_Yitzchak_Rabin.jpg/400px-Memorial_of_Israeli_Prime_Minister_Yitzchak_Rabin.jpg',
-                        audio: new Sound('station5.mp3',Sound.MAIN_BUNDLE)
+                        audio: new Sound('t1s5.mp3',Sound.MAIN_BUNDLE)
                     }
                 ];
                     break;
@@ -420,7 +420,7 @@ class Store {
                             longitude: 34.756486
                         },
                         img: 'https://images1.calcalist.co.il/PicServer2/20122005/118617/AMIT_l.jpg',
-                        audio: new Sound('station1.mp3',Sound.MAIN_BUNDLE)
+                        audio: new Sound('t2s1.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 2,
@@ -430,7 +430,7 @@ class Store {
                             longitude: 34.765507
                         },
                         img: 'https://images1.calcalist.co.il/PicServer2/20122005/188354/CAL0009129_l.jpg',
-                        audio: new Sound('station2.mp3',Sound.MAIN_BUNDLE)
+                        audio: new Sound('t2s2.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 3,
@@ -440,37 +440,27 @@ class Store {
                             longitude: 34.764584
                         },
                         img: 'http://www.israelhayom.co.il/sites/default/files/styles/566x349/public/images/articles/2016/08/03/14701835615544_b.jpg',
-                        audio: new Sound('station3.mp3',Sound.MAIN_BUNDLE)
+                        audio: new Sound('t2s3.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 4,
-                        name: 'Independence Park',
-                        coordinate: {
-                            latitude: 32.089911,
-                            longitude: 34.772031
-                        },
-                        img: 'http://www.nrg.co.il/images/archive/465x349/1/071/952.jpg',
-                        audio: new Sound('station4.mp3',Sound.MAIN_BUNDLE)
-                    },
-                    {
-                        key: 5,
                         name: 'Tel Aviv Harbor',
                         coordinate: {
                             latitude: 32.096460,
                             longitude: 34.772611
                         },
                         img: 'http://kinderland.co.il/wp-content/uploads/2015/04/19343-namal.jpg',
-                        audio: new Sound('station5.mp3',Sound.MAIN_BUNDLE)
+                        audio: new Sound('t2s4.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
-                        key: 6,
-                        name: 'Tel Aviv\'s Lighthouse',
+                        key: 5,
+                        name: 'Tel Aviv\'s Power Station',
                         coordinate: {
                             latitude: 32.104054,
                             longitude: 34.776745
                         },
                         img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Reading_Power_Station022.jpg/250px-Reading_Power_Station022.jpg',
-                        audio: new Sound('station6.mp3',Sound.MAIN_BUNDLE)
+                        audio: new Sound('t2s5.mp3',Sound.MAIN_BUNDLE)
                     },
                 ];
                     break;
@@ -483,7 +473,7 @@ class Store {
                                 latitude: 31.970070,
                                 longitude: 34.772808 },
                             img: 'http://in.bgu.ac.il/alumni/DocLib/Pages/hatava-academon/academon.bmp',
-                            audio: new Sound('station1.mp3',Sound.MAIN_BUNDLE)
+                            audio: new Sound('t3s1.mp3',Sound.MAIN_BUNDLE)
                         },
                         {
                             key:2,
@@ -492,7 +482,7 @@ class Store {
                                 latitude: 31.970070,
                                 longitude: 34.772808},
                             img: 'https://www.kaptest.com/blog/lsat-the-180/wp-content/uploads/sites/11/2016/03/iStock_000087169105_Small-e1457387991459.jpg',
-                            audio: new Sound('station2.mp3',Sound.MAIN_BUNDLE)
+                            audio: new Sound('t3s2.mp3',Sound.MAIN_BUNDLE)
                         },
                         {
                             key:3,
@@ -501,7 +491,7 @@ class Store {
                                 latitude: 31.970480,
                                 longitude: 34.772014},
                             img: 'http://www.archijob.co.il/archijob_projects/projects/PR285/4.jpg',
-                            audio: new Sound('station3.mp3',Sound.MAIN_BUNDLE)
+                            audio: new Sound('t3s3.mp3',Sound.MAIN_BUNDLE)
                         },
                         {
                             key:4,
@@ -510,7 +500,7 @@ class Store {
                                 latitude: 31.970834,
                                 longitude: 34.771660},
                             img: 'https://static.wixstatic.com/media/b8a557_232a4480efc845e6b1e80450a2a52616.jpg_srz_668_440_85_22_0.50_1.20_0.00_jpg_srz',
-                            audio: new Sound('station4.mp3',Sound.MAIN_BUNDLE)
+                            audio: new Sound('t3s4.mp3',Sound.MAIN_BUNDLE)
                         },
                         {
                             key:5,
@@ -519,7 +509,7 @@ class Store {
                                 latitude: 31.970880,
                                 longitude: 34.771360},
                             img: 'http://www.news1.co.il/uploadimages/NEWS1-749111354351044.jpg',
-                            audio: new Sound('station5.mp3',Sound.MAIN_BUNDLE)
+                            audio: new Sound('t3s5.mp3',Sound.MAIN_BUNDLE)
                         },
                         {
                             key:6,
@@ -529,7 +519,7 @@ class Store {
                                 longitude: 34.771617
                             },
                             img: 'http://www.ilimudim.co.il/files/8491.jpg',
-                            audio: new Sound('station6.mp3',Sound.MAIN_BUNDLE)
+                            audio: new Sound('t3s6.mp3',Sound.MAIN_BUNDLE)
                         }
                     ];
                     break;
@@ -541,7 +531,7 @@ class Store {
                             coordinate: {
                                 latitude: 31.780182,
                                 longitude: 35.232126},
-                            audio: new Sound('station1.mp3',Sound.MAIN_BUNDLE),
+                            audio: new Sound('t4s1.mp3',Sound.MAIN_BUNDLE),
                             img: 'http://cdn.c.photoshelter.com/img-get2/I0000O3ynRRbGbRI/fit=1000x750/Station-five-of-the-Via-Dolorosa-in-the-Old-City-of-Jerusalem-000032-275.jpg'
                         },
                         {
@@ -550,7 +540,7 @@ class Store {
                             coordinate: {
                                 latitude: 31.970070,
                                 longitude: 34.772808},
-                            audio: new Sound('station2.mp3',Sound.MAIN_BUNDLE),
+                            audio: new Sound('t4s2.mp3',Sound.MAIN_BUNDLE),
                             img: 'https://www.itraveljerusalem.com/wp-content/uploads/2016/07/atr-western-wall-2.jpg'
                         },
                         {
@@ -559,7 +549,7 @@ class Store {
                             coordinate: {
                                 latitude: 31.779283,
                                 longitude: 35.223841},
-                            audio: new Sound('station3.mp3',Sound.MAIN_BUNDLE),
+                            audio: new Sound('t4s3.mp3',Sound.MAIN_BUNDLE),
                             img: 'https://images1.calcalist.co.il/PicServer2/20122005/312181/CAL000290-L.jpg'
                         },
                         {
@@ -568,7 +558,7 @@ class Store {
                             coordinate: {
                                 latitude: 31.970834,
                                 longitude: 35.224689},
-                            audio: new Sound('station4.mp3',Sound.MAIN_BUNDLE),
+                            audio: new Sound('t4s4.mp3',Sound.MAIN_BUNDLE),
                             img: 'https://upload.wikimedia.org/wikipedia/commons/3/36/Jerusalem_Historical_City_Hall_Building_2.JPG'
                         },
                         {
@@ -577,7 +567,7 @@ class Store {
                             coordinate: {
                                 latitude: 31.785212,
                                 longitude: 35.210817},
-                            audio: new Sound('station5.mp3',Sound.MAIN_BUNDLE),
+                            audio: new Sound('t4s5.mp3',Sound.MAIN_BUNDLE),
                             img: 'https://media-cdn.tripadvisor.com/media/photo-s/0a/0c/8c/07/mahane-yehuda-market.jpg'
                         },
                     ];
@@ -659,12 +649,6 @@ class Store {
     }
 
     @action setAudio(){
-         this.audio = new Sound('kalimba.mp3',Sound.MAIN_BUNDLE,(error)=>{
-             if (error) {
-                 alert('Oops! failed to load the sound');
-                 console.warn('failed to load the sound', error);
-             }
-         });
     }
 
     @action playAudio(){

@@ -159,8 +159,8 @@ class TourDetailsPage extends Component {
                         loop
                 >
                     {
-                        tourStations.map(station => (
-                            <View style={styles.slide}>
+                        tourStations.map((station,index) => (
+                            <View style={styles.slide} key={index}>
                                 <Image
                                     resizeMode='stretch'
                                     style={styles.image}
