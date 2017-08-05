@@ -43,6 +43,7 @@ const images = [
     require('../../../assets/stations/station_14.png'),
     require('../../../assets/stations/station_15.png'),
     require('../../../assets/stations/station_16.png'),
+    require('../../../assets/stations/stationCurrent.png'),
 ];
 
 
@@ -61,52 +62,9 @@ class TourMapPage extends Component {
 
         this._handleBackPress = this._handleBackPress.bind(this);
 
-
-        // Alert.alert(this.state.coords.length.toString());
-        // var tour = this.props.tour;
-        //
-        // var url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + tour.coordinate.latitude.toString() + ","
-        //                                                                          + tour.coordinate.longitude.toString()
-        //                                                                          + "&waypoints=";
-        //
-        // var arrCoords = [];
-        //
-        // tour.stations.forEach((station) => arrCoords.push({
-        //     latitude:station.coordinate.latitude,
-        //     longitude:station.coordinate.longitude
-        // }));
-        //
-        // url += arrCoords[1].latitude.toString() + "," + arrCoords[1].longitude.toString();
-        //
-        // for (var i=2; i<(arrCoords.length-1); i++) {
-        //     url += "|" + arrCoords[i].latitude.toString() + "," + arrCoords[i].longitude.toString();
-        // }
-        //
-        // url += "&destination=" + arrCoords[arrCoords.length-1].latitude.toString() + "," + arrCoords[arrCoords.length-1].longitude.toString();
-        //
-        // url += "&key=AIzaSyAz94Lzcc_GhVXZdH8wDiqf61nKXJwEOJc&mode=walking";
-        //
-        // fetch(url)
-        //     .then(response => response.json())
-        //     .then(responseJson => {
-        //         // Alert.alert(responseJson.toString());
-        //         if (responseJson.routes.length) {
-        //             this.setState({
-        //                 coords: this.decode(responseJson.routes[0].overview_polyline.points) // definition below
-        //             });
-        //         }
-        //     }).catch(e => {console.warn(e)});
-
-        // this.state = {
-        //     region: {
-        //         latitude: LATITUDE,
-        //         longitude: LONGITUDE,
-        //         latitudeDelta: LATITUDE_DELTA,
-        //         longitudeDelta: LONGITUDE_DELTA
-        //     },
-        //     tour: this.props.tour,
-        //     coords: this.props.coords,
-        // };
+        this.state = {
+            tourStations: this.props.store.tourStations,
+        };
     }
 
     _handleBackPress() {
@@ -168,9 +126,10 @@ class TourMapPage extends Component {
         this.props.store.onStationPress(null);
     }
 
-    onRankModalClosed() {
-        this.props.store.onRankIconPress(null);
-    }
+    // onRankModalClosed() {
+    //     // this.refs.TourMapNav.refs.RankModal.closeModal();
+    //     // this.props.store.onRankIconPress(null);
+    // }
 
     onStationPress(e,currStation) {
         this.props.store.onStationPress(e);
@@ -190,67 +149,75 @@ class TourMapPage extends Component {
         }
     }
 
+    paintCloseMarker() {
+        // Alert.alert(this.props.store.position.latitude.toString() + " " + this.props.store.position.longitude.toString());
+
+        var tourStations = this.props.store.tourStations;
+        var currPoint = this.props.store.position;
+        var closestStation = tourStations[0].key;
+        var minDistance = this.props.store.calculateDistance(currPoint, tourStations[0].coordinate);
+
+        tourStations.forEach((station) => {
+
+
+            if (station.isClosest) {
+                station.isClosest = null;
+            }
+
+            var currDistance = this.props.store.calculateDistance(currPoint, station.coordinate);
+
+            if (currDistance < minDistance) {
+                minDistance = currDistance;
+                closestStation = station.key;
+            }
+        });
+
+        // TODO: Change it!
+        if (minDistance <= 130000) {
+            tourStations[closestStation-1].isClosest = true;
+        }
+
+        // this.props.store.setTourStations(tourStations);
+
+        this.setState({
+            tourStations: tourStations
+        })
+
+    }
+
     getLocation() {
         navigator.geolocation.getCurrentPosition(
             ({coords}) => {
                 const {latitude, longitude} = coords;
                 this.props.store.setLocation(latitude,longitude,0.005,0.001);
-                // this.props.store.setRegion(latitude,longitude,0.005,0.001);
-                // this.props.store.setCurrRegion(latitude,longitude,0.005,0.001);
-                // this.props.store.setPosition(latitude,longitude);
-                // this.setState({
-                //     position: {
-                //         latitude,
-                //         longitude,
-                //     },
-                //     region: {
-                //         latitude,
-                //         longitude,
-                //         latitudeDelta: 0.005,
-                //         longitudeDelta: 0.001,
-                //     },
-                //     currRegion: {
-                //         latitude,
-                //         longitude,//     }
-                //         latitudeDelta: 0.005,
-                //         longitudeDelta: 0.001,
-
-                // })
+                this.paintCloseMarker();
             },
             (error) => {},
             {enableHighAccuracy: true}
         );
 
-        this.watchID = navigator.geolocation.watchPosition(
-            ({coords}) => {
-                // const {lat, long} = coords
-                // this.setState({
-                //     position: {
-                //         lat,
-                //         long
-                //     }
-                // })
-                const {latitude, longitude} = coords;
-                this.props.store.watchPosition(latitude,longitude,0.005,0.001);
-                // this.setState({
-                //     position: {
-                //         latitude,
-                //         longitude
-                //     },
-                //     currRegion: {
-                //         latitude,
-                //         longitude,
-                //         latitudeDelta: 0.005,
-                //         longitudeDelta: 0.001,
-                //     }
-                // })
-            });
+
+    }
+
+    componentWillMount() {
+        this.getLocation();
     }
 
     componentDidMount() {
-        this.getLocation();
+
+        setTimeout(() => {
+            // this.map.animateToRegion(this.props.store.currRegion, 1);
+            this.map.fitToElements(true);
+        }, 200);
 
         BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
+
+        this.watchID = navigator.geolocation.watchPosition(
+            ({coords}) => {
+                const {latitude, longitude} = coords;
+                this.props.store.watchPosition(latitude,longitude,0.005,0.001);
+                this.paintCloseMarker();
+            });
     }
 
     componentWillUnmount() {
@@ -277,8 +244,8 @@ class TourMapPage extends Component {
                 Alert.alert("left button");
                 return (
                     <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-                                      onPress={() => navigator.parentNavigator.replace({id: "MainMapPage"})}>
-                        <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 10,}} />
+                                      onPress={() => this._handleBackPress()}>
+                        <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 3,}} />
                     </TouchableOpacity>
                 );
             },
@@ -491,11 +458,13 @@ class TourMapPage extends Component {
             }
         ];
 
-        const actions = [{
-            icon: 'warning',
-            badge: { value: counter, animate: true },
-            onPress: () => this.props.store.setCounter(counter+1),
-        }, {
+        const actions = [
+        //     {
+        //     icon: 'warning',
+        //     badge: { value: counter, animate: true },
+        //     onPress: () => this.props.store.setCounter(counter+1),
+        // },
+            {
             icon: 'star',
             onPress: () => this.props.store.onRankIconPress(this.props.store.chosenTour.key),
         }];
@@ -505,7 +474,8 @@ class TourMapPage extends Component {
                 <MaterialToolbar title={chosenTour.name}
                                  primary={'googleBlue'}
                                  icon="keyboard-backspace"
-                                 onIconPress={() => navigator.parentNavigator.replace({id: "MainMapPage"})}
+                                 onIconPress={() => this._handleBackPress()}
+                                 // onIconPress={() => navigator.parentNavigator.replace({id: "MainMapPage"})}
                                  actions={actions}
                 />
                 <View style={bbStyle(varTop)}>
@@ -546,11 +516,11 @@ class TourMapPage extends Component {
                         geodesic={false}
                     />
 
-                    {tourStations.map(currStation => (
+                    {this.state.tourStations.map(currStation => (
                         <MapView.Marker
                             key={currStation.key}
                             coordinate={currStation.coordinate}
-                            image={images[currStation.key - 1]}
+                            image={currStation.isClosest ? images[16] : images[currStation.key - 1]}
                             onPress={this.onStationPress.bind(this,currStation)}
                         />
                     ))}
@@ -561,7 +531,7 @@ class TourMapPage extends Component {
                               chosenStation={this.props.store.chosenStation ? this.props.store.chosenStation : null}/>
 
                 <RankModal ref="RankModal" store={this.props.store}
-                              onRankModalClosed={() => this.onRankModalClosed.bind(this)}
+                              // onRankModalClosed={() => this.onRankModalClosed.bind(this)}
                            tourKeyForRanking={this.props.store.tourKeyForRanking ? this.props.store.tourKeyForRanking : null}/>
             </View>
         );

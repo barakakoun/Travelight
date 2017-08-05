@@ -160,9 +160,10 @@ class TourDetailsPage extends Component {
                         loop
                 >
                     {
-                        tourStations.map(station => (
-                            <View style={styles.slide}>
+                        tourStations.map((station, index) => (
+                            <View style={styles.slide} key={index}>
                                 <Image
+                                    key={index}
                                     resizeMode='stretch'
                                     style={styles.image}
                                     source={{uri: station.img.toString()}}
