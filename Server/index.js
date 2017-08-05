@@ -11,8 +11,10 @@ app.use(bodyparser.urlencoded({ extended: true })); // support encoded bodies
 var router = express.Router()
 var tours = require('./api/tour/index');
 var users = require('./api/user/index');
+var reccomendation = require('./api/reccomendation/index');
 app.use('/tours',tours);
 app.use('/users',users);
+app.use('/reccomendation',reccomendation);
 app.listen('3000');
 console.log("listening on port 3000");
 // app.close(function () {

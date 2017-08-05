@@ -5,10 +5,11 @@ var mysql = require('mysql')
 // Initialize the connection to the DB
 exports.initDB = function(){
     var connection = mysql.createConnection({
-        host: 'localhost',
-        user: 'travelight',
-        password: 'Aa123123',
-        database: 'travelight'
+        host: '193.106.55.39',
+        user: 'project39',
+        password: 'project@1833',
+        database: 'travelight',
+        multipleStatements: true
     });
 
 //Connect to the DB

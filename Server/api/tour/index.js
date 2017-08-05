@@ -12,4 +12,5 @@ router.post('/create',controller.create);
 router.post('/:tourId/update',controller.update);
 router.get('/:tourId/delete',controller.delete);
 router.get('/:city/selectTours',controller.selectByCity);
+router.get('/:tourId/getStations',controller.getStations);
 module.exports = router;

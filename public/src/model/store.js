@@ -197,6 +197,7 @@ class Store {
                     firstName : result.first_name,
                     lastName: result.last_name,
                     email: result.email,
+                    birthday:result.birthday
                 };
                 //var jresult = JSON.parse(result);
                 // this.userPhoto = result.picture.data.url;
@@ -221,7 +222,7 @@ class Store {
                 accessToken: this.accessToken,
                 parameters: {
                     fields: {
-                        string: 'email,first_name,last_name,name,picture' // what you want to get
+                        string: 'email,first_name,last_name,name,picture,birthday' // what you want to get
                     }
                 }},
             responseInfoCallback
@@ -360,7 +361,14 @@ class Store {
     @action getTourStations() {
          // Get tour stations by this.chosenTour.key
         if(GET_FROM_SERVER) {
-            //TODO: GET FROM SERVER
+            const url = URL_TOURS_ENDPOINT+this.chosenTour.key+'/getStations';
+            fetch(url).then(response => response.json())
+                .then(result => {
+                    this.tourStations = result;
+                })
+                .catch(error => {
+                    console.warn(error);
+                });
         } else {
             switch(this.chosenTour.key) {
                 case 1:
@@ -377,7 +385,7 @@ class Store {
                         name: 'Sarona compound',
                         coordinate: {
                             latitude: 32.073299,
-                            longitude: 34.787055
+                                longitude: 34.787055
                         },
                         img: 'http://images.globes.co.il/images/NewGlobes/big_image_800/2016/sarona-800.2016125T152619.jpg',
                         audio: new Sound('station2.mp3',Sound.MAIN_BUNDLE)
@@ -440,7 +448,7 @@ class Store {
                             latitude: 32.073960,
                             longitude: 34.764584
                         },
-                        img: 'http://www.israelhayom.co.il/sites/default/files/styles/566x349/public/images/articles/2016/08/03/14701835615544_b.jpg',
+                            img: 'http://www.israelhayom.co.il/sites/default/files/styles/566x349/public/images/articles/2016/08/03/14701835615544_b.jpg',
                         audio: new Sound('station3.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
@@ -572,7 +580,7 @@ class Store {
                             key:5,
                             name: 'Machane Yehudah Market',
                             coordinate: {
-                                latitude: 31.785212,
+                                    latitude: 31.785212,
                                 longitude: 35.210817},
                             audio: new Sound('station5.mp3',Sound.MAIN_BUNDLE),
                             img: 'https://media-cdn.tripadvisor.com/media/photo-s/0a/0c/8c/07/mahane-yehuda-market.jpg'
