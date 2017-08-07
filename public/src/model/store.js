@@ -82,6 +82,8 @@ class Store {
         this.stopAudio = this.stopAudio.bind(this);
         this.pauseAudio = this.pauseAudio.bind(this);
         this.releaseAudio = this.releaseAudio.bind(this);
+        this.setTourStations = this.setTourStations.bind(this);
+        this.calculateDistance = this.calculateDistance.bind(this);
         //this.removeUserFromStorage = this.removeUserFromStorage.bind(this);
         this.logoutUser = this.logoutUser.bind(this);
         this.getTourReviews = this.getTourReviews.bind(this);
@@ -209,6 +211,7 @@ class Store {
                     lastName: result.last_name,
                     email: result.email,
                     birthDate: result.birthday,
+                    // birthday:result.birthday
                 };
                 //var jresult = JSON.parse(result);
                 // this.userPhoto = result.picture.data.url;
@@ -372,7 +375,14 @@ class Store {
     @action getTourStations() {
          // Get tour stations by this.chosenTour.key
         if(GET_FROM_SERVER) {
-            //TODO: GET FROM SERVER
+            const url = URL_TOURS_ENDPOINT+this.chosenTour.key+'/getStations';
+            fetch(url).then(response => response.json())
+                .then(result => {
+                    this.tourStations = result;
+                })
+                .catch(error => {
+                    console.warn(error);
+                });
         } else {
             switch(this.chosenTour.key) {
                 case 1:
@@ -389,7 +399,7 @@ class Store {
                         name: 'Sarona compound',
                         coordinate: {
                             latitude: 32.073299,
-                            longitude: 34.787055
+                                longitude: 34.787055
                         },
                         img: 'http://images.globes.co.il/images/NewGlobes/big_image_800/2016/sarona-800.2016125T152619.jpg',
                         audio: new Sound('t1s2.mp3',Sound.MAIN_BUNDLE)
@@ -455,6 +465,8 @@ class Store {
                         },
                         img: 'http://www.israelhayom.co.il/sites/default/files/styles/566x349/public/images/articles/2016/08/03/14701835615544_b.jpg',
                         audio: new Sound('t2s3.mp3',Sound.MAIN_BUNDLE)
+                        //     img: 'http://www.israelhayom.co.il/sites/default/files/styles/566x349/public/images/articles/2016/08/03/14701835615544_b.jpg',
+                        // audio: new Sound('station3.mp3',Sound.MAIN_BUNDLE)
                     },
                     {
                         key: 4,
@@ -580,7 +592,7 @@ class Store {
                             key:5,
                             name: 'Machane Yehudah Market',
                             coordinate: {
-                                latitude: 31.785212,
+                                    latitude: 31.785212,
                                 longitude: 35.210817},
                             audio: new Sound('t4s5.mp3',Sound.MAIN_BUNDLE),
                             img: 'https://media-cdn.tripadvisor.com/media/photo-s/0a/0c/8c/07/mahane-yehuda-market.jpg'
@@ -726,6 +738,33 @@ class Store {
             this.chosenStation.audio.release();
             this.chosenStation.audio = null;
         }
+    }
+
+    @action setTourStations(value) {
+        this.tourStations = value;
+    }
+
+    @action calculateDistance(pointA, pointB) {
+
+        const lat1 = pointA.latitude;
+        const lon1 = pointA.longitude;
+
+        const lat2 = pointB.latitude;
+        const lon2 = pointB.longitude;
+
+        const R = 6371e3; // earth radius in meters
+        const φ1 = lat1 * (Math.PI / 180);
+        const φ2 = lat2 * (Math.PI / 180);
+        const Δφ = (lat2 - lat1) * (Math.PI / 180);
+        const Δλ = (lon2 - lon1) * (Math.PI / 180);
+
+        const a = (Math.sin(Δφ / 2) * Math.sin(Δφ / 2)) +
+            ((Math.cos(φ1) * Math.cos(φ2)) * (Math.sin(Δλ / 2) * Math.sin(Δλ / 2)));
+
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        const distance = R * c;
+        return distance; // in meters
     }
 
     @computed get startTourPosition() {

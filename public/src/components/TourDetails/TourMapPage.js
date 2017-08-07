@@ -43,6 +43,7 @@ const images = [
     require('../../../assets/stations/station_14.png'),
     require('../../../assets/stations/station_15.png'),
     require('../../../assets/stations/station_16.png'),
+    require('../../../assets/stations/stationCurrent.png'),
 ];
 
 
@@ -61,52 +62,9 @@ class TourMapPage extends Component {
 
         this._handleBackPress = this._handleBackPress.bind(this);
 
-
-        // Alert.alert(this.state.coords.length.toString());
-        // var tour = this.props.tour;
-        //
-        // var url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + tour.coordinate.latitude.toString() + ","
-        //                                                                          + tour.coordinate.longitude.toString()
-        //                                                                          + "&waypoints=";
-        //
-        // var arrCoords = [];
-        //
-        // tour.stations.forEach((station) => arrCoords.push({
-        //     latitude:station.coordinate.latitude,
-        //     longitude:station.coordinate.longitude
-        // }));
-        //
-        // url += arrCoords[1].latitude.toString() + "," + arrCoords[1].longitude.toString();
-        //
-        // for (var i=2; i<(arrCoords.length-1); i++) {
-        //     url += "|" + arrCoords[i].latitude.toString() + "," + arrCoords[i].longitude.toString();
-        // }
-        //
-        // url += "&destination=" + arrCoords[arrCoords.length-1].latitude.toString() + "," + arrCoords[arrCoords.length-1].longitude.toString();
-        //
-        // url += "&key=AIzaSyAz94Lzcc_GhVXZdH8wDiqf61nKXJwEOJc&mode=walking";
-        //
-        // fetch(url)
-        //     .then(response => response.json())
-        //     .then(responseJson => {
-        //         // Alert.alert(responseJson.toString());
-        //         if (responseJson.routes.length) {
-        //             this.setState({
-        //                 coords: this.decode(responseJson.routes[0].overview_polyline.points) // definition below
-        //             });
-        //         }
-        //     }).catch(e => {console.warn(e)});
-
-        // this.state = {
-        //     region: {
-        //         latitude: LATITUDE,
-        //         longitude: LONGITUDE,
-        //         latitudeDelta: LATITUDE_DELTA,
-        //         longitudeDelta: LONGITUDE_DELTA
-        //     },
-        //     tour: this.props.tour,
-        //     coords: this.props.coords,
-        // };
+        this.state = {
+            tourStations: this.props.store.tourStations,
+        };
     }
 
     _handleBackPress() {
@@ -193,42 +151,38 @@ class TourMapPage extends Component {
 
     paintCloseMarker() {
         // Alert.alert(this.props.store.position.latitude.toString() + " " + this.props.store.position.longitude.toString());
-        //
-        // var minDistance;
-        // this.props.store.tourStations.forEach((station) => {
-        //     if (product.name.indexOf(this.props.filterText) === -1 || (!product.stocked && this.props.inStockOnly)) {
-        //         return;
-        //     }
-        //     if (product.category !== lastCategory) {
-        //         rows.push(<ProductCategoryRow category={product.category} key={product.category} />);
-        //     }
-        //     rows.push(<ProductRow product={product} key={product.name} />);
-        //     lastCategory = product.category;
-        // });
 
-    }
+        var tourStations = this.props.store.tourStations;
+        var currPoint = this.props.store.position;
+        var closestStation = tourStations[0].key;
+        var minDistance = this.props.store.calculateDistance(currPoint, tourStations[0].coordinate);
 
-    calculateDistance(pointA, pointB) {
+        tourStations.forEach((station) => {
 
-        const lat1 = pointA.latitude;
-        const lon1 = pointA.longitude;
 
-        const lat2 = pointB.latitude;
-        const lon2 = pointB.longitude;
+            if (station.isClosest) {
+                station.isClosest = null;
+            }
 
-        const R = 6371e3; // earth radius in meters
-        const φ1 = lat1 * (Math.PI / 180);
-        const φ2 = lat2 * (Math.PI / 180);
-        const Δφ = (lat2 - lat1) * (Math.PI / 180);
-        const Δλ = (lon2 - lon1) * (Math.PI / 180);
+            var currDistance = this.props.store.calculateDistance(currPoint, station.coordinate);
 
-        const a = (Math.sin(Δφ / 2) * Math.sin(Δφ / 2)) +
-            ((Math.cos(φ1) * Math.cos(φ2)) * (Math.sin(Δλ / 2) * Math.sin(Δλ / 2)));
+            if (currDistance < minDistance) {
+                minDistance = currDistance;
+                closestStation = station.key;
+            }
+        });
 
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        // TODO: Change it!
+        if (minDistance <= 130000) {
+            tourStations[closestStation-1].isClosest = true;
+        }
 
-        const distance = R * c;
-        return distance; // in meters
+        // this.props.store.setTourStations(tourStations);
+
+        this.setState({
+            tourStations: tourStations
+        })
+
     }
 
     getLocation() {
@@ -237,57 +191,11 @@ class TourMapPage extends Component {
                 const {latitude, longitude} = coords;
                 this.props.store.setLocation(latitude,longitude,0.005,0.001);
                 this.paintCloseMarker();
-                // this.props.store.setRegion(latitude,longitude,0.005,0.001);
-                // this.props.store.setCurrRegion(latitude,longitude,0.005,0.001);
-                // this.props.store.setPosition(latitude,longitude);
-                // this.setState({
-                //     position: {
-                //         latitude,
-                //         longitude,
-                //     },
-                //     region: {
-                //         latitude,
-                //         longitude,
-                //         latitudeDelta: 0.005,
-                //         longitudeDelta: 0.001,
-                //     },
-                //     currRegion: {
-                //         latitude,
-                //         longitude,//     }
-                //         latitudeDelta: 0.005,
-                //         longitudeDelta: 0.001,
-
-                // })
             },
             (error) => {},
             {enableHighAccuracy: true}
         );
 
-        this.watchID = navigator.geolocation.watchPosition(
-            ({coords}) => {
-                // const {lat, long} = coords
-                // this.setState({
-                //     position: {
-                //         lat,
-                //         long
-                //     }
-                // })
-                const {latitude, longitude} = coords;
-                this.props.store.watchPosition(latitude,longitude,0.005,0.001);
-                this.paintCloseMarker();
-                // this.setState({
-                //     position: {
-                //         latitude,
-                //         longitude
-                //     },
-                //     currRegion: {
-                //         latitude,
-                //         longitude,
-                //         latitudeDelta: 0.005,
-                //         longitudeDelta: 0.001,
-                //     }
-                // })
-            });
 
     }
 
@@ -303,6 +211,13 @@ class TourMapPage extends Component {
         }, 200);
 
         BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
+
+        this.watchID = navigator.geolocation.watchPosition(
+            ({coords}) => {
+                const {latitude, longitude} = coords;
+                this.props.store.watchPosition(latitude,longitude,0.005,0.001);
+                this.paintCloseMarker();
+            });
     }
 
     componentWillUnmount() {
@@ -601,11 +516,11 @@ class TourMapPage extends Component {
                         geodesic={false}
                     />
 
-                    {tourStations.map(currStation => (
+                    {this.state.tourStations.map(currStation => (
                         <MapView.Marker
                             key={currStation.key}
                             coordinate={currStation.coordinate}
-                            image={images[currStation.key - 1]}
+                            image={currStation.isClosest ? images[16] : images[currStation.key - 1]}
                             onPress={this.onStationPress.bind(this,currStation)}
                         />
                     ))}

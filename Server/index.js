@@ -9,14 +9,17 @@ const bodyparser = require('body-parser');
 app.use(bodyparser.json()); // support json encoded bodies
 //app.use(bodyparser()); // support json encoded bodies
 app.use(bodyparser.urlencoded({ extended: true })); // support encoded bodies
+
 const router = express.Router();
 const tours = require('./api/tour/index');
 const users = require('./api/user/index');
 const reviews = require('./api/review/index');
+const reccomendation = require('./api/reccomendation/index');
 
 app.use('/tours',tours);
 app.use('/users',users);
 app.use('/reviews', reviews);
+app.use('/reccomendation',reccomendation);
 
 app.listen('3000');
 console.log("listening on port 3000");
