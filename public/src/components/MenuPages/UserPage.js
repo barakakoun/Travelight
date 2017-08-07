@@ -86,7 +86,6 @@ class UserPage extends Component {
                 />}
                 ref={(drawer) => { !this.state.drawer ? this.setDrawer(drawer) : null }}>
                 <View style={styles.container}>
-
                     <MaterialToolbar title={'User Page'}
                                  primary={'googleBlue'}
                                  icon="menu"

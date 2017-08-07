@@ -111,8 +111,8 @@ class TourMapPage extends Component {
 
     _handleBackPress() {
         Alert.alert(
-            'Alert Title',
-            'Sure you wanna stop tour?',
+            'Leaving Already?',
+            'Sure you wanna stop the tour?',
             [
                 {text: 'Yes', onPress: () => this.props.store.navigatorReplace("MainMapPage")},
                 {text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},

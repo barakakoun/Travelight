@@ -10,8 +10,9 @@ import {
     BackAndroid,
     DrawerLayoutAndroid,
     Dimensions,
+    ScrollView
 } from 'react-native';
-import { Toolbar as MaterialToolbar, Icon,Avatar } from 'react-native-material-design';
+import { Toolbar as MaterialToolbar, Icon, Avatar, Card } from 'react-native-material-design';
 import SideNavigation from '../Navigation/SideNavigation';
 import {observer} from 'mobx-react/native';
 
@@ -26,7 +27,15 @@ class RecommendedPage extends Component {
         this.state = {
             drawer: null
         };
+        this.goToTourDetails = this.goToTourDetails.bind(this);
+        this._handleBackPress = this._handleBackPress.bind(this);
+
     }
+
+    goToTourDetails(tour) {
+        this.props.store.navigatorOpenTourModal('TourDetailsPage', Navigator.SceneConfigs.FloatFromBottom);
+    }
+
     openDrawer() {
         this.setState({
             drawerOpen: true
@@ -51,18 +60,38 @@ class RecommendedPage extends Component {
         }
         return false;
     }
+
     onOpenBurger(e) {
         this.state.drawer.openDrawer();
     }
+
     setDrawer = (drawer) => {
         this.setState({
             drawer
         });
     };
+
     PushToNavigator(id) {
         this.props.store.navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft);
     }
+
+    _handleBackPress() {
+        this.props.store.navigatorPop();
+        return true;
+    }
+
+    componentDidMount() {
+        // this.props.store.getRecommendedTours();
+        this.props.store.getAvailableTours();
+        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
+    }
+
+    componentWillUnmount() {
+        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPress);
+    }
+
     render() {
+        const { availableTours } = this.props.store;
         //const {appNavigator} = this.props.store;
         return (
             <Navigator
@@ -73,7 +102,12 @@ class RecommendedPage extends Component {
     }
 
     renderScene(route, navigator) {
-        const { navigatorOpenDrawer } = this.props.store;
+        const { navigatorOpenDrawer,
+                currentUser,
+                recommendedTours,
+                availableTours,
+                onRecommendedTourPress
+                } = this.props.store;
         return (
             <DrawerLayoutAndroid
                 onDrawerOpen={this.openDrawer.bind(this)}
@@ -86,17 +120,42 @@ class RecommendedPage extends Component {
                     onChangeScene={(id) => {navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft)}}
                 />}
                 ref={(drawer) => { !this.state.drawer ? this.setDrawer(drawer) : null }}>
-            <View  style={styles.container}>
-                <MaterialToolbar title={'Recommended for you'}
-                                 primary={'googleBlue'}
-                                 icon="menu"
-                                 onIconPress={this.onOpenBurger.bind(this)}/>
-                <Image
-                    resizeMode='stretch'
-                    style={styles.image}
-                    source={comingsoon}
-                />
-            </View>
+                <ScrollView  style={styles.container}>
+                    <MaterialToolbar title={'Recommended for you'}
+                                     primary={'googleBlue'}
+                                     icon="menu"
+                                     onIconPress={this.onOpenBurger.bind(this)}/>
+                    <Text style={styles.title}>Hello {currentUser.firstName},</Text>
+                    <Text style={styles.text}>Here are some tours we think are perfect for you</Text>
+                    <View style={styles.oneUnderOne}>
+                        { availableTours.map((tour, index) => (
+                            <TouchableOpacity key={index} onPress={() => onRecommendedTourPress(tour, Navigator.SceneConfigs.FloatFromBottom)}>
+                                <Card key={index}>
+                                    <Card.Media
+                                        image={<Image source={{uri: tour.img}} />}
+                                        overlay
+                                    >
+                                        <Text style={{fontSize: 30, color: 'white'}}>{tour.name}</Text>
+                                    </Card.Media>
+                                    <Card.Body style={styles.oneByOne}>
+                                        <View style={styles.twoSides}>
+                                            <View style={styles.oneByOne}>
+                                                <Icon name="timer" color="#000000" style={styles.icon}/>
+                                                <Text style={{fontSize: 18, color: "black"}}>
+                                                    {tour.duration}
+                                                </Text>
+                                            </View>
+                                            <Text style={{fontSize: 15, color: 'black'}}>
+                                                {tour.distance} Km
+                                            </Text>
+                                            <Icon name='directions-walk' color="#000000" style={styles.icon} />
+                                        </View>
+                                    </Card.Body>
+                                </Card>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                </ScrollView>
             </DrawerLayoutAndroid>
         );
     }
@@ -122,7 +181,16 @@ var NavigationBarRouteMapper = {
 
 const styles = StyleSheet.create({
     text: {
-        fontSize: 16,
+        fontSize: 20,
+        color: 'black',
+        marginLeft: 4 ,
+    },
+    title: {
+        color: 'black',
+        fontSize: 32,
+        marginTop: 60,
+        fontWeight:'bold',
+        marginLeft: 4 ,
     },
     image: {
         width,
@@ -131,12 +199,30 @@ const styles = StyleSheet.create({
     },
     container: {
         backgroundColor: '#FFFFFF',
-        flex: 1,
-        justifyContent: 'flex-end',
+        // flex: 1,
+        // justifyContent: 'flex-start',
     },
     toolbar: {
         backgroundColor: '#e9eaed',
         height: 56,
+    },
+    oneByOne: {
+        flex:1,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start'
+    },
+    twoSides: {
+        flex:1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start'
+    },
+    oneUnderOne: {
+        // backgroundColor: '#5592f4',
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'flex-start'
     },
 });
 

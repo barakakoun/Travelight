@@ -31,9 +31,17 @@ class TourDetailsPage extends Component {
 
         this.startTour = this.startTour.bind(this);
         this.exitPage = this.exitPage.bind(this);
+        this.showReviews = this.showReviews.bind(this);
+        this._handleBackPress = this._handleBackPress.bind(this);
+    }
+
+    _handleBackPress() {
+        this.props.store.navigatorPop();
+        return true;
     }
 
     componentWillUnmount() {
+        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPress);
         if(!this.isStartTour) {
             this.exitPage();
         }
@@ -41,7 +49,7 @@ class TourDetailsPage extends Component {
 
     exitPage() {
         this.props.store.resetChosenTour();
-        this.props.store.appNavigator.pop()
+        //this.props.store.navigatorPop();
     }
 
     startTour() {
@@ -93,6 +101,13 @@ class TourDetailsPage extends Component {
         }
     }
 
+    showReviews() {
+        //this.props.store.appNavigator.pop();
+        this.props.store.appNavigator.push({
+            id: 'ReviewsPage',
+        });
+    }
+
     decode(encoded) {
         if (!encoded) {
             return [];
@@ -132,6 +147,11 @@ class TourDetailsPage extends Component {
             poly.push(p);
         }
         return poly;
+    }
+
+    componentDidMount() {
+        // this.props.store.getTourReviews();
+        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
     }
 
     render() {
@@ -177,13 +197,13 @@ class TourDetailsPage extends Component {
                 </Swiper>
                 <Divider style={{ marginBottom: 10 }}/>
                 <View style={styles.oneUnderOne}>
-                    <Text style={{color: 'white', fontSize: 24, marginBottom: 10}}>
+                    <Text style={{color: 'white', fontSize: 24, marginBottom: 10, paddingLeft: 2}}>
                         {chosenTour.name}
                     </Text>
                     <View style={styles.twoSides}>
                         <View style={styles.oneByOne}>
                             <Icon name="timer" color="#FFFFFF" style={styles.icon}/>
-                            <Text style={{fontSize: 20, color: 'white'}}>
+                            <Text style={{fontSize: 20, color: 'white', paddingLeft: 2 }}>
                                 {chosenTour.duration}
                             </Text>
                         </View>
@@ -195,7 +215,7 @@ class TourDetailsPage extends Component {
                     </View>
                     <View style={styles.twoSides}>
                         <View style={styles.oneByOne}>
-                            <Text style={{marginRight: 2, color:'white'}}>
+                            <Text style={{marginRight: 2, color:'white', paddingLeft: 2}}>
                                 {chosenTour.rating}
                             </Text>
                             <Stars
@@ -206,7 +226,7 @@ class TourDetailsPage extends Component {
                                 rate={chosenTour.rating}
                                 size={20}
                             />
-                            <TouchableOpacity onPress={() => {}}>
+                            <TouchableOpacity onPress={() => this.showReviews()}>
                                 <Text style={{marginLeft: 10, color:'white'}}>
                                      { chosenTour.reviews } reviews
                                 </Text>
@@ -219,7 +239,7 @@ class TourDetailsPage extends Component {
 
                 </View>
                 <View style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10}}>
-                    <ScrollView style={{height: 15}}>
+                    <ScrollView style={{height: 15, paddingLeft: 2}}>
                         <Text style={{fontSize: 15}}>
                             {chosenTour.description}
                         </Text>

@@ -9,4 +9,9 @@ const URL_USERS_ENDPOINT = URL_BASE+'users/';
 export const LOGINUSER = URL_USERS_ENDPOINT+'login';
 
 /** TOURS */
-export const URL_TOURS_ENDPOINT= URL_BASE+'tours/';
+export const URL_TOURS_ENDPOINT = URL_BASE+'tours/';
+export const URL_RECOMMENDED_TOURS = URL_TOURS_ENDPOINT+'recommended/';
+
+/** REVIEWS */
+export const URL_REVIEWS_ENDPOINT = URL_BASE+'reviews/';
+export const URL_REVIEWS_TOUR = URL_REVIEWS_ENDPOINT+'tour/';

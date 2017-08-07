@@ -10,7 +10,8 @@ import { LATITUDE_DELTA,
         } from "../../../Consts/variables";
 import { LOGINUSER,
          URL_TOURS_ENDPOINT,
-         URL_REVIEWS_TOUR, } from "../../../Consts/urls";
+         URL_REVIEWS_TOUR,
+         URL_RECOMMENDED_TOURS} from "../../../Consts/urls";
 import FBSDK from 'react-native-fbsdk';
 import React, { Component } from 'react';
 import {AsyncStorage} from 'react-native';
@@ -48,6 +49,8 @@ class Store {
         img: "http://www.worldofbuzz.com/wp-content/uploads/2015/04/noprofilemale.gif?x82567",
         name: "Unknown"
     };
+    @observable tourReviews = [];
+    @observable recommendedTours = [];
 
     constructor() {
         this.setAppNavigator = this.setAppNavigator.bind(this);
@@ -82,6 +85,8 @@ class Store {
         //this.removeUserFromStorage = this.removeUserFromStorage.bind(this);
         this.logoutUser = this.logoutUser.bind(this);
         this.getTourReviews = this.getTourReviews.bind(this);
+        this.getRecommendedTours = this.getRecommendedTours.bind(this);
+        this.onRecommendedTourPress = this.onRecommendedTourPress.bind(this);
     }
 
     sendFacebookLoginDataToServer(){
@@ -91,10 +96,13 @@ class Store {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                firstName: this.firstName,
-                lastName: this.lastName,
-                email: this.email,
-                method: '1'
+                EMAIL: this.currentUser.email,
+                FIRST_NAME: this.currentUser.firstName,
+                LAST_NAME: this.currentUser.lastName,
+                BIRTH_DATE: this.currentUser.birthDate,
+                LOGIN_TYPE: '1',
+                IMG: this.currentUser.img,
+
             })}).then((response) => response.json())
             .then((responseJson) => {
             console.warn("After facebook login");
@@ -134,7 +142,8 @@ class Store {
         this.currentUser.lastName='';
         this.currentUser.email='';
         this.currentUser.name='';
-        this.currentUser.img=null;
+        this.currentUser.img = null;
+        this.currentUser.birthDate = null;
     }
 
     @action logoutUser() {
@@ -199,6 +208,7 @@ class Store {
                     firstName : result.first_name,
                     lastName: result.last_name,
                     email: result.email,
+                    birthDate: result.birthday,
                 };
                 //var jresult = JSON.parse(result);
                 // this.userPhoto = result.picture.data.url;
@@ -223,7 +233,7 @@ class Store {
                 accessToken: this.accessToken,
                 parameters: {
                     fields: {
-                        string: 'email,first_name,last_name,name,picture' // what you want to get
+                        string: 'email,first_name,last_name,name,picture,birthday' // what you want to get
                     }
                 }},
             responseInfoCallback
@@ -587,6 +597,7 @@ class Store {
     @action resetChosenTour() {
         this.chosenTour = null;
         this.tourStations = [];
+        this.tourReviews = [];
     }
 
     @action onTourPress(tour) {
@@ -594,7 +605,7 @@ class Store {
         this.isTourModalOpen = false;
 
         setTimeout(() => {
-            if (this.chosenTour!=null) {
+            if (this.chosenTour !=null) {
                 this.isTourModalOpen = true;
             }
         }, 500);
@@ -621,8 +632,6 @@ class Store {
         //     }
         // }, 500);
     }
-
-
 
     @action setLocation(latitude,longitude,latitudeDelta,longitudeDelta) {
         this.setRegion(latitude,longitude,latitudeDelta,longitudeDelta);
@@ -737,13 +746,33 @@ class Store {
         fetch(url)
             .then(response => response.json())
             .then(result => {
-                this.availableTours = result;
+                console.warn(JSON.stringify(result,null,3));
+                this.tourReviews = result;
             })
             .catch(error => {
                 console.warn(error);
             });
     }
 
+    @action getRecommendedTours() {
+        const url = `${URL_RECOMMENDED_TOURS}${this.currentUser.email}`;
+        fetch(url)
+            .then(response => response.json())
+            .then(result => {
+                this.recommendedTours = result;
+            })
+            .catch(err => {console.warn("Error in getRecommendedTours " + err)});
+    }
+
+    @action onRecommendedTourPress(tour, configureScene) {
+        this.chosenTour = tour;
+        this.getTourStations();
+        this.appNavigator.push({
+            id: 'TourDetailsPage',
+            chosenTour: this.chosenTour,
+            configureScene: configureScene
+        });
+    }
 }
 
 const store = new Store();

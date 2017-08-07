@@ -20,6 +20,7 @@ import RecommendedPage from './public/src/components/MenuPages/RecommendedPage';
 import SettingsPage from './public/src/components/MenuPages/SettingsPage';
 import AboutPage from './public/src/components/MenuPages/AboutPage';
 import UserPage from './public/src/components/MenuPages/UserPage';
+import TourReviews from './public/src/components/TourReviews/TourReviews';
 var nativeImageSource = require('nativeImageSource');
 
 import Store from './public/src/model/store';
@@ -151,6 +152,11 @@ export default class travelight extends Component {
             }
             if (routeId === 'UserPage') {
                 contentView = <UserPage
+                    navigator={Store.appNavigator}
+                    store={Store} />;
+            }
+            if(routeId === 'ReviewsPage') {
+                contentView = <TourReviews
                     navigator={Store.appNavigator}
                     store={Store} />;
             }
