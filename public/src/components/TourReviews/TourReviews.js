@@ -33,12 +33,20 @@ class TourReviews extends Component {
     }
 
     exitPage() {
-        this.props.store.resetChosenTour();
+        // this.props.store.resetChosenTour();
         this.props.store.appNavigator.pop()
     }
 
     componentDidMount() {
         this.props.store.getTourReviews();
+        BackAndroid.addEventListener('hardwareBackPress', this.exitPage);
+    }
+
+    componentWillUnmount() {
+        BackAndroid.removeEventListener('hardwareBackPress', this.exitPage);
+        // if(!this.isStartTour) {
+        //     this.exitPage();
+        // }
     }
 
     render() {

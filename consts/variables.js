@@ -19,4 +19,4 @@ export const GOOGLE_LOGIN = "Google";
 export const REGULAR_LOGIN = "Regular";
 
 //Other
-export const GET_FROM_SERVER = true;
+export const GET_FROM_SERVER = false;

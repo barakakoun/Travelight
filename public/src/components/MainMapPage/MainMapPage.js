@@ -302,7 +302,7 @@ class MainMapPage extends Component {
         const {region,
                availableTours } = this.props.store;
         const { height: windowHeight } = Dimensions.get('window');
-        const varTop = windowHeight - 125;
+        const varTop = windowHeight - 100;
         const hitSlop = {
             top: 15,
             bottom: 15,
