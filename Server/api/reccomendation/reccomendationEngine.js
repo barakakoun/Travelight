@@ -171,7 +171,7 @@ exports.updateUserProfile=function (user) {
     //get all users that took this tour and get their taste profile
 };
 
-exports.contentBasedRecommend = function (user,country) {
+exports.contentBasedRecommend = function (user,country,res) {
     let connection = db.initDB();
     const sql = 'SELECT category_id,rating from user_profile where user_id = ?; SELECT t.id,tp.category_id,tp.rating ' +
         'from tour_profile tp ' +
@@ -185,8 +185,6 @@ exports.contentBasedRecommend = function (user,country) {
                     else {
                         let userProfile = rows1[0];
                         let toursProfiles = rows1[1];
-                        console.log("user profile " + JSON.stringify(userProfile));
-                        console.log("tours profile" + JSON.stringify(toursProfiles));
                         // connection.query('SELECT t.id,category_id,rating from tour_profile tp ' +
                         //     'inner join tour t on t.id = tp.tour_id' +
                         //     ' where t.country = ? ',country,function(err2,rows2) {
@@ -200,11 +198,10 @@ exports.contentBasedRecommend = function (user,country) {
                         if((userProfile.length > 0)&&(toursProfiles.length >0)) {
                             const resultTours = _
                                 .chain(toursProfiles)
-                                .map(row => {
-                                    mapTourToDistance(row, userProfile.find(profile => profile.category_id === row.category_id))
-                                })
+                                .map(row =>
+                                    mapTourToDistance(row, _.find(userProfile,profile => profile.category_id === row.category_id))
+                                )
                                 .value();
-
                             // Temp array of tour ids
                             const tourIds = _
                                 .chain(resultTours)
@@ -220,7 +217,34 @@ exports.contentBasedRecommend = function (user,country) {
                                     distance: calcSquertDistance(resultTours.filter(row => row.tour === tourId))
                                 }))
                                 .value();
-                            return toursWithDistance;
+                            const sortedTours = _.sortBy(toursWithDistance,['distance']);
+                            const tours = [];
+                            _.forEach(sortedTours,row => {
+                                tours.push(row.tour);
+                            });
+
+                            const toursQuery = 'SELECT id,name,img,duration,distance FROM tour WHERE ID in ('+tours+
+                        ')';
+                            connection.query(toursQuery,[],function (err,rows) {
+                                if(err)
+                                {
+                                    console.log(err);
+                                    throw err;
+                                }
+                                else
+                                {
+                                    const tourDetails = sortedTours.map(tour=> (
+                                        {key:tour.tour,
+                                            name:_.find(rows,row => row.id ===tour.tour).name,
+                                        img:_.find(rows,row => row.id ===tour.tour).img,
+                                        duration:_.find(rows,row => row.id ===tour.tour).duration,
+                                        distance:_.find(rows,row => row.id ===tour.tour).distance,
+                                    }));
+                                    db.closeDB(connection);
+                                    res.send(tourDetails);
+                                }
+
+                            });
                         }
                         else
                         {
@@ -233,23 +257,41 @@ exports.contentBasedRecommend = function (user,country) {
                         )
 };
 
-const mapTourToDistance = (row,userRating) => ({
+const mapTourToDistance = (row,userRating) => (
+    {
     tour: row.id,
-    category: row.category,
-    distance: getSingleDistance(row.rating,userRating),
+    category: row.category_id,
+    distance: getSingleDistance(row.rating,userRating.rating),
 });
 function getSingleDistance(tourRating,userRating)
 {
-    return Math.pow(tourRating - userRating);
+    return Math.pow(tourRating - userRating,2);
 }
 
 function calcSquertDistance(ratings) {
     let sum =0;
-    console.log(ratings);
-    _.foreach(ratings, row => {
-        sum+=row;
+    _.forEach(ratings, row => {
+        sum+=row.distance;
     });
-    console.log(sum)
-
     return Math.sqrt(sum);
+}
+
+function getTourDetails(tour,connection)
+{
+    const query = 'SELECT id,name,img,duration FROM tour WHERE ID = ?';
+    console.log('sdasdas');
+    connection.query(query,[tour.tour],function(err,rows)
+    {
+        if (err)
+        {
+            console.log('error');
+            throw err;
+        }
+        else
+        {
+            console.log('sdasdas2');
+            JSON.stringify(rows);
+            return ({name:rows[0].name,img:rows[0].img,duration:rows[0].duration,distance:2});
+        }
+    })
 }

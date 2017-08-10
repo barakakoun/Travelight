@@ -21,13 +21,11 @@ exports.updateUserProfile = function (req,res) {
 exports.contentBasedRecommend = function (req,res) {
     const user = req.param('userId');
     const country = req.param('CountryId');
-    let reccomendations = engine.contentBasedRecommend(user,country);
-    res.send(reccomendations);
+    let reccomendations = engine.contentBasedRecommend(user,country,res);
 }
 
 exports.ratingBasedRecommend = function (req,res) {
     const user = req.param('userId');
     const country = req.param('country');
-    let reccomendations = engine.ratingBasedRecommend(user,country);
-    res.send(reccomendations);
+    engine.ratingBasedRecommend(user,country,res);
 }
