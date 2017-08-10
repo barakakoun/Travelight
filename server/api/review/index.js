@@ -9,5 +9,5 @@ const express = require ('express');
 const bodyparser = require('body-parser');
 const router = express.Router();
 
-router.get('/tour/:tourId',controller.getTourReviews);
+router.get('/:tourId',controller.getTourReviews);
 module.exports = router;

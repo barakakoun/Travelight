@@ -13,8 +13,9 @@ import { LATITUDE_DELTA,
 } from "../../../Consts/variables";
 import { LOGINUSER,
          URL_TOURS_ENDPOINT,
-         URL_REVIEWS_TOUR,
-         URL_RECOMMENDED_TOURS} from "../../../Consts/urls";
+         URL_REVIEWS_ENDPOINT,
+         URL_RECOMMENDED_TOURS,
+         URL_GET_TOUR_DETAILS } from "../../../Consts/urls";
 import FBSDK from 'react-native-fbsdk';
 import React from 'react';
 import {AsyncStorage} from 'react-native';
@@ -764,7 +765,7 @@ class Store {
     }
 
     @action getTourReviews() {
-        const url = `${URL_REVIEWS_TOUR}${this.chosenTour.key}`;
+        const url = `${URL_REVIEWS_ENDPOINT}${this.chosenTour.key}`;
         fetch(url)
             .then(response => response.json())
             .then(result => {
@@ -787,13 +788,21 @@ class Store {
     }
 
     @action onRecommendedTourPress(tour, configureScene) {
-        this.chosenTour = tour;
-        this.getTourStations();
-        this.appNavigator.push({
-            id: 'TourDetailsPage',
-            chosenTour: this.chosenTour,
-            configureScene: configureScene
-        });
+        const url = `${URL_GET_TOUR_DETAILS}${tour.key}`;
+        console.warn(url);
+        fetch(url)
+            .then(response => response.json())
+            .then(result => {
+                console.warn(result);
+                this.chosenTour = result;
+                this.getTourStations();
+                this.appNavigator.push({
+                    id: 'TourDetailsPage',
+                    chosenTour: this.chosenTour,
+                    configureScene: configureScene
+                });
+            })
+            .catch(err => console.warn(err))
     }
 
     mapStationsToScreen(station) {

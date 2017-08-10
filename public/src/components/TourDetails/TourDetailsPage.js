@@ -19,6 +19,7 @@ import { observable } from 'mobx';
 import {observer} from 'mobx-react/native';
 import Swiper from 'react-native-swiper';
 import Stars from 'react-native-stars-rating';
+import ReviewsComponent from './ReviewsComponent.js';
 import _ from 'lodash';
 
 const { width } = Dimensions.get('window');
@@ -213,29 +214,7 @@ class TourDetailsPage extends Component {
                         <Icon name='directions-walk' color="#FFFFFF" style={styles.icon} />
 
                     </View>
-                    <View style={styles.twoSides}>
-                        <View style={styles.oneByOne}>
-                            <Text style={{marginRight: 2, color:'white', paddingLeft: 2}}>
-                                {chosenTour.rating}
-                            </Text>
-                            <Stars
-                                isActive={false}
-                                rateMax={5}
-                                isHalfStarEnabled={true}
-                                onStarPress={(rating) => console.log(rating)}
-                                rate={chosenTour.rating}
-                                size={20}
-                            />
-                            <TouchableOpacity onPress={() => this.showReviews()}>
-                                <Text style={{marginLeft: 10, color:'white'}}>
-                                     { chosenTour.reviews } reviews
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        {chosenTour.accessible ?
-                            <Icon name="accessible" color="#FFFFFF" style={styles.icon}/> : null
-                        }
-                    </View>
+                    <ReviewsComponent store={this.props.store} textColor="white"/>
 
                 </View>
                 <View style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10}}>
@@ -293,7 +272,6 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold'
     },
-
     image: {
         marginTop: 60,
         width,

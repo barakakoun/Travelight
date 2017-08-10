@@ -7,6 +7,7 @@ const tourConsts = require('../../../consts/tour');
 const stationConsts = require('../../../consts/station');
 const tourStationConsts = require('../../../consts/tourStation');
 const messages = require('../../../consts/messages');
+
 const _ = require('lodash');
 //create connection to mysql
 
@@ -98,7 +99,7 @@ exports.test = function(req, res) {
 exports.getTours = function(req, res) {
     let connection = db.initDB();
 
-    const query = 'SELECT T.id,T.name,T.description,T.duration,S.latitude,S.longitude,T.img' +
+    const query = 'SELECT T.id,T.name,T.description,T.distance,T.duration,S.latitude,S.longitude,T.img' +
                    ' FROM tour T INNER JOIN tour_station TS ON T.ID = TS.TOUR_ID INNER JOIN station S ' +
                    ' ON TS.STATION_ID = S.ID WHERE TS.STATION_NUMBER =1';
     connection.query(query,[],function (err,rows) {
@@ -110,45 +111,84 @@ exports.getTours = function(req, res) {
         }
         else
         {
-            const tours =_
-                .chain(rows).map(row => ({
-                    key:row.id,
-                    name:row.name,
-                    description:row.description,
-                    duration:row.duration,
-                    accessible: true,
-                    distance: '2',
-                    reviews: 5,
-                    rating: 4.5,
-                    coordinate:{ latitude:row.latitude,
-                                 longitude:row.longitude },
-                    img:row.img,
-            })).value();
+            const tourIds = rows.map(row => row.id);
+            const reviewsQuery = 'SELECT R.RANK, R.REVIEW_TEXT, R.TOUR_ID' +
+            ' FROM reviews R WHERE R.TOUR_ID IN (' + tourIds + ')';
+            connection.query(reviewsQuery,function (err2,reviews) {
+                if(err2) {res.send('error')}
+                // console.log(JSON.stringify(reviews,null,3));
+                const tours = _
+                    .chain(rows).map(row => {
+                        let tourReviews = reviews.filter(review => review.TOUR_ID === row.id);
+                        console.log(JSON.stringify(tourReviews,null,3));
+                        let sum = 0;
+                        for(let i=0; i<tourReviews.length; i++) {
+                            sum += tourReviews[i].RANK;
+                        }
+                        // console.log(sum);
+                        // console.log(sum/tourReviews.length);
+                        // console.log(Math.round(sum/tourReviews.length));
+                        return {
+                            key: row.id,
+                            name: row.name,
+                            description: row.description,
+                            duration: row.duration,
+                            accessible: true,
+                            distance: row.distance,
+                            reviews: tourReviews.length,
+                            rating: tourReviews.length ? Math.round(sum/tourReviews.length) : 0,
+                            coordinate: {
+                                latitude: row.latitude,
+                                longitude: row.longitude
+                            },
+                            img: row.img,
+                        }}).value();
 
-            db.closeDB(connection);
-            res.send(tours);
+                db.closeDB(connection);
+                res.send(tours);
+            })
         }
-
     })
 
-}
+};
 
 // Get tour by ID
 exports.getTourDetails = function(req,res) {
-   var id =  req.param('tourId');
+   var tourId =  req.param('tourId');
     //Connect to the DB
     connection = db.initDB();
-    connection.query('SELECT * from tour where ID=?',id,function (err, rows, fields) {
-        if (!err) {
+    connection.query('SELECT T.id, T.name, T.description,T.duration,T.distance,T.img from tour T where ID=?',tourId,
+        function (err, tours) {
+            if (err) {
+                db.closeDB(connection);
+                res.send(messages.selectTourFailed);
+            }
 
-            res.send(rows);
-        }
-        else {
-            res.send(messages.selectTourFailed);
-           throw err;
-        }
+            const reviewsQuery = 'SELECT R.id, R.rank' +
+                ' FROM reviews R WHERE R.TOUR_ID = ?';
+            connection.query(reviewsQuery,tourId, function (err2,reviews) {
+                if(err2) { res.send(err2)}
+
+                let sum = 0;
+                for(let i=0; i< reviews.length; i++) {
+                    sum += reviews[i].rank;
+                }
+
+                const tour = {
+                    key: tours[0].id,
+                    name: tours[0].name,
+                    description: tours[0].description,
+                    duration: tours[0].duration,
+                    accessible: true,
+                    distance: tours[0].distance,
+                    reviews: reviews.length,
+                    rating: reviews.length ? Math.round(sum/reviews.length) : 0,
+                    img: tours[0].img
+                };
+                db.closeDB(connection);
+                res.send(tour);
+            });
     });
-    db.closeDB(connection);
 };
 
 // Create Tour

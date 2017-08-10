@@ -7,7 +7,7 @@ const bodyparser = require('body-parser');
 const router = express.Router();
 
 router.get('/',controller.getTours);
-router.get('/:tourId/details',controller.getTourDetails);
+router.get('/details/:tourId',controller.getTourDetails);
 router.post('/create',controller.create);
 router.post('/:tourId/update',controller.update);
 router.get('/:tourId/delete',controller.delete);

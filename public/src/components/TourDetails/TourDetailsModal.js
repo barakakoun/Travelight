@@ -5,11 +5,11 @@ import {
     Button,
     StyleSheet,
     Image,
+    TouchableHighlight,
     View,
 } from 'react-native';
 import {observer} from 'mobx-react/native';
-import { Col, Row, Grid } from 'react-native-easy-grid';
-import { Avatar } from 'react-native-material-design';
+import ReviewsComponent from './ReviewsComponent.js';
 
 @observer
 class TourDetailsModal extends Component {
@@ -35,13 +35,26 @@ class TourDetailsModal extends Component {
             return null;
         }
         return (
+
             <Modal style={[styles.modal, styles.modalTourDetails]} backdrop={false} backButtonClose={true}
                    position={"bottom"} ref="modalTourDetails"
                    onClosed={this.props.onModalTourDetailsClosed.bind(this)}>
-                    <Avatar size={150} image={<Image source={{uri:chosenTour.img}}/>} />
-                    <Text style={[styles.text, {color: "white"}]}>{chosenTour.name}</Text>
-                    <Button onPress={this.props.goToTourDetails.bind(this)} title="More Info" style={styles.btn}/>
+                <TouchableHighlight underlayColor="white" onPress={this.props.goToTourDetails.bind(this)}>
+                    <View style={[styles.modal, styles.modal2]}>
+                <Image resizeMode='cover' style={styles.img} source={{uri:chosenTour.img}}/>
+                        <Text style={styles.text}>
+                            {"\n"}
+                            {chosenTour.name}
+                            {"\n"}
+                            {"\n"}
+                            </Text>
+                        <ReviewsComponent style={{paddingLeft:5, marginTop:20}} store={this.props.store} textColor="black"/>
+                    </View>
+                </TouchableHighlight>
+
+
             </Modal>
+
         );
 
     }
@@ -53,21 +66,32 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+    modal2: {
+        marginLeft: 10
+    },
     modalTourDetails: {
-        height: 250,
-        backgroundColor: "#3B5998"
+        height: 200,
+        backgroundColor: "white",
+        // borderTopColor: "#4286f5",
+        //borderTopWidth: 6
     },
     text: {
         color: "black",
-        fontSize: 22,
-        paddingLeft: 2
+        fontSize: 14,
+        paddingLeft: 5
     },
-    btn: {
-        margin: 10,
-        backgroundColor: "#3B5998",
-        color: "white",
-        padding: 10
+    img:{
+        width: 300,
+        height: 130,
+        backgroundColor: "white",
+        marginTop: 10
     },
+    // btn: {
+    //     margin: 10,
+    //     backgroundColor: "#3B5998",
+    //     color: "white",
+    //     padding: 10
+    // },
 });
 
 module.exports = TourDetailsModal;
