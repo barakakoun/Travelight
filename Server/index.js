@@ -14,12 +14,12 @@ const router = express.Router();
 const tours = require('./api/tour/index');
 const users = require('./api/user/index');
 const reviews = require('./api/review/index');
-const reccomendation = require('./api/reccomendation/index');
+const recommendation = require('./api/reccomendation/index');
 
 app.use('/tours',tours);
 app.use('/users',users);
 app.use('/reviews', reviews);
-app.use('/reccomendation',reccomendation);
+app.use('/recommendation',recommendation);
 
 app.listen('3000');
 console.log("listening on port 3000");

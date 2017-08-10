@@ -81,8 +81,7 @@ class RecommendedPage extends Component {
     }
 
     componentDidMount() {
-        // this.props.store.getRecommendedTours();
-        this.props.store.getAvailableTours();
+        this.props.store.getRecommendedTours();
         BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
     }
 
@@ -91,7 +90,7 @@ class RecommendedPage extends Component {
     }
 
     render() {
-        const { availableTours } = this.props.store;
+        const { recommendedTours } = this.props.store;
         //const {appNavigator} = this.props.store;
         return (
             <Navigator
@@ -105,7 +104,6 @@ class RecommendedPage extends Component {
         const { navigatorOpenDrawer,
                 currentUser,
                 recommendedTours,
-                availableTours,
                 onRecommendedTourPress
                 } = this.props.store;
         return (
@@ -128,7 +126,7 @@ class RecommendedPage extends Component {
                     <Text style={styles.title}>Hello {currentUser.firstName},</Text>
                     <Text style={styles.text}>Here are some tours we think are perfect for you</Text>
                     <View style={styles.oneUnderOne}>
-                        { availableTours.map((tour, index) => (
+                        { recommendedTours.map((tour, index) => (
                             <TouchableOpacity key={index} onPress={() => onRecommendedTourPress(tour, Navigator.SceneConfigs.FloatFromBottom)}>
                                 <Card key={index}>
                                     <Card.Media

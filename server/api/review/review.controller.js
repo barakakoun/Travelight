@@ -37,7 +37,7 @@ exports.getTourReviews = function (req,res) {
                 rank: row.rank,
                 reviewText: row.review_text,
                 firstName: row.first_name,
-                last_name: row.last_name,
+                lastName: row.last_name,
                 userImg: row.img,
             }))
             console.log(reviews);

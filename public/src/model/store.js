@@ -15,7 +15,9 @@ import { LOGINUSER,
          URL_TOURS_ENDPOINT,
          URL_REVIEWS_ENDPOINT,
          URL_RECOMMENDED_TOURS,
-         URL_GET_TOUR_DETAILS } from "../../../Consts/urls";
+         URL_GET_TOUR_DETAILS,
+         URL_RECOMMENDATION_CB,
+       } from "../../../Consts/urls";
 import FBSDK from 'react-native-fbsdk';
 import React from 'react';
 import {AsyncStorage} from 'react-native';
@@ -778,10 +780,13 @@ class Store {
     }
 
     @action getRecommendedTours() {
-        const url = `${URL_RECOMMENDED_TOURS}${this.currentUser.email}`;
+        console.warn("Recommended");
+        const url = `${URL_RECOMMENDATION_CB}${this.currentUser.email}/ISRAEL`;
+        console.warn(url);
         fetch(url)
             .then(response => response.json())
             .then(result => {
+                console.warn(JSON.stringify(result, null ,3));
                 this.recommendedTours = result;
             })
             .catch(err => {console.warn("Error in getRecommendedTours " + err)});
