@@ -20,3 +20,6 @@ export const REGULAR_LOGIN = "Regular";
 
 //Other
 export const GET_FROM_SERVER = true;
+export const TYPE_TEXT = 't';
+export const TYPE_SOUND = 's';
+export const TYPE_IMAGE = 'i';

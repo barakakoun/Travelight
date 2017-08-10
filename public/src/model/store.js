@@ -6,14 +6,17 @@ import { LATITUDE_DELTA,
          REGULAR_LOGIN,
          STATION_LONGITUDE_DELTA,
          STATION_LATITUDE_DELTA,
-        GET_FROM_SERVER,
-        } from "../../../Consts/variables";
+         GET_FROM_SERVER,
+         TYPE_TEXT,
+         TYPE_SOUND,
+         TYPE_IMAGE,
+} from "../../../Consts/variables";
 import { LOGINUSER,
          URL_TOURS_ENDPOINT,
          URL_REVIEWS_TOUR,
          URL_RECOMMENDED_TOURS} from "../../../Consts/urls";
 import FBSDK from 'react-native-fbsdk';
-import React, { Component } from 'react';
+import React from 'react';
 import {AsyncStorage} from 'react-native';
 import massages from "../../../Consts/messages";
 import Sound from 'react-native-sound';
@@ -89,6 +92,7 @@ class Store {
         this.getTourReviews = this.getTourReviews.bind(this);
         this.getRecommendedTours = this.getRecommendedTours.bind(this);
         this.onRecommendedTourPress = this.onRecommendedTourPress.bind(this);
+        this.mapStationsToScreen = this.mapStationsToScreen.bind(this);
     }
 
     sendFacebookLoginDataToServer(){
@@ -122,14 +126,6 @@ class Store {
     }
 
     @action getUserFromStorage() {
-    //     AsyncStorage.multiGet(['token','firstName','lastName','email']).then((data)=>{
-    //     console.warn(data[0][1]);
-    //     if(data[0][1])
-    //     {
-    //         this.accessToken = data[0][1];
-    //         this.currentUser.firstName = data[1][1];
-    //     }
-    // })
         AsyncStorage.getItem('token').then((value) => {
             if(value)
             {
@@ -154,7 +150,6 @@ class Store {
     }
 
     removeUserFromStorage() {
-        // AsyncStorage.multiRemove(['token','firstName','lastName','email']);
         AsyncStorage.removeItem('token');
     }
 
@@ -211,20 +206,7 @@ class Store {
                     lastName: result.last_name,
                     email: result.email,
                     birthDate: result.birthday,
-                    // birthday:result.birthday
                 };
-                //var jresult = JSON.parse(result);
-                // this.userPhoto = result.picture.data.url;
-                // this.firstName = result.first_name;
-                // this.lastName = result.last_name;
-                // this.email = result.email;
-                // AsyncStorage.multiSet([['token',this.accessToken],['firstName',this.currentUser.firstName],
-                // ['lastname',this.currentUser.lastName],['email',this.currentUser.email]],(err)=>{
-                //     if (err)
-                //     {
-                //         console.warn('something not right');
-                //     }
-                // });
                 AsyncStorage.setItem('token', this.accessToken);
                 this.sendFacebookLoginDataToServer()
             }
@@ -376,9 +358,10 @@ class Store {
          // Get tour stations by this.chosenTour.key
         if(GET_FROM_SERVER) {
             const url = URL_TOURS_ENDPOINT+this.chosenTour.key+'/getStations';
-            fetch(url).then(response => response.json())
+            fetch(url)
+                .then(response => response.json())
                 .then(result => {
-                    this.tourStations = result;
+                    this.tourStations = result.map(this.mapStationsToScreen);
                 })
                 .catch(error => {
                     console.warn(error);
@@ -811,6 +794,25 @@ class Store {
             chosenTour: this.chosenTour,
             configureScene: configureScene
         });
+    }
+
+    mapStationsToScreen(station) {
+        const stationImg = _
+            .chain(station.data)
+            .filter(row => row.type === TYPE_IMAGE)
+            .map(row => row.data)
+            .value();
+        const audio = _.find(station.data,row => row.type === TYPE_SOUND);
+        const text = _.find(station.data,row => row.type === TYPE_TEXT);
+
+        return {
+            key: station.key,
+            name: station.name,
+            coordinate: station.coordinate,
+            img: stationImg,
+            audio: audio ? new Sound(audio.data,Sound.MAIN_BUNDLE) : null,
+            text: text ? text.data : null,
+        }
     }
 }
 

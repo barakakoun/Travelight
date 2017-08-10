@@ -186,7 +186,7 @@ class TourDetailsPage extends Component {
                                     key={index}
                                     resizeMode='stretch'
                                     style={styles.image}
-                                    source={{uri: station.img.toString()}}
+                                    source={{uri: station.img.length ? station.img[0].toString() : "https://www.game-on.no/templates/newyork/images/no_image.png"}}
                                 />
                                 <Text style={{fontSize: 30, flex: 1, justifyContent: 'center'}}>
                                     {station.name}

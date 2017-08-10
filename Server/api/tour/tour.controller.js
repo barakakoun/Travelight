@@ -111,10 +111,18 @@ exports.getTours = function(req, res) {
         else
         {
             const tours =_
-                .chain(rows).map(row => ({key:row.id,name:row.name,description:row.description,
-                duration:row.duration,accessible: true,
-             distance: '2', reviews: 5, rating: 4.5,coordinate:{latitude:row.latitude,longitude:row.longitude
-            ,img:row.img}
+                .chain(rows).map(row => ({
+                    key:row.id,
+                    name:row.name,
+                    description:row.description,
+                    duration:row.duration,
+                    accessible: true,
+                    distance: '2',
+                    reviews: 5,
+                    rating: 4.5,
+                    coordinate:{ latitude:row.latitude,
+                                 longitude:row.longitude },
+                    img:row.img,
             })).value();
 
             db.closeDB(connection);
@@ -238,7 +246,7 @@ exports.selectByCity= function (req,res) {
 
 exports.getStations = function (req,res) {
     const tourKey = req.param('tourId');
-    const query ='SELECT ts.station_number , s.name,s.latitude,s.longitude,s.image,si.data' +
+    const query ='SELECT ts.station_number, s.name, s.latitude, s.longitude, s.image, si.type, si.data' +
         ' FROM tour_station ts inner join station s on  s.id = ts.station_id left join station_info si' +
         ' on s.id = si.station_id where tour_id = ?';
     connection = db.initDB();
@@ -251,11 +259,42 @@ exports.getStations = function (req,res) {
         }
         else
         {
-            const stations = _.chain(rows).map(row => ({key:row.station_number,name:row.name,coordinate:{
-                latitude:row.latitude,longitude:row.longitude},img:row.image,audio:row.data
+            const stationsData = _
+                .chain(rows)
+                .map(row => ({
+                key:row.station_number,
+                name:row.name,
+                coordinate:{
+                    latitude:row.latitude,
+                    longitude:row.longitude},
+                type:row.type,
+                data:row.data,
             })).value();
 
-            res.send(stations);
+            const stationIds = _
+                .chain(stationsData)
+                .map(s => ({key: s.key, name:s.name, coordinate: s.coordinate}))
+                .uniqBy('key')
+                .value();
+
+            const resultStations = stationIds.map(stationId =>{
+                const station = {
+                    key: stationId.key,
+                    name:stationId.name,
+                    coordinate: stationId.coordinate,
+                    data: [],
+                };
+
+                station.data = _
+                    .chain(stationsData)
+                    .filter(s => s.key === stationId.key)
+                    .map(row => ({type: row.type,data: row.data }))
+                    .value();
+
+                return station;
+            });
+            console.log(JSON.stringify(resultStations, null, 3));
+            res.send(resultStations);
         }
     });
     db.closeDB(connection);

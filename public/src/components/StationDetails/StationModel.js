@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Modal from 'react-native-modalbox';
-import {Avatar,Icon} from 'react-native-material-design';
+import {Avatar, Icon, Divider} from 'react-native-material-design';
 import {Button} from 'react-native-vector-icons/FontAwesome';
 import Sound from 'react-native-sound';
 import {
@@ -12,6 +12,8 @@ import {
 } from 'react-native';
 import {observer} from 'mobx-react/native';
 const { width } = Dimensions.get('window');
+import Swiper from 'react-native-swiper';
+
 @observer
 class StationModel extends Component {
 
@@ -67,12 +69,28 @@ class StationModel extends Component {
                     <View style={styles.name}>
                         <Text style={styles.text}>{chosenStation.name}</Text>
                     </View>
-                    <View style={styles.image}>
-                        <Image style={styles.img}
-                            resizeMode='stretch'
-                            source={{uri: chosenStation.img.toString()}}
-                        />
-                    </View>
+                    <Swiper style={{marginTop: 60, marginBottom: 10}}
+                            height={280}
+                            activeDot={<View style={{backgroundColor: 'white', width: 9, height: 9, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}} />}
+                            showsButtons={true}
+                            nextButton={<Text style={{backgroundColor: 'white', fontSize: 38, color:'white'}}>›</Text>}
+                            prevButton={<Text style={{backgroundColor: 'white', fontSize: 38, color:'white'}}>‹</Text>}
+                            loop
+                    >
+                        {
+                            chosenStation.img.map((image,index) => (
+                                <View style={styles.slide} key={index}>
+                                    <Image
+                                        key={index}
+                                        resizeMode='stretch'
+                                        style={styles.image}
+                                        source={{uri: image.toString()}}
+                                    />
+                                </View>
+                            ))
+                        }
+                    </Swiper>
+                    <Divider style={{ marginBottom: 10 }}/>
                     { /* <View style={styles.icons}>
                         {this.loadInfoIcon()}
                         {this.loadAudioIcon()}
@@ -111,6 +129,11 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+    },
+    slide: {
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: 'transparent'
     },
     image:{
         flex: 2,
