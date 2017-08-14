@@ -24,10 +24,40 @@ exports.loginUser = function (req,res) {
                             res.send(messages.loginUserFailed);
                         }
                         else {
-                            res.send(JSON.stringify({message: messages.loginUserSucess}));
+                            connection.query('SELECT id from categories',[],function(err,rows){
+                              if(err)
+                              {
+                                  console.log(err);
+                                  throw err;
+                              }
+                              else
+                              {
+                                  let insertsQueries ='';
+                                  rows.forEach(row => {
+                                      insertsQueries+='INSERT into user_profile set user_id ="'+user.EMAIL+
+                                          '",category_id='
+                                      + row.id +',rating=2.5;';
+                                  });
+                                  console.log(insertsQueries);
+                                  connection.query(insertsQueries,[],function (err,result1) {
+                                      if(err)
+                                      {
+                                          throw err;
+                                      }
+                                      else
+                                      {
+                                          res.send(JSON.stringify({message: messages.loginUserSucess}));
+                                          db.closeDB(connection);
+                                      }
+
+                                  })
+
+                              }
+                            })
+
                         }
                     });
-                    db.closeDB(connection);
+
                 }
                 else
                 {
