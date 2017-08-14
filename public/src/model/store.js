@@ -114,7 +114,6 @@ class Store {
 
             })}).then((response) => response.json())
             .then((responseJson) => {
-            console.warn("After facebook login");
             if(responseJson.message === massages.loginUserSucess)
             {
                 //this.navigatorReplace('MainMapPage');
@@ -157,7 +156,7 @@ class Store {
     }
 
     @action loginWithFacebook() {
-        LoginManager.logInWithReadPermissions(['public_profile','email'])
+        LoginManager.logInWithReadPermissions(['public_profile','email','user_birthday'])
             .then(result => {
                 console.warn(JSON.stringify(result, null, 3));
                 if (result.isCancelled) {
