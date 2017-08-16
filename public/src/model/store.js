@@ -269,6 +269,13 @@ class Store {
         });
     }
 
+    @action navigatorOpenStationDetails(screenId,configureScene ) {
+        this.appNavigator.push({
+            id: screenId,
+            configureScene: configureScene
+        });
+    }
+
     @action navigatorOpenDrawer(screenId, configureScene) {
         this.appNavigator.push({
             id: screenId,

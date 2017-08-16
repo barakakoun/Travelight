@@ -1,8 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
 
 import React, {Component} from 'react';
 import {
@@ -252,8 +247,8 @@ class MainMapPage extends Component {
     componentDidMount() {
         setTimeout(() => {
             // this.map.animateToRegion(this.props.store.currRegion, 1);
-            this.map.fitToElements(false);
-        }, 50);
+            this.map.fitToElements(true);
+        }, 800);
 
         BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressExit);
         // this._findMe();

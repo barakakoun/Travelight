@@ -36,6 +36,29 @@ class TourDetailsPage extends Component {
         this._handleBackPress = this._handleBackPress.bind(this);
     }
 
+    static NavigationBarRouteMapper = props => ({
+        LeftButton(route, navigator, index, navState) {
+            return (
+                <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
+                                  onPress={() => navigator.parentNavigator.pop()}>
+                    <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 10,}} />
+                </TouchableOpacity>
+            );
+        },
+        RightButton(route, navigator, index, navState) {
+            return null;
+        },
+        Title(route, navigator, index, navState) {
+            return (
+                <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
+                    <Text style={{color: 'white', margin: 10, fontSize: 20}}>
+                        Tour Details
+                    </Text>
+                </TouchableOpacity>
+            );
+        }
+    })
+
     _handleBackPress() {
         this.props.store.navigatorPop();
         return true;
@@ -163,7 +186,7 @@ class TourDetailsPage extends Component {
                 navigator={this.props.navigator}
                 navigationBar={
                     <Navigator.NavigationBar style={{backgroundColor: '#246dd5'}}
-                                             routeMapper={NavigationBarRouteMapper} />
+                                             routeMapper={TourDetailsPage.NavigationBarRouteMapper(this.props)} />
                 } />
         );
     }
@@ -230,28 +253,28 @@ class TourDetailsPage extends Component {
     }
 }
 
-const NavigationBarRouteMapper = {
-    LeftButton(route, navigator, index, navState) {
-        return (
-            <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-                              onPress={() => navigator.parentNavigator.pop()}>
-                <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 10,}} />
-            </TouchableOpacity>
-        );
-    },
-    RightButton(route, navigator, index, navState) {
-        return null;
-    },
-    Title(route, navigator, index, navState) {
-        return (
-            <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
-                <Text style={{color: 'white', margin: 10, fontSize: 20}}>
-                    Tour Details
-                </Text>
-            </TouchableOpacity>
-        );
-    }
-};
+// const NavigationBarRouteMapper = {
+//     LeftButton(route, navigator, index, navState) {
+//         return (
+//             <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
+//                               onPress={() => navigator.parentNavigator.pop()}>
+//                 <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 10,}} />
+//             </TouchableOpacity>
+//         );
+//     },
+//     RightButton(route, navigator, index, navState) {
+//         return null;
+//     },
+//     Title(route, navigator, index, navState) {
+//         return (
+//             <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
+//                 <Text style={{color: 'white', margin: 10, fontSize: 20}}>
+//                     Tour Details
+//                 </Text>
+//             </TouchableOpacity>
+//         );
+//     }
+// };
 
 const styles = StyleSheet.create({
     btn: {

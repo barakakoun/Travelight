@@ -10,17 +10,18 @@ import {
     BackAndroid,
 } from 'react-native';
 
-import MainMapPage from './public/src/components/MainMapPage/MainMapPage';
-import TourMapPage from './public/src/components/TourDetails/TourMapPage';
-import SplashPage from './public/src/components/Login/SplashPage';
-import LoginPage from './public/src/components/Login/LoginPage';
-import TourDetailsPage from './public/src/components/TourDetails/TourDetailsPage';
-import EventsPage from './public/src/components/MenuPages/EventsPage';
-import RecommendedPage from './public/src/components/MenuPages/RecommendedPage';
-import SettingsPage from './public/src/components/MenuPages/SettingsPage';
-import AboutPage from './public/src/components/MenuPages/AboutPage';
-import UserPage from './public/src/components/MenuPages/UserPage';
-import TourReviews from './public/src/components/TourReviews/TourReviews';
+import MainMapPage      from './public/src/components/MainMapPage/MainMapPage';
+import TourMapPage      from './public/src/components/TourDetails/TourMapPage';
+import SplashPage       from './public/src/components/Login/SplashPage';
+import LoginPage        from './public/src/components/Login/LoginPage';
+import TourDetailsPage  from './public/src/components/TourDetails/TourDetailsPage';
+import EventsPage       from './public/src/components/MenuPages/EventsPage';
+import RecommendedPage  from './public/src/components/MenuPages/RecommendedPage';
+import SettingsPage     from './public/src/components/MenuPages/SettingsPage';
+import AboutPage        from './public/src/components/MenuPages/AboutPage';
+import UserPage         from './public/src/components/MenuPages/UserPage';
+import TourReviews      from './public/src/components/TourReviews/TourReviews';
+import StationDetailsPage from './public/src/components/StationDetails/StationDetailsPage';
 var nativeImageSource = require('nativeImageSource');
 
 import Store from './public/src/model/store';
@@ -127,6 +128,11 @@ export default class travelight extends Component {
             }
             if (routeId === 'TourDetailsPage') {
                 contentView = <TourDetailsPage
+                    navigator={Store.appNavigator}
+                    store={Store} />;
+            }
+            if (routeId === 'StationDetailsPage') {
+                contentView = <StationDetailsPage
                     navigator={Store.appNavigator}
                     store={Store} />;
             }

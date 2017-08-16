@@ -10,6 +10,7 @@ import {
     Alert,
     Button,
     BackAndroid,
+    Vibration,
 } from 'react-native';
 import MapView from 'react-native-maps';
 import StationModel from '../StationDetails/StationModel';
@@ -173,7 +174,7 @@ class TourMapPage extends Component {
         });
 
         // TODO: Change it!
-        if (minDistance <= 130000) {
+        if (minDistance <= 100) {
             tourStations[closestStation-1].isClosest = true;
         }
 
