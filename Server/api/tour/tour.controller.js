@@ -166,27 +166,40 @@ exports.getTourDetails = function(req,res) {
 
             const reviewsQuery = 'SELECT R.id, R.rank' +
                 ' FROM reviews R WHERE R.TOUR_ID = ?';
+
             connection.query(reviewsQuery,tourId, function (err2,reviews) {
                 if(err2) { res.send(err2)}
 
-                let sum = 0;
-                for(let i=0; i< reviews.length; i++) {
-                    sum += reviews[i].rank;
-                }
+                // TODO: Maybe there is a better way...
+                const stationsQuery = 'SELECT S.latitude,S.longitude' +
+                    ' FROM tour T INNER JOIN tour_station TS ON T.ID = TS.TOUR_ID INNER JOIN station S ON TS.STATION_ID = S.ID WHERE TS.STATION_NUMBER =1 and T.ID = ?';
 
-                const tour = {
-                    key: tours[0].id,
-                    name: tours[0].name,
-                    description: tours[0].description,
-                    duration: tours[0].duration,
-                    accessible: true,
-                    distance: tours[0].distance,
-                    reviews: reviews.length,
-                    rating: reviews.length ? Math.round(sum/reviews.length) : 0,
-                    img: tours[0].img
-                };
-                db.closeDB(connection);
-                res.send(tour);
+                connection.query(stationsQuery,tourId, function (err3,station) {
+                    if(err3) { res.send(err3)}
+
+                    let sum = 0;
+                    for(let i=0; i< reviews.length; i++) {
+                        sum += reviews[i].rank;
+                    }
+
+                    const tour = {
+                        key: tours[0].id,
+                        name: tours[0].name,
+                        description: tours[0].description,
+                        duration: tours[0].duration,
+                        coordinate: {
+                            latitude: station[0].latitude,
+                            longitude: station[0].longitude
+                        },
+                        accessible: true,
+                        distance: tours[0].distance,
+                        reviews: reviews.length,
+                        rating: reviews.length ? Math.round(sum/reviews.length) : 0,
+                        img: tours[0].img
+                    };
+                    db.closeDB(connection);
+                    res.send(tour);
+                });
             });
     });
 };

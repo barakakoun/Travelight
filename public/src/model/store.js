@@ -114,7 +114,6 @@ class Store {
 
             })}).then((response) => response.json())
             .then((responseJson) => {
-            console.warn("After facebook login");
             if(responseJson.message === massages.loginUserSucess)
             {
                 //this.navigatorReplace('MainMapPage');
@@ -157,7 +156,7 @@ class Store {
     }
 
     @action loginWithFacebook() {
-        LoginManager.logInWithReadPermissions(['public_profile','email'])
+        LoginManager.logInWithReadPermissions(['public_profile','email','user_birthday'])
             .then(result => {
                 console.warn(JSON.stringify(result, null, 3));
                 if (result.isCancelled) {
@@ -265,6 +264,13 @@ class Store {
         this.appNavigator.push({
             id: screenId,
             chosenTour: this.chosenTour,
+            configureScene: configureScene
+        });
+    }
+
+    @action navigatorOpenStationDetails(screenId,configureScene ) {
+        this.appNavigator.push({
+            id: screenId,
             configureScene: configureScene
         });
     }
@@ -798,9 +804,10 @@ class Store {
         fetch(url)
             .then(response => response.json())
             .then(result => {
-                console.warn(result);
+                // console.warn(JSON.stringify(result, null ,3));
                 this.chosenTour = result;
                 this.getTourStations();
+                console.warn(JSON.stringify(this.chosenTour, null ,3));
                 this.appNavigator.push({
                     id: 'TourDetailsPage',
                     chosenTour: this.chosenTour,

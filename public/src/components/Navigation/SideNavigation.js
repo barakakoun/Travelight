@@ -29,7 +29,7 @@ export default class SideNavigation extends Component {
 
     componentWillMount()
     {
-        this.props.store.getUserData();
+       // this.props.store.getUserData();
     }
 
     logout(){

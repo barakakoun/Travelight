@@ -8,7 +8,6 @@ import {
     StyleSheet,
     TouchableOpacity,
     BackAndroid,
-    DrawerLayoutAndroid,
 } from 'react-native';
 import { Toolbar as MaterialToolbar, Icon,Avatar } from 'react-native-material-design';
 import SideNavigation from '../Navigation/SideNavigation';
@@ -18,50 +17,26 @@ import {observer} from 'mobx-react/native';
 class AboutPage extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            drawer: null
-        };
-    }
-    openDrawer() {
-        this.setState({
-            drawerOpen: true
-        });
-        console.log("drawer listener added");
-        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+
+        this._handleBackPress = this._handleBackPress.bind(this);
+
     }
 
-    closeDrawer() {
-        this.setState({
-            drawerOpen: false
-        });
-        console.log("drawer listener removed");
-        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+    _handleBackPress() {
+        this.props.store.navigatorPop();
+        return true;
     }
 
-    _handleBackPressInDrawer() {
-        if (this.state.drawerOpen) {
-            this.closeDrawer();
-            this.state.drawer.closeDrawer();
-            return true;
-        }
-        return false;
+
+    componentDidMount() {
+        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
     }
 
-    onOpenBurger(e) {
-        this.state.drawer.openDrawer();
+    componentWillUnmount() {
+        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPress);
     }
-    setDrawer = (drawer) => {
-        this.setState({
-            drawer
-        });
-    };
-    PushToNavigator(id) {
-        console.warn(id);
-        this.props.store.navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft);
-    }
+
     render() {
-
-        //const {appNavigator} = this.props.store;
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}
@@ -71,24 +46,10 @@ class AboutPage extends Component {
     }
 
     renderScene(route, navigator) {
-        const { navigatorOpenDrawer } = this.props.store;
         return (
-            <DrawerLayoutAndroid
-                onDrawerOpen={this.openDrawer.bind(this)}
-                onDrawerClose={this.closeDrawer.bind(this)}
-                drawerWidth={200}
-                drawerPosition={DrawerLayoutAndroid.positions.Left}
-                renderNavigationView={() => <SideNavigation
-                    store={this.props.store}
-                    navigator={navigator}
-                    onChangeScene={(id) => {navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft)}}
-                    />}
-                ref={(drawer) => { !this.state.drawer ? this.setDrawer(drawer) : null }}>
             <View  style={styles.container}>
                 <MaterialToolbar title={'About'}
-                                 primary={'googleBlue'}
-                                 icon="menu"
-                                 onIconPress={this.onOpenBurger.bind(this)}/>
+                                 primary={'googleBlue'}/>
                 <Text style={{color: 'white', fontSize: 32,  marginTop: 60 }}>Travelight</Text>
                 <Text style={{color: 'white', fontSize: 26, marginBottom: 20}}>Tour Guide In Your Pocket!</Text>
                 <Text style={{color:'white', fontSize: 18, marginLeft: 2}}>
@@ -103,7 +64,6 @@ class AboutPage extends Component {
                     those that have been given by human tour guides.
                 </Text>
             </View>
-            </DrawerLayoutAndroid>
         );
     }
 }
