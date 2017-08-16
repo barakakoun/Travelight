@@ -241,6 +241,7 @@ class MainMapPage extends Component {
 
     componentWillMount() {
         this.getLocation();
+        this.props.store.getUserData();
         this.props.store.getAvailableTours();
     }
 
