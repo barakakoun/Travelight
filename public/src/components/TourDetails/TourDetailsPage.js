@@ -81,6 +81,7 @@ class TourDetailsPage extends Component {
                 tourStations } = this.props.store;
         if(chosenTour) {
             if (tourStations) {
+                console.warn(JSON.stringify(chosenTour, null ,3));
                 let url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + chosenTour.coordinate.latitude.toString() + ","
                     + chosenTour.coordinate.longitude.toString()
                     + "&waypoints=";

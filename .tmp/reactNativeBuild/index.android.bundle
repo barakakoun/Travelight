@@ -1288,7 +1288,7 @@ var _StationDetailsPage = require(750                                           
 
 var _StationDetailsPage2 = babelHelpers.interopRequireDefault(_StationDetailsPage);
 
-var _store = require(751                       ); // 751 = ./public/src/model/store
+var _store = require(753                       ); // 753 = ./public/src/model/store
 
 var _store2 = babelHelpers.interopRequireDefault(_store);
 
@@ -46553,6 +46553,7 @@ var MainMapPage = (0, _native.observer)(_class = (_temp = _class2 = function (_C
         key: 'componentWillMount',
         value: function componentWillMount() {
             this.getLocation();
+            this.props.store.getUserData();
             this.props.store.getAvailableTours();
         }
     }, {
@@ -48255,7 +48256,9 @@ var styles = _reactNative.StyleSheet.create({
     },
     modalTourDetails: {
         height: 250,
-        backgroundColor: "white"
+        backgroundColor: "white",
+        borderTopColor: "#4286f5",
+        borderTopWidth: 6
     },
     text: {
         color: "black",
@@ -61626,9 +61629,7 @@ var SideNavigation = (0, _native.observer)(_class = function (_Component) {
 
     babelHelpers.createClass(SideNavigation, [{
         key: 'componentWillMount',
-        value: function componentWillMount() {
-            this.props.store.getUserData();
-        }
+        value: function componentWillMount() {}
     }, {
         key: 'logout',
         value: function logout() {
@@ -86866,55 +86867,25 @@ var EventsPage = (0, _native.observer)(_class = function (_Component) {
 
         var _this = babelHelpers.possibleConstructorReturn(this, (EventsPage.__proto__ || Object.getPrototypeOf(EventsPage)).call(this, props));
 
-        _this.setDrawer = function (drawer) {
-            _this.setState({
-                drawer: drawer
-            });
-        };
-
-        _this.state = {
-            drawer: null
-        };
+        _this._handleBackPress = _this._handleBackPress.bind(_this);
         return _this;
     }
 
     babelHelpers.createClass(EventsPage, [{
-        key: 'openDrawer',
-        value: function openDrawer() {
-            this.setState({
-                drawerOpen: true
-            });
-            console.log("drawer listener added");
-            _reactNative.BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+        key: '_handleBackPress',
+        value: function _handleBackPress() {
+            this.props.store.navigatorPop();
+            return true;
         }
     }, {
-        key: 'closeDrawer',
-        value: function closeDrawer() {
-            this.setState({
-                drawerOpen: false
-            });
-            console.log("drawer listener removed");
-            _reactNative.BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            _reactNative.BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
         }
     }, {
-        key: '_handleBackPressInDrawer',
-        value: function _handleBackPressInDrawer() {
-            if (this.state.drawerOpen) {
-                this.closeDrawer();
-                this.state.drawer.closeDrawer();
-                return true;
-            }
-            return false;
-        }
-    }, {
-        key: 'onOpenBurger',
-        value: function onOpenBurger(e) {
-            this.state.drawer.openDrawer();
-        }
-    }, {
-        key: 'PushToNavigator',
-        value: function PushToNavigator(id) {
-            this.props.store.navigatorOpenDrawer(id, _reactNative.Navigator.SceneConfigs.SwipeFromLeft);
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            _reactNative.BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPress);
         }
     }, {
         key: 'render',
@@ -86927,43 +86898,17 @@ var EventsPage = (0, _native.observer)(_class = function (_Component) {
     }, {
         key: 'renderScene',
         value: function renderScene(route, navigator) {
-            var _this2 = this;
-
-            var navigatorOpenDrawer = this.props.store.navigatorOpenDrawer;
-
 
             return _react2.default.createElement(
-                _reactNative.DrawerLayoutAndroid,
-                {
-                    onDrawerOpen: this.openDrawer.bind(this),
-                    onDrawerClose: this.closeDrawer.bind(this),
-                    drawerWidth: 200,
-                    drawerPosition: _reactNative.DrawerLayoutAndroid.positions.Left,
-                    renderNavigationView: function renderNavigationView() {
-                        return _react2.default.createElement(_SideNavigation2.default, {
-                            store: _this2.props.store,
-                            navigator: navigator,
-                            onChangeScene: function onChangeScene(id) {
-                                navigatorOpenDrawer(id, _reactNative.Navigator.SceneConfigs.SwipeFromLeft);
-                            }
-                        });
-                    },
-                    ref: function ref(drawer) {
-                        !_this2.state.drawer ? _this2.setDrawer(drawer) : null;
-                    } },
-                _react2.default.createElement(
-                    _reactNative.View,
-                    { style: styles.container },
-                    _react2.default.createElement(_reactNativeMaterialDesign.Toolbar, { title: 'Event Page',
-                        primary: 'googleBlue',
-                        icon: 'menu',
-                        onIconPress: this.onOpenBurger.bind(this) }),
-                    _react2.default.createElement(_reactNative.Image, {
-                        resizeMode: 'stretch',
-                        style: styles.image,
-                        source: _comingsoon2.default
-                    })
-                )
+                _reactNative.View,
+                { style: styles.container },
+                _react2.default.createElement(_reactNativeMaterialDesign.Toolbar, { title: 'Event Page',
+                    primary: 'googleBlue' }),
+                _react2.default.createElement(_reactNative.Image, {
+                    resizeMode: 'stretch',
+                    style: styles.image,
+                    source: _comingsoon2.default
+                })
             );
         }
     }]);
@@ -87057,15 +87002,6 @@ var RecommendedPage = (0, _native.observer)(_class = function (_Component) {
 
         var _this = babelHelpers.possibleConstructorReturn(this, (RecommendedPage.__proto__ || Object.getPrototypeOf(RecommendedPage)).call(this, props));
 
-        _this.setDrawer = function (drawer) {
-            _this.setState({
-                drawer: drawer
-            });
-        };
-
-        _this.state = {
-            drawer: null
-        };
         _this.goToTourDetails = _this.goToTourDetails.bind(_this);
         _this._handleBackPress = _this._handleBackPress.bind(_this);
 
@@ -87076,44 +87012,6 @@ var RecommendedPage = (0, _native.observer)(_class = function (_Component) {
         key: 'goToTourDetails',
         value: function goToTourDetails(tour) {
             this.props.store.navigatorOpenTourModal('TourDetailsPage', _reactNative.Navigator.SceneConfigs.FloatFromBottom);
-        }
-    }, {
-        key: 'openDrawer',
-        value: function openDrawer() {
-            this.setState({
-                drawerOpen: true
-            });
-            console.log("drawer listener added");
-            _reactNative.BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
-        }
-    }, {
-        key: 'closeDrawer',
-        value: function closeDrawer() {
-            this.setState({
-                drawerOpen: false
-            });
-            console.log("drawer listener removed");
-            _reactNative.BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
-        }
-    }, {
-        key: '_handleBackPressInDrawer',
-        value: function _handleBackPressInDrawer() {
-            if (this.state.drawerOpen) {
-                this.closeDrawer();
-                this.state.drawer.closeDrawer();
-                return true;
-            }
-            return false;
-        }
-    }, {
-        key: 'onOpenBurger',
-        value: function onOpenBurger(e) {
-            this.state.drawer.openDrawer();
-        }
-    }, {
-        key: 'PushToNavigator',
-        value: function PushToNavigator(id) {
-            this.props.store.navigatorOpenDrawer(id, _reactNative.Navigator.SceneConfigs.SwipeFromLeft);
         }
     }, {
         key: '_handleBackPress',
@@ -87145,105 +87043,80 @@ var RecommendedPage = (0, _native.observer)(_class = function (_Component) {
     }, {
         key: 'renderScene',
         value: function renderScene(route, navigator) {
-            var _this2 = this;
-
             var _props$store = this.props.store,
-                navigatorOpenDrawer = _props$store.navigatorOpenDrawer,
                 currentUser = _props$store.currentUser,
                 recommendedTours = _props$store.recommendedTours,
                 onRecommendedTourPress = _props$store.onRecommendedTourPress;
 
             return _react2.default.createElement(
-                _reactNative.DrawerLayoutAndroid,
-                {
-                    onDrawerOpen: this.openDrawer.bind(this),
-                    onDrawerClose: this.closeDrawer.bind(this),
-                    drawerWidth: 200,
-                    drawerPosition: _reactNative.DrawerLayoutAndroid.positions.Left,
-                    renderNavigationView: function renderNavigationView() {
-                        return _react2.default.createElement(_SideNavigation2.default, {
-                            store: _this2.props.store,
-                            navigator: navigator,
-                            onChangeScene: function onChangeScene(id) {
-                                navigatorOpenDrawer(id, _reactNative.Navigator.SceneConfigs.SwipeFromLeft);
-                            }
-                        });
-                    },
-                    ref: function ref(drawer) {
-                        !_this2.state.drawer ? _this2.setDrawer(drawer) : null;
-                    } },
+                _reactNative.ScrollView,
+                { style: styles.container },
+                _react2.default.createElement(_reactNativeMaterialDesign.Toolbar, { title: 'Recommended for you',
+                    primary: 'googleBlue' }),
                 _react2.default.createElement(
-                    _reactNative.ScrollView,
-                    { style: styles.container },
-                    _react2.default.createElement(_reactNativeMaterialDesign.Toolbar, { title: 'Recommended for you',
-                        primary: 'googleBlue',
-                        icon: 'menu',
-                        onIconPress: this.onOpenBurger.bind(this) }),
-                    _react2.default.createElement(
-                        _reactNative.Text,
-                        { style: styles.title },
-                        'Hello ',
-                        currentUser.firstName,
-                        ','
-                    ),
-                    _react2.default.createElement(
-                        _reactNative.Text,
-                        { style: styles.text },
-                        'Here are some tours we think are perfect for you'
-                    ),
-                    _react2.default.createElement(
-                        _reactNative.View,
-                        { style: styles.oneUnderOne },
-                        recommendedTours.map(function (tour, index) {
-                            return _react2.default.createElement(
-                                _reactNative.TouchableOpacity,
-                                { key: index, onPress: function onPress() {
-                                        return onRecommendedTourPress(tour, _reactNative.Navigator.SceneConfigs.FloatFromBottom);
-                                    } },
+                    _reactNative.Text,
+                    { style: styles.title },
+                    'Hello ',
+                    currentUser.firstName,
+                    ','
+                ),
+                _react2.default.createElement(
+                    _reactNative.Text,
+                    { style: styles.text },
+                    'Here are some tours we think are perfect for you'
+                ),
+                _react2.default.createElement(
+                    _reactNative.View,
+                    { style: styles.oneUnderOne },
+                    recommendedTours.map(function (tour, index) {
+                        return _react2.default.createElement(
+                            _reactNative.TouchableOpacity,
+                            { key: index, onPress: function onPress() {
+                                    return onRecommendedTourPress(tour, _reactNative.Navigator.SceneConfigs.FloatFromBottom);
+                                } },
+                            _react2.default.createElement(
+                                _reactNativeMaterialDesign.Card,
+                                { key: index },
                                 _react2.default.createElement(
-                                    _reactNativeMaterialDesign.Card,
-                                    { key: index },
+                                    _reactNativeMaterialDesign.Card.Media,
+                                    {
+                                        image: _react2.default.createElement(_reactNative.Image, { source: { uri: tour.img } }),
+                                        overlay: true
+                                    },
                                     _react2.default.createElement(
-                                        _reactNativeMaterialDesign.Card.Media,
-                                        {
-                                            image: _react2.default.createElement(_reactNative.Image, { source: { uri: tour.img } }),
-                                            overlay: true
-                                        },
-                                        _react2.default.createElement(
-                                            _reactNative.Text,
-                                            { style: { fontSize: 30, color: 'white' } },
-                                            tour.name
-                                        )
-                                    ),
+                                        _reactNative.Text,
+                                        { style: { fontSize: 30, color: 'white' } },
+                                        tour.name
+                                    )
+                                ),
+                                _react2.default.createElement(
+                                    _reactNativeMaterialDesign.Card.Body,
+                                    { style: styles.oneByOne },
                                     _react2.default.createElement(
-                                        _reactNativeMaterialDesign.Card.Body,
-                                        { style: styles.oneByOne },
+                                        _reactNative.View,
+                                        { style: styles.twoSides },
                                         _react2.default.createElement(
                                             _reactNative.View,
-                                            { style: styles.twoSides },
-                                            _react2.default.createElement(
-                                                _reactNative.View,
-                                                { style: styles.oneByOne },
-                                                _react2.default.createElement(_reactNativeMaterialDesign.Icon, { name: 'timer', color: '#000000', style: styles.icon }),
-                                                _react2.default.createElement(
-                                                    _reactNative.Text,
-                                                    { style: { fontSize: 18, color: "black" } },
-                                                    tour.duration
-                                                )
-                                            ),
+                                            { style: styles.oneByOne },
+                                            _react2.default.createElement(_reactNativeMaterialDesign.Icon, { name: 'timer', color: '#000000', style: styles.icon }),
                                             _react2.default.createElement(
                                                 _reactNative.Text,
-                                                { style: { fontSize: 15, color: 'black' } },
-                                                tour.distance,
-                                                ' Km'
-                                            ),
-                                            _react2.default.createElement(_reactNativeMaterialDesign.Icon, { name: 'directions-walk', color: '#000000', style: styles.icon })
-                                        )
+                                                { style: { fontSize: 18, color: "black" } },
+                                                tour.duration
+                                            )
+                                        ),
+                                        _react2.default.createElement(
+                                            _reactNative.Text,
+                                            { style: { fontSize: 15, color: 'black' } },
+                                            tour.distance,
+                                            ' Km'
+                                        ),
+                                        _react2.default.createElement(_reactNativeMaterialDesign.Icon, { name: 'directions-walk', color: '#000000', style: styles.icon })
                                     )
                                 )
-                            );
-                        })
-                    )
+                            )
+                        );
+                    })
                 )
             );
         }
@@ -87349,55 +87222,25 @@ var SettingsPage = (0, _native.observer)(_class = function (_Component) {
 
         var _this = babelHelpers.possibleConstructorReturn(this, (SettingsPage.__proto__ || Object.getPrototypeOf(SettingsPage)).call(this, props));
 
-        _this.setDrawer = function (drawer) {
-            _this.setState({
-                drawer: drawer
-            });
-        };
-
-        _this.state = {
-            drawer: null
-        };
+        _this._handleBackPress = _this._handleBackPress.bind(_this);
         return _this;
     }
 
     babelHelpers.createClass(SettingsPage, [{
-        key: 'openDrawer',
-        value: function openDrawer() {
-            this.setState({
-                drawerOpen: true
-            });
-            console.log("drawer listener added");
-            _reactNative.BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+        key: '_handleBackPress',
+        value: function _handleBackPress() {
+            this.props.store.navigatorPop();
+            return true;
         }
     }, {
-        key: 'closeDrawer',
-        value: function closeDrawer() {
-            this.setState({
-                drawerOpen: false
-            });
-            console.log("drawer listener removed");
-            _reactNative.BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            _reactNative.BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
         }
     }, {
-        key: '_handleBackPressInDrawer',
-        value: function _handleBackPressInDrawer() {
-            if (this.state.drawerOpen) {
-                this.closeDrawer();
-                this.state.drawer.closeDrawer();
-                return true;
-            }
-            return false;
-        }
-    }, {
-        key: 'onOpenBurger',
-        value: function onOpenBurger(e) {
-            this.state.drawer.openDrawer();
-        }
-    }, {
-        key: 'PushToNavigator',
-        value: function PushToNavigator(id) {
-            this.props.store.navigatorOpenDrawer(id, _reactNative.Navigator.SceneConfigs.SwipeFromLeft);
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            _reactNative.BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPress);
         }
     }, {
         key: 'render',
@@ -87410,41 +87253,17 @@ var SettingsPage = (0, _native.observer)(_class = function (_Component) {
     }, {
         key: 'renderScene',
         value: function renderScene(route, navigator) {
-            var _this2 = this;
-
-            var navigatorOpenDrawer = this.props.store.navigatorOpenDrawer;
-
 
             return _react2.default.createElement(
-                _reactNative.DrawerLayoutAndroid,
-                {
-                    drawerWidth: 200,
-                    drawerPosition: _reactNative.DrawerLayoutAndroid.positions.Left,
-                    renderNavigationView: function renderNavigationView() {
-                        return _react2.default.createElement(_SideNavigation2.default, {
-                            store: _this2.props.store,
-                            navigator: navigator,
-                            onChangeScene: function onChangeScene(id) {
-                                navigatorOpenDrawer(id, _reactNative.Navigator.SceneConfigs.SwipeFromLeft);
-                            }
-                        });
-                    },
-                    ref: function ref(drawer) {
-                        !_this2.state.drawer ? _this2.setDrawer(drawer) : null;
-                    } },
-                _react2.default.createElement(
-                    _reactNative.View,
-                    { style: styles.container },
-                    _react2.default.createElement(_reactNativeMaterialDesign.Toolbar, { title: 'Settings',
-                        primary: 'googleBlue',
-                        icon: 'menu',
-                        onIconPress: this.onOpenBurger.bind(this) }),
-                    _react2.default.createElement(_reactNative.Image, {
-                        resizeMode: 'stretch',
-                        style: styles.image,
-                        source: _comingsoon2.default
-                    })
-                )
+                _reactNative.View,
+                { style: styles.container },
+                _react2.default.createElement(_reactNativeMaterialDesign.Toolbar, { title: 'Settings',
+                    primary: 'googleBlue' }),
+                _react2.default.createElement(_reactNative.Image, {
+                    resizeMode: 'stretch',
+                    style: styles.image,
+                    source: _comingsoon2.default
+                })
             );
         }
     }]);
@@ -87517,56 +87336,26 @@ var AboutPage = (0, _native.observer)(_class = function (_Component) {
 
         var _this = babelHelpers.possibleConstructorReturn(this, (AboutPage.__proto__ || Object.getPrototypeOf(AboutPage)).call(this, props));
 
-        _this.setDrawer = function (drawer) {
-            _this.setState({
-                drawer: drawer
-            });
-        };
+        _this._handleBackPress = _this._handleBackPress.bind(_this);
 
-        _this.state = {
-            drawer: null
-        };
         return _this;
     }
 
     babelHelpers.createClass(AboutPage, [{
-        key: 'openDrawer',
-        value: function openDrawer() {
-            this.setState({
-                drawerOpen: true
-            });
-            console.log("drawer listener added");
-            _reactNative.BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+        key: '_handleBackPress',
+        value: function _handleBackPress() {
+            this.props.store.navigatorPop();
+            return true;
         }
     }, {
-        key: 'closeDrawer',
-        value: function closeDrawer() {
-            this.setState({
-                drawerOpen: false
-            });
-            console.log("drawer listener removed");
-            _reactNative.BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            _reactNative.BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
         }
     }, {
-        key: '_handleBackPressInDrawer',
-        value: function _handleBackPressInDrawer() {
-            if (this.state.drawerOpen) {
-                this.closeDrawer();
-                this.state.drawer.closeDrawer();
-                return true;
-            }
-            return false;
-        }
-    }, {
-        key: 'onOpenBurger',
-        value: function onOpenBurger(e) {
-            this.state.drawer.openDrawer();
-        }
-    }, {
-        key: 'PushToNavigator',
-        value: function PushToNavigator(id) {
-            console.warn(id);
-            this.props.store.navigatorOpenDrawer(id, _reactNative.Navigator.SceneConfigs.SwipeFromLeft);
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            _reactNative.BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPress);
         }
     }, {
         key: 'render',
@@ -87579,57 +87368,31 @@ var AboutPage = (0, _native.observer)(_class = function (_Component) {
     }, {
         key: 'renderScene',
         value: function renderScene(route, navigator) {
-            var _this2 = this;
-
-            var navigatorOpenDrawer = this.props.store.navigatorOpenDrawer;
-
             return _react2.default.createElement(
-                _reactNative.DrawerLayoutAndroid,
-                {
-                    onDrawerOpen: this.openDrawer.bind(this),
-                    onDrawerClose: this.closeDrawer.bind(this),
-                    drawerWidth: 200,
-                    drawerPosition: _reactNative.DrawerLayoutAndroid.positions.Left,
-                    renderNavigationView: function renderNavigationView() {
-                        return _react2.default.createElement(_SideNavigation2.default, {
-                            store: _this2.props.store,
-                            navigator: navigator,
-                            onChangeScene: function onChangeScene(id) {
-                                navigatorOpenDrawer(id, _reactNative.Navigator.SceneConfigs.SwipeFromLeft);
-                            }
-                        });
-                    },
-                    ref: function ref(drawer) {
-                        !_this2.state.drawer ? _this2.setDrawer(drawer) : null;
-                    } },
+                _reactNative.View,
+                { style: styles.container },
+                _react2.default.createElement(_reactNativeMaterialDesign.Toolbar, { title: 'About',
+                    primary: 'googleBlue' }),
                 _react2.default.createElement(
-                    _reactNative.View,
-                    { style: styles.container },
-                    _react2.default.createElement(_reactNativeMaterialDesign.Toolbar, { title: 'About',
-                        primary: 'googleBlue',
-                        icon: 'menu',
-                        onIconPress: this.onOpenBurger.bind(this) }),
-                    _react2.default.createElement(
-                        _reactNative.Text,
-                        { style: { color: 'white', fontSize: 32, marginTop: 60 } },
-                        'Travelight'
-                    ),
-                    _react2.default.createElement(
-                        _reactNative.Text,
-                        { style: { color: 'white', fontSize: 26, marginBottom: 20 } },
-                        'Tour Guide In Your Pocket!'
-                    ),
-                    _react2.default.createElement(
-                        _reactNative.Text,
-                        { style: { color: 'white', fontSize: 18, marginLeft: 2 } },
-                        'Our application will replace the human tour guide in a way that allows you to travel freely in all the city\u2019s tour sites using your smartphones .',
-                        "\n",
-                        "\n",
-                        'By a chosen location, you will be able to view all the tours provided by our team, and travel to every site you want.',
-                        "\n",
-                        "\n",
-                        'You will be able to consume the service using any media source: videos, audios, photographs, etc. accompanied by in-depth explanation which equals to those that have been given by human tour guides.'
-                    )
+                    _reactNative.Text,
+                    { style: { color: 'white', fontSize: 32, marginTop: 60 } },
+                    'Travelight'
+                ),
+                _react2.default.createElement(
+                    _reactNative.Text,
+                    { style: { color: 'white', fontSize: 26, marginBottom: 20 } },
+                    'Tour Guide In Your Pocket!'
+                ),
+                _react2.default.createElement(
+                    _reactNative.Text,
+                    { style: { color: 'white', fontSize: 18, marginLeft: 2 } },
+                    'Our application will replace the human tour guide in a way that allows you to travel freely in all the city\u2019s tour sites using your smartphones .',
+                    "\n",
+                    "\n",
+                    'By a chosen location, you will be able to view all the tours provided by our team, and travel to every site you want.',
+                    "\n",
+                    "\n",
+                    'You will be able to consume the service using any media source: videos, audios, photographs, etc. accompanied by in-depth explanation which equals to those that have been given by human tour guides.'
                 )
             );
         }
@@ -87698,55 +87461,25 @@ var UserPage = (0, _native.observer)(_class = function (_Component) {
 
         var _this = babelHelpers.possibleConstructorReturn(this, (UserPage.__proto__ || Object.getPrototypeOf(UserPage)).call(this, props));
 
-        _this.setDrawer = function (drawer) {
-            _this.setState({
-                drawer: drawer
-            });
-        };
-
-        _this.state = {
-            drawer: null
-        };
+        _this._handleBackPress = _this._handleBackPress.bind(_this);
         return _this;
     }
 
     babelHelpers.createClass(UserPage, [{
-        key: 'openDrawer',
-        value: function openDrawer() {
-            this.setState({
-                drawerOpen: true
-            });
-            console.log("drawer listener added");
-            _reactNative.BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+        key: '_handleBackPress',
+        value: function _handleBackPress() {
+            this.props.store.navigatorPop();
+            return true;
         }
     }, {
-        key: 'closeDrawer',
-        value: function closeDrawer() {
-            this.setState({
-                drawerOpen: false
-            });
-            console.log("drawer listener removed");
-            _reactNative.BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            _reactNative.BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
         }
     }, {
-        key: '_handleBackPressInDrawer',
-        value: function _handleBackPressInDrawer() {
-            if (this.state.drawerOpen) {
-                this.closeDrawer();
-                this.state.drawer.closeDrawer();
-                return true;
-            }
-            return false;
-        }
-    }, {
-        key: 'onOpenBurger',
-        value: function onOpenBurger(e) {
-            this.state.drawer.openDrawer();
-        }
-    }, {
-        key: 'PushToNavigator',
-        value: function PushToNavigator(id) {
-            this.props.store.navigatorOpenDrawer(id, _reactNative.Navigator.SceneConfigs.SwipeFromLeft);
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            _reactNative.BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPress);
         }
     }, {
         key: 'render',
@@ -87759,64 +87492,39 @@ var UserPage = (0, _native.observer)(_class = function (_Component) {
     }, {
         key: 'renderScene',
         value: function renderScene(route, navigator) {
-            var _this2 = this;
-
             var currentUser = this.props.store.currentUser;
-            var navigatorOpenDrawer = this.props.store.navigatorOpenDrawer;
 
 
             return _react2.default.createElement(
-                _reactNative.DrawerLayoutAndroid,
-                {
-                    onDrawerOpen: this.openDrawer.bind(this),
-                    onDrawerClose: this.closeDrawer.bind(this),
-                    drawerWidth: 200,
-                    drawerPosition: _reactNative.DrawerLayoutAndroid.positions.Left,
-                    renderNavigationView: function renderNavigationView() {
-                        return _react2.default.createElement(_SideNavigation2.default, {
-                            store: _this2.props.store,
-                            navigator: navigator,
-                            onChangeScene: function onChangeScene(id) {
-                                navigatorOpenDrawer(id, _reactNative.Navigator.SceneConfigs.SwipeFromLeft);
-                            }
-                        });
-                    },
-                    ref: function ref(drawer) {
-                        !_this2.state.drawer ? _this2.setDrawer(drawer) : null;
-                    } },
+                _reactNative.View,
+                { style: styles.container },
+                _react2.default.createElement(_reactNativeMaterialDesign.Toolbar, { title: 'User Page',
+                    primary: 'googleBlue' }),
                 _react2.default.createElement(
                     _reactNative.View,
-                    { style: styles.container },
-                    _react2.default.createElement(_reactNativeMaterialDesign.Toolbar, { title: 'User Page',
-                        primary: 'googleBlue',
-                        icon: 'menu',
-                        onIconPress: this.onOpenBurger.bind(this) }),
+                    { style: styles.userphoto },
+                    _react2.default.createElement(_reactNativeMaterialDesign.Avatar, { size: 150, image: _react2.default.createElement(_reactNative.Image, { source: { uri: currentUser.img } }) })
+                ),
+                _react2.default.createElement(
+                    _reactNative.View,
+                    { style: styles.userform },
                     _react2.default.createElement(
-                        _reactNative.View,
-                        { style: styles.userphoto },
-                        _react2.default.createElement(_reactNativeMaterialDesign.Avatar, { size: 150, image: _react2.default.createElement(_reactNative.Image, { source: { uri: currentUser.img } }) })
+                        _reactNative.Text,
+                        { style: { color: 'white', fontSize: 24 } },
+                        ' First Name : ',
+                        currentUser.firstName
                     ),
                     _react2.default.createElement(
-                        _reactNative.View,
-                        { style: styles.userform },
-                        _react2.default.createElement(
-                            _reactNative.Text,
-                            { style: { color: 'white', fontSize: 24 } },
-                            ' First Name : ',
-                            currentUser.firstName
-                        ),
-                        _react2.default.createElement(
-                            _reactNative.Text,
-                            { style: { color: 'white', fontSize: 24 } },
-                            ' Last Name : ',
-                            currentUser.lastName
-                        ),
-                        _react2.default.createElement(
-                            _reactNative.Text,
-                            { style: { color: 'white', fontSize: 24 } },
-                            ' Email : ',
-                            currentUser.email
-                        )
+                        _reactNative.Text,
+                        { style: { color: 'white', fontSize: 24 } },
+                        ' Last Name : ',
+                        currentUser.lastName
+                    ),
+                    _react2.default.createElement(
+                        _reactNative.Text,
+                        { style: { color: 'white', fontSize: 24 } },
+                        ' Email : ',
+                        currentUser.email
                     )
                 )
             );
@@ -88105,7 +87813,12 @@ var _reactNativeSwiper = require(631                  ); // 631 = react-native-s
 
 var _reactNativeSwiper2 = babelHelpers.interopRequireDefault(_reactNativeSwiper);
 
+var _reactNativeCardview = require(751                    ); // 751 = react-native-cardview
+
+var _reactNativeCardview2 = babelHelpers.interopRequireDefault(_reactNativeCardview);
+
 var _Dimensions$get = _reactNative.Dimensions.get('window'),
+    height = _Dimensions$get.height,
     width = _Dimensions$get.width;
 
 var StationDetailsPage = (0, _native.observer)(_class = function (_Component) {
@@ -88152,64 +87865,58 @@ var StationDetailsPage = (0, _native.observer)(_class = function (_Component) {
         value: function renderScene(route, navigator) {
             var chosenStation = this.props.store.chosenStation;
 
+            var heightForText = height - 400;
 
             return _react2.default.createElement(
                 _reactNative.View,
-                { style: { flex: 1, justifyContent: 'flex-start', backgroundColor: '#FFFFFF' } },
+                { style: styles.container },
                 _react2.default.createElement(
                     _reactNative.View,
-                    { style: styles.container },
+                    { style: { marginTop: 50 } },
                     _react2.default.createElement(
-                        _reactNative.View,
-                        { style: styles.name },
-                        _react2.default.createElement(
-                            _reactNative.Text,
-                            { style: styles.text },
-                            chosenStation.name
-                        )
-                    ),
+                        _reactNative.Text,
+                        { style: styles.text },
+                        chosenStation.name
+                    )
+                ),
+                _react2.default.createElement(
+                    _reactNativeSwiper2.default,
+                    { style: styles.bubble,
+                        height: 280,
+                        activeDot: _react2.default.createElement(_reactNative.View, { style: { backgroundColor: 'white', width: 9, height: 9, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3 } }),
+                        showsButtons: false,
+                        loop: true
+                    },
+                    chosenStation.img.map(function (image, index) {
+                        return _react2.default.createElement(
+                            _reactNative.View,
+                            { style: styles.slide, key: index },
+                            _react2.default.createElement(_reactNative.Image, {
+                                key: index,
+                                resizeMode: 'stretch',
+                                style: styles.image,
+                                source: { uri: image.toString() }
+                            })
+                        );
+                    })
+                ),
+                chosenStation.text ? _react2.default.createElement(
+                    _reactNativeCardview2.default,
+                    {
+                        cardElevation: 5,
+                        cardMaxElevation: 5,
+                        cornerRadius: 5,
+                        style: [styles.bubble, { maxHeight: heightForText, padding: 5 }] },
                     _react2.default.createElement(
-                        _reactNativeSwiper2.default,
-                        { style: { marginBottom: 10, backgroundColor: 'white' },
-                            height: 280,
-                            activeDot: _react2.default.createElement(_reactNative.View, { style: { backgroundColor: 'white', width: 9, height: 9, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3 } }),
-                            showsButtons: true,
-                            nextButton: _react2.default.createElement(
-                                _reactNative.Text,
-                                { style: { backgroundColor: 'white', fontSize: 38, color: 'white' } },
-                                '\u203A'
-                            ),
-                            prevButton: _react2.default.createElement(
-                                _reactNative.Text,
-                                { style: { backgroundColor: 'white', fontSize: 38, color: 'white' } },
-                                '\u2039'
-                            ),
-                            loop: true
-                        },
-                        chosenStation.img.map(function (image, index) {
-                            return _react2.default.createElement(
-                                _reactNative.View,
-                                { style: styles.slide, key: index },
-                                _react2.default.createElement(_reactNative.Image, {
-                                    key: index,
-                                    resizeMode: 'stretch',
-                                    style: styles.image,
-                                    source: { uri: image.toString() }
-                                })
-                            );
-                        })
-                    ),
-                    _react2.default.createElement(_reactNativeMaterialDesign.Divider, { style: { marginBottom: 10 } }),
-                    chosenStation.text ? _react2.default.createElement(
                         _reactNative.ScrollView,
-                        { style: { backgroundColor: 'white' } },
+                        { style: { paddingRight: 10 } },
                         _react2.default.createElement(
                             _reactNative.Text,
                             null,
                             chosenStation.text
                         )
-                    ) : null
-                )
+                    )
+                ) : null
             );
         }
     }]);
@@ -88246,8 +87953,10 @@ var NavigationBarRouteMapper = {
 var styles = _reactNative.StyleSheet.create({
     container: {
         flex: 1,
+        flexDirection: 'column',
         justifyContent: 'flex-start',
-        backgroundColor: '#4286f5'
+        backgroundColor: '#fafafa',
+        alignItems: 'center'
     },
     slide: {
         flex: 1,
@@ -88271,21 +87980,45 @@ var styles = _reactNative.StyleSheet.create({
     },
     text: {
         color: "black",
-        fontSize: 22
+        fontSize: 22,
+        margin: 10
     },
     info: {
         justifyContent: 'flex-start'
     },
-    player: {
-        flex: 1,
-        alignItems: 'flex-end',
-        justifyContent: 'center',
-        flexDirection: 'row'
+    bubble: {
+        margin: 5,
+        backgroundColor: 'white',
+        borderRadius: 10
     }
 });
 
 module.exports = StationDetailsPage;
 }, 750, null, "travelight/public/src/components/StationDetails/StationDetailsPage.js");
+__d(/* react-native-cardview/index.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _CardView = require(752              ); // 752 = ./libs/CardView
+
+var _CardView2 = babelHelpers.interopRequireDefault(_CardView);
+
+exports.default = _CardView2.default;
+}, 751, null, "react-native-cardview/index.js");
+__d(/* react-native-cardview/libs/CardView.android.js */function(global, require, module, exports) {var _react = require(12     ); // 12 = react
+
+var _reactNative = require(42            ); // 42 = react-native
+
+var iface = {
+  name: 'CardView',
+  propTypes: babelHelpers.extends({
+    cornerRadius: _react.PropTypes.number,
+    cardElevation: _react.PropTypes.number,
+    cardMaxElevation: _react.PropTypes.number
+  }, _reactNative.View.propTypes)
+};
+module.exports = (0, _reactNative.requireNativeComponent)('RNCardView', iface);
+}, 752, null, "react-native-cardview/libs/CardView.android.js");
 __d(/* travelight/public/src/model/store.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
     value: true
 });
@@ -88294,9 +88027,9 @@ var _desc, _value, _class, _descriptor, _descriptor2, _descriptor3, _descriptor4
 
 var _mobx = require(416   ); // 416 = mobx
 
-var _variables = require(752                        ); // 752 = ../../../Consts/variables
+var _variables = require(754                        ); // 754 = ../../../Consts/variables
 
-var _urls = require(753                   ); // 753 = ../../../Consts/urls
+var _urls = require(755                   ); // 755 = ../../../Consts/urls
 
 var _reactNativeFbsdk = require(719                 ); // 719 = react-native-fbsdk
 
@@ -88308,7 +88041,7 @@ var _react2 = babelHelpers.interopRequireDefault(_react);
 
 var _reactNative = require(42            ); // 42 = react-native
 
-var _messages = require(754                       ); // 754 = ../../../Consts/messages
+var _messages = require(756                       ); // 756 = ../../../Consts/messages
 
 var _messages2 = babelHelpers.interopRequireDefault(_messages);
 
@@ -88471,7 +88204,6 @@ var Store = (_class = function () {
                 }) }).then(function (response) {
                 return response.json();
             }).then(function (responseJson) {
-                console.warn("After facebook login");
                 if (responseJson.message === _messages2.default.loginUserSucess) {} else {
                     alert(responseJson.message);
                 }
@@ -88515,7 +88247,7 @@ var Store = (_class = function () {
         value: function loginWithFacebook() {
             var _this2 = this;
 
-            LoginManager.logInWithReadPermissions(['public_profile', 'email']).then(function (result) {
+            LoginManager.logInWithReadPermissions(['public_profile', 'email', 'user_birthday']).then(function (result) {
                 console.warn(JSON.stringify(result, null, 3));
                 if (result.isCancelled) {
                     alert('Login was cancelled');
@@ -89305,7 +89037,7 @@ var Store = (_class = function () {
 
 var store = new Store();
 exports.default = store;
-}, 751, null, "travelight/public/src/model/store.js");
+}, 753, null, "travelight/public/src/model/store.js");
 __d(/* travelight/Consts/variables.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -89333,7 +89065,7 @@ var GET_FROM_SERVER = exports.GET_FROM_SERVER = true;
 var TYPE_TEXT = exports.TYPE_TEXT = 't';
 var TYPE_SOUND = exports.TYPE_SOUND = 's';
 var TYPE_IMAGE = exports.TYPE_IMAGE = 'i';
-}, 752, null, "travelight/Consts/variables.js");
+}, 754, null, "travelight/Consts/variables.js");
 __d(/* travelight/Consts/urls.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -89350,7 +89082,7 @@ var URL_REVIEWS_ENDPOINT = exports.URL_REVIEWS_ENDPOINT = URL_BASE + 'reviews/';
 
 var URL_RECOMMENDATION_ENDPOINT = exports.URL_RECOMMENDATION_ENDPOINT = URL_BASE + 'recommendation/';
 var URL_RECOMMENDATION_CB = exports.URL_RECOMMENDATION_CB = URL_RECOMMENDATION_ENDPOINT + 'contentBasedRecommend/';
-}, 753, null, "travelight/Consts/urls.js");
+}, 755, null, "travelight/Consts/urls.js");
 __d(/* travelight/Consts/messages.js */function(global, require, module, exports) {
 exports.addTourSuccess = 'new Tour added';
 exports.addTourFailed = 'Add tour Failed';
@@ -89362,7 +89094,7 @@ exports.updateTourSuceess = 'Tour Updated';
 
 exports.loginUserSucess = 'User loged in successfully';
 exports.loginUserFailed = 'Something went wrong, please try again later';
-}, 754, null, "travelight/Consts/messages.js");
+}, 756, null, "travelight/Consts/messages.js");
 ;require(194);
 ;require(0);
 //# sourceMappingURL=index.android.map

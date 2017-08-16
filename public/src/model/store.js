@@ -804,9 +804,10 @@ class Store {
         fetch(url)
             .then(response => response.json())
             .then(result => {
-                console.warn(result);
+                // console.warn(JSON.stringify(result, null ,3));
                 this.chosenTour = result;
                 this.getTourStations();
+                console.warn(JSON.stringify(this.chosenTour, null ,3));
                 this.appNavigator.push({
                     id: 'TourDetailsPage',
                     chosenTour: this.chosenTour,
