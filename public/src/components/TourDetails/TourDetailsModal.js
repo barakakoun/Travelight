@@ -35,7 +35,6 @@ class TourDetailsModal extends Component {
             return null;
         }
         return (
-
             <Modal style={[styles.modal, styles.modalTourDetails]} backdrop={false} backButtonClose={true}
                    position={"bottom"} ref="modalTourDetails"
                    onClosed={this.props.onModalTourDetailsClosed.bind(this)}>
