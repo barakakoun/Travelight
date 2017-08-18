@@ -40,6 +40,7 @@ class Store {
     @observable chosenStation = null;
     @observable tourKeyForRanking = null;
     @observable tourStations = [];
+    @observable cityEvents = [];
     @observable counter = 0;
     @observable region = null;
     @observable currRegion = null;
@@ -81,6 +82,7 @@ class Store {
         this.setTourModalOpen = this.setTourModalOpen.bind(this);
         this.setStationModalOpen = this.setStationModalOpen.bind(this);
         this.setRankModalOpen = this.setRankModalOpen.bind(this);
+        this.getCityEvents = this.getCityEvents.bind(this);
         this.getUserFromStorage = this.getUserFromStorage.bind(this);
         this.mapFacebookDataToUser.bind(this);
         this.setAudio = this.setAudio.bind(this);
@@ -687,6 +689,32 @@ class Store {
 
     @action setRankModalOpen(value) {
         this.isRankModalOpen = value;
+    }
+
+    @action getCityEvents() {
+        var currEvents = [
+            {
+                key: 1,
+                name: "White night",
+                description: "A night when everybody stays awake and party!",
+                url: "http://www.mouse.co.il/special-events/1.3474650",
+                img: "http://img.mako.co.il/2010/06/27/IMG_0435c.jpg"
+            },{
+                key: 2,
+                name: "Food festival",
+                description: "Try and buy local food",
+                url: "http://food.nana10.co.il/Article/?ArticleID=1187583",
+                img: "http://cdn.be106.net/p/EF7848100fd4895.jpg"
+            },{
+                key: 2,
+                name: "Pride parade",
+                description: "The famous pride parade of TLV",
+                url: "http://www.maariv.co.il/news/israel/Article-587365",
+                img: "http://images1.ynet.co.il//PicServer4/2016/05/20/7016030/70160024941683640360no.jpg"
+            }
+        ];
+
+        this.cityEvents = currEvents;
     }
 
     @action logOff() {

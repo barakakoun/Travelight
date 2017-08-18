@@ -11,7 +11,7 @@ import {
     Dimensions,
     ScrollView
 } from 'react-native';
-import { Toolbar as MaterialToolbar, Icon, Avatar, Card } from 'react-native-material-design';
+import { Toolbar as MaterialToolbar, Icon, Card } from 'react-native-material-design';
 import SideNavigation from '../Navigation/SideNavigation';
 import {observer} from 'mobx-react/native';
 

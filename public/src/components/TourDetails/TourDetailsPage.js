@@ -186,7 +186,7 @@ class TourDetailsPage extends Component {
                 renderScene={this.renderScene.bind(this)}
                 navigator={this.props.navigator}
                 navigationBar={
-                    <Navigator.NavigationBar style={{backgroundColor: '#246dd5'}}
+                    <Navigator.NavigationBar style={{backgroundColor: '#5592f4'}}
                                              routeMapper={TourDetailsPage.NavigationBarRouteMapper(this.props)} />
                 } />
         );
@@ -199,23 +199,22 @@ class TourDetailsPage extends Component {
                 <Swiper style={{marginTop: 60, marginBottom: 10}}
                         height={280}
                         activeDot={<View style={{backgroundColor: '#0000FF', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}} />}
-                        showsButtons={true}
-                        nextButton={<Text style={{backgroundColor: 'transparent', fontSize: 38, color:'#0000FF'}}>›</Text>}
-                        prevButton={<Text style={{backgroundColor: 'transparent', fontSize: 38, color:'#0000FF'}}>‹</Text>}
+                        showsButtons={false}
                         loop
                 >
                     {
                         tourStations.map((station,index) => (
                             <View style={styles.slide} key={index}>
                                 <Image
+                                    // blurRadius={1.2}
                                     key={index}
                                     resizeMode='stretch'
                                     style={styles.image}
                                     source={{uri: station.img.length ? station.img[0].toString() : "https://www.game-on.no/templates/newyork/images/no_image.png"}}
                                 />
-                                <Text style={{fontSize: 30, flex: 1, justifyContent: 'center'}}>
-                                    {station.name}
-                                </Text>
+                                {/*<Text style={{fontSize: 30, flex: 1, justifyContent: 'center'}}>*/}
+                                    {/*{station.name}*/}
+                                {/*</Text>*/}
                             </View>
                         ))
                     }
