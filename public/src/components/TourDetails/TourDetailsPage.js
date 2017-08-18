@@ -36,29 +36,6 @@ class TourDetailsPage extends Component {
         this._handleBackPress = this._handleBackPress.bind(this);
     }
 
-    static NavigationBarRouteMapper = props => ({
-        LeftButton(route, navigator, index, navState) {
-            return (
-                <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-                                  onPress={() => navigator.parentNavigator.pop()}>
-                    <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 10,}} />
-                </TouchableOpacity>
-            );
-        },
-        RightButton(route, navigator, index, navState) {
-            return null;
-        },
-        Title(route, navigator, index, navState) {
-            return (
-                <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
-                    <Text style={{color: 'white', margin: 10, fontSize: 20}}>
-                        Tour Details
-                    </Text>
-                </TouchableOpacity>
-            );
-        }
-    })
-
     _handleBackPress() {
         this.props.store.navigatorPop();
         return true;
@@ -81,7 +58,7 @@ class TourDetailsPage extends Component {
                 tourStations } = this.props.store;
         if(chosenTour) {
             if (tourStations) {
-                console.warn(JSON.stringify(chosenTour, null ,3));
+                //console.warn(JSON.stringify(chosenTour, null ,3));
                 let url = "https://maps.googleapis.com/maps/api/directions/json?origin=" + chosenTour.coordinate.latitude.toString() + ","
                     + chosenTour.coordinate.longitude.toString()
                     + "&waypoints=";
@@ -117,12 +94,12 @@ class TourDetailsPage extends Component {
                             });
                         }
                     }).catch(e => {
-                    console.warn(e);
+                    //console.warn(e);
                 });
             }
         }
         else {
-            console.warn("No tour");
+            //console.warn("No tour");
         }
     }
 
@@ -181,22 +158,51 @@ class TourDetailsPage extends Component {
 
     render() {
         const {tourStations} = this.props.store;
+        const NavigationBarRouteMapper = {
+            LeftButton(route, navigator, index, navState) {
+                return (
+                    <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
+                                      onPress={() => navigator.parentNavigator.pop()}>
+                        <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 3,}} />
+                    </TouchableOpacity>
+                );
+            },
+            RightButton(route, navigator, index, navState) {
+                return null;
+            },
+            Title(route, navigator, index, navState) {
+                return null;
+            }
+        };
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}
                 navigator={this.props.navigator}
-                navigationBar={
-                    <Navigator.NavigationBar style={{backgroundColor: '#5592f4'}}
-                                             routeMapper={TourDetailsPage.NavigationBarRouteMapper(this.props)} />
-                } />
+                ref="TourDetailsNav"
+            />
         );
+
+        // return (
+        //     <Navigator
+        //         renderScene={this.renderScene.bind(this)}
+        //         navigator={this.props.navigator}
+        //         navigationBar={
+        //             <Navigator.NavigationBar style={{backgroundColor: '#5592f4'}}
+        //                                      routeMapper={TourDetailsPage.NavigationBarRouteMapper(this.props)} />
+        //         } />
+        // );
     }
     renderScene(route, navigator) {
         const { chosenTour,
                 tourStations } = this.props.store;
         return (
             <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: '#FFFFFF'}}>
-                <Swiper style={{marginTop: 60, marginBottom: 10}}
+                <MaterialToolbar title={chosenTour.name}
+                                 primary={'googleBlue'}
+                                 icon="keyboard-backspace"
+                                 onIconPress={() => this._handleBackPress()}
+                />
+                <Swiper
                         height={280}
                         activeDot={<View style={{backgroundColor: '#0000FF', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3, marginTop: 3, marginBottom: 3}} />}
                         showsButtons={false}
@@ -211,30 +217,28 @@ class TourDetailsPage extends Component {
                                     resizeMode='stretch'
                                     style={styles.image}
                                     source={{uri: station.img.length ? station.img[0].toString() : "https://www.game-on.no/templates/newyork/images/no_image.png"}}
-                                />
-                                {/*<Text style={{fontSize: 30, flex: 1, justifyContent: 'center'}}>*/}
-                                    {/*{station.name}*/}
-                                {/*</Text>*/}
+                                >
+                                    <Text style={styles.empty}> </Text>
+                                    <Text style={styles.textOnImg}>
+                                        {station.name}
+                                    </Text>
+                                </Image>
                             </View>
                         ))
                     }
                 </Swiper>
-                <Divider style={{ marginBottom: 10 }}/>
                 <View style={styles.oneUnderOne}>
-                    <Text style={{color: 'white', fontSize: 24, marginBottom: 10, paddingLeft: 2}}>
-                        {chosenTour.name}
-                    </Text>
-                    <View style={styles.twoSides}>
+                    <View style={[styles.twoSides, {paddingTop: 10}]}>
                         <View style={styles.oneByOne}>
                             <Icon name="timer" color="#FFFFFF" style={styles.icon}/>
                             <Text style={{fontSize: 20, color: 'white', paddingLeft: 2 }}>
                                 {chosenTour.duration}
                             </Text>
                         </View>
-                        <Text style={{fontSize: 15, color: 'white'}}>
-                            {chosenTour.distance} Km
-                        </Text>
                         <Icon name='directions-walk' color="#FFFFFF" style={styles.icon} />
+                        <Text style={{fontSize: 15, color: 'white'}}>
+                            {chosenTour.distance} Km  {null}
+                        </Text>
 
                     </View>
                     <ReviewsComponent store={this.props.store} textColor="white"/>
@@ -246,35 +250,12 @@ class TourDetailsPage extends Component {
                             {chosenTour.description}
                         </Text>
                     </ScrollView>
-                    <Button onPress={() => this.startTour()} title="Start Tour" style={styles.btn}/>
+                    <Button onPress={() => this.startTour()} title="Begin Tour" style={styles.btn}/>
                 </View>
             </View>
         );
     }
 }
-
-// const NavigationBarRouteMapper = {
-//     LeftButton(route, navigator, index, navState) {
-//         return (
-//             <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-//                               onPress={() => navigator.parentNavigator.pop()}>
-//                 <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 10,}} />
-//             </TouchableOpacity>
-//         );
-//     },
-//     RightButton(route, navigator, index, navState) {
-//         return null;
-//     },
-//     Title(route, navigator, index, navState) {
-//         return (
-//             <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
-//                 <Text style={{color: 'white', margin: 10, fontSize: 20}}>
-//                     Tour Details
-//                 </Text>
-//             </TouchableOpacity>
-//         );
-//     }
-// };
 
 const styles = StyleSheet.create({
     btn: {
@@ -284,7 +265,18 @@ const styles = StyleSheet.create({
     wrapper: {
         marginTop: 60,
     },
-
+    textOnImg: {
+        fontSize: 20,
+        flex: 1,
+        color: 'white',
+        position: 'absolute'
+    },
+    empty: {
+        fontSize: 20,
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,.35)',
+        width,
+    },
     slide: {
         flex: 1,
         justifyContent: 'center',
@@ -296,9 +288,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     image: {
-        marginTop: 60,
+        marginTop: 55,
         width,
-        flex: 1
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     oneByOne: {
         backgroundColor: '#5592f4',

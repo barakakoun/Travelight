@@ -160,13 +160,13 @@ class Store {
     @action loginWithFacebook() {
         LoginManager.logInWithReadPermissions(['public_profile','email','user_birthday'])
             .then(result => {
-                console.warn(JSON.stringify(result, null, 3));
+                //console.warn(JSON.stringify(result, null, 3));
                 if (result.isCancelled) {
                     alert('Login was cancelled');
                 } else {
                     AccessToken.getCurrentAccessToken().then(
                         (data) => {
-                            console.warn(_.values(data));
+                            //console.warn(_.values(data));
                             this.loginType = FACEBOOK_LOGIN;
                             this.accessToken = data.accessToken;
                             this.navigatorReplace('MainMapPage');
@@ -296,7 +296,7 @@ class Store {
                     this.availableTours = result;
                 })
                 .catch(error => {
-                    console.warn(error);
+                    //console.warn(error);
                 });
         } else {
             this.availableTours = [
@@ -375,7 +375,7 @@ class Store {
                     this.tourStations = result.map(this.mapStationsToScreen);
                 })
                 .catch(error => {
-                    console.warn(error);
+                    //console.warn(error);
                 });
         } else {
             switch(this.chosenTour.key) {

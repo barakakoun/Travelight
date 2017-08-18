@@ -84,7 +84,9 @@ const styles = StyleSheet.create({
         width: 300,
         height: 130,
         backgroundColor: "white",
-        marginTop: 10
+        marginTop: 10,
+        borderWidth: 2,
+        borderColor: '#4286f5'
     },
     // btn: {
     //     margin: 10,
