@@ -8,6 +8,7 @@ import {
     StyleSheet,
     TouchableOpacity,
     BackAndroid,
+    Button,
 } from 'react-native';
 import { Toolbar as MaterialToolbar, Icon, Avatar } from 'react-native-material-design';
 import SideNavigation from '../Navigation/SideNavigation';
@@ -51,6 +52,9 @@ class UserPage extends Component {
                     <MaterialToolbar title={'User Page'}
                                  primary={'googleBlue'}/>
                     <View style={styles.userphoto}>
+                        <Avatar size={150} image={<Image source={{uri:currentUser.img}}/>} />
+                    </View>
+                    <View style={{justifyContent: "center", alignItems: "center", flexDirection: "row"}}>
                         <Avatar size={150} image={<Image source={{uri:currentUser.img}}/>} />
                     </View>
                     <View style={styles.userform}>
