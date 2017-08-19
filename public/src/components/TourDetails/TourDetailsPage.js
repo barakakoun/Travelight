@@ -54,6 +54,7 @@ class TourDetailsPage extends Component {
     }
 
     startTour() {
+        this.props.store.updateHistoryTours();
         const { chosenTour,
                 tourStations } = this.props.store;
         if(chosenTour) {

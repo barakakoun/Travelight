@@ -12,6 +12,8 @@ import { LATITUDE_DELTA,
          TYPE_IMAGE,
 } from "../../../Consts/variables";
 import { LOGINUSER,
+         TOURS_HISTORY,
+            URL_ADD_TOUR,
          URL_TOURS_ENDPOINT,
          URL_REVIEWS_ENDPOINT,
          URL_RECOMMENDED_TOURS,
@@ -58,6 +60,7 @@ class Store {
     };
     @observable tourReviews = [];
     @observable recommendedTours = [];
+    @observable historyTours = [];
 
     constructor() {
         this.setAppNavigator = this.setAppNavigator.bind(this);
@@ -97,6 +100,8 @@ class Store {
         this.getTourReviews = this.getTourReviews.bind(this);
         this.getRecommendedTours = this.getRecommendedTours.bind(this);
         this.onRecommendedTourPress = this.onRecommendedTourPress.bind(this);
+        this.getHistoryTours = this.getHistoryTours.bind(this);
+        this.updateHistoryTours = this.updateHistoryTours.bind(this);
         this.mapStationsToScreen = this.mapStationsToScreen.bind(this);
     }
 
@@ -844,6 +849,35 @@ class Store {
             })
             .catch(err => console.warn(err))
     }
+
+    @action getHistoryTours() {
+        const url = `${TOURS_HISTORY}${this.currentUser.email}`;
+        console.warn(url);
+        fetch(url)
+            .then(response => response.json())
+            .then(result => {
+                console.warn(JSON.stringify(result, null ,3));
+                this.historyTours = result;
+            })
+            .catch(err => console.warn(err))
+    }
+
+    @action updateHistoryTours(email, tourId) {
+        var email = this.currentUser.email;
+        var tourId = this.chosenTour.key;
+        // TODO: Implement!
+        const url = `${URL_ADD_TOUR}${this.currentUser.email}`;
+        console.warn(url);
+        fetch(url)
+            .then(response => response.json())
+            .then(result => {
+                console.warn(JSON.stringify(result, null ,3));
+                this.historyTours = result;
+            })
+            .catch(err => console.warn(err))
+    }
+
+
 
     mapStationsToScreen(station) {
         const stationImg = _

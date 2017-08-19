@@ -39,7 +39,6 @@ class RecommendedPage extends Component {
     }
 
     componentDidMount() {
-        this.props.store.getRecommendedTours();
         BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
     }
 

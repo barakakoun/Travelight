@@ -8,6 +8,9 @@ const URL_BASE = 'http://192.168.14.19:3000/';
 /** USERS */
 const URL_USERS_ENDPOINT = URL_BASE+'users/';
 export const LOGINUSER = URL_USERS_ENDPOINT+'login';
+export const TOURS_HISTORY = URL_USERS_ENDPOINT+'toursHistory/';
+export const URL_ADD_TOUR = URL_USERS_ENDPOINT+'addTour';
+
 
 /** TOURS */
 export const URL_TOURS_ENDPOINT = URL_BASE+'tours/';

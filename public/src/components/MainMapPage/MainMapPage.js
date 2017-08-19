@@ -91,6 +91,8 @@ class MainMapPage extends Component {
     }
 
     onOpenBurger(e) {
+        this.props.store.getHistoryTours();
+        this.props.store.getRecommendedTours();
         this.state.drawer.openDrawer();
     }
 
