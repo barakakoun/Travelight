@@ -265,7 +265,7 @@ class MainMapPage extends Component {
 
     _handleBackPressExit() {
         Alert.alert(
-            'Alert Title',
+            'Come back soon!',
             'Sure you wanna exit?',
             [
                 {text: 'Yes', onPress: () => BackAndroid.exitApp()},

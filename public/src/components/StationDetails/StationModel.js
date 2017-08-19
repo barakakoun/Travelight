@@ -76,7 +76,6 @@ class StationModel extends Component {
         }
 
         //const url = 'http://lacavewebradio.chickenkiller.com:8000/stream.mp3';
-        this.props.store.setAudio();
         return (
             <Modal style={[styles.modal, styles.modelStation]} backdrop={true}  backButtonClose={true} swipeToClose={false} transparent={true}
                    backdropOpacity={0.5} onClosed={()=>this.closeModal()} ref="modalStation">
@@ -85,12 +84,12 @@ class StationModel extends Component {
                     <View style={[styles.name, {paddingLeft:rightForIcon, paddingRight:leftForText }]}>
                         <Text style={[styles.text, {}]}>{chosenStation.name}
                         </Text>
-
+                        {
                         <TouchableOpacity style={{position: 'absolute', flex: 1, justifyContent: 'center', right: rightForIcon, backgroundColor: 'white', height: 60}}
                                           onPress={() => this.stationInfo()}>
                             <Icon name="info" color="rgba(0,0,0,.9)" size={40} />
                         </TouchableOpacity>
-
+                        }
                     </View>
                     <Swiper style={{marginTop: 60, marginBottom: 10}}
                             height={280}
@@ -111,7 +110,6 @@ class StationModel extends Component {
                                     >
 
                                     </Image>
-
                                 </View>
                             ))
                         }

@@ -5,24 +5,6 @@
 const db = require('../database');
 //create connection to mysql
 
-exports.test = function(req, res) {
-
-    //Connect to the DB
-    connection = db.initDB();
-
-    connection.query('SELECT * from ', function (err, rows, fields) {
-        if (!err) {
-            console.log('The solution is: ', rows);
-            res.send(rows);
-        }
-        else {
-            res.send('idiot');
-            console.log('Error while performing Query.');
-        }
-    });
-    db.closeDB(connection)
-};
-
 exports.getTourReviews = function (req,res) {
     const tourId = req.param('tourId');
     connection = db.initDB();
@@ -39,12 +21,31 @@ exports.getTourReviews = function (req,res) {
                 firstName: row.first_name,
                 lastName: row.last_name,
                 userImg: row.img,
-            }))
+            }));
             console.log(reviews);
             res.send(reviews);
         }
     });
     db.closeDB(connection);
+};
+
+exports.addReviewToTour = function ({body:{userId, rank, reviewText, tourId}},res) {
+    const query = 'INSERT INTO reviews SET RANK = ' + rank +', REVIEW_TEXT = \'' +reviewText.toString() + '\', USER_ID = \'' +
+        userId.toString() + '\', TOUR_ID = ' + tourId;
+    connection = db.initDB();
+    connection.query(query, function (err, result) {
+            if (err) {
+                console.log(err);
+                db.closeDB(connection);
+                res.send({status: '300', error: err});
+                //throw err;
+            } else {
+                db.closeDB(connection);
+                res.send({status: '200'})
+            }
+
+        });
+
 };
 //     const reviews = [
 //         {

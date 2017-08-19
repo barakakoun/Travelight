@@ -30,7 +30,7 @@ class TourDetailsModal extends Component {
     }
 
     render() {
-        var {chosenTour} = this.props.store;
+        const {chosenTour} = this.props.store;
         if (!chosenTour) {
             return null;
         }
