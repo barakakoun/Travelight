@@ -59,20 +59,33 @@ class UserPage extends Component {
         return (
                 <View style={styles.container}>
                     <MaterialToolbar title={'User Page'}
-                                 primary={'googleBlue'}/>
-                    {/*<Image style={styles.userphoto} source={{uri:currentUser.img}}/>*/}
-                    <View style={styles.userphoto}>
-                        <Avatar size={150} image={<Image source={{uri:currentUser.img}}/>} />
-                    </View>
+                                 primary={'googleBlue'}>
+
+                    </MaterialToolbar>
+
+                    {/*<View style={{backgroundColor:'rgba(255, 255, 255, 0.7)' }}>*/}
+                    <Image style={styles.userphoto}
+                           resizeMode='contain'
+                           source={{uri:currentUser.img}}>
+                    </Image>
+                    <Text style={{color:"white", fontSize: 20}}>{currentUser.firstName} {currentUser.lastName}</Text>
+                    {/*</View>*/}
+
+                    {/*<View style={styles.userphoto}>*/}
+                        {/*<Avatar size={150} image={<Image source={{uri:currentUser.img}}/>} />*/}
+                    {/*</View>*/}
                     {/*<View style={{justifyContent: "center", alignItems: "center", flexDirection: "row"}}>*/}
                         {/*<Avatar size={150} image={<Image source={{uri:currentUser.img}}/>} />*/}
                     {/*</View>*/}
 
                     <ScrollableTabView
-                        style={[styles.container2, {marginTop:55}]}
-                        renderTabBar={()=><DefaultTabBar backgroundColor='rgba(255, 255, 255, 0.7)' />}
+                        tabBarActiveTextColor="white"
+                        tabBarInactiveTextColor='rgba(255, 255, 255, 0.7)'
+                        tabBarUnderlineStyle={{backgroundColor:'rgba(255, 255, 255, 0.7)'}}
+                        style={[styles.container2, {marginTop:0}]}
+                        renderTabBar={()=><DefaultTabBar  />}
                     >
-                        <ScrollView tabLabel='Detailes'>
+                        <ScrollView tabLabel='Details'  style={{backgroundColor:'rgba(255, 255, 255, 0.7)' }}>
                             <View style={styles.userform}>
                                 <Text style={{color: 'white', fontSize: 24,}}> First Name : {currentUser.firstName}</Text>
                                 <Text style={{color: 'white', fontSize: 24,}}> Last Name : {currentUser.lastName}</Text>
@@ -80,7 +93,7 @@ class UserPage extends Component {
                             </View>
 
                         </ScrollView>
-                        <ScrollView tabLabel='Tours History'>
+                        <ScrollView tabLabel='Tours History' style={{backgroundColor:'rgba(255, 255, 255, 0.7)' }}>
                             <View style={[styles.oneUnderOne, {paddingBottom:80}]}>
                                 { historyTours.map((tour, index) => (
                                     <TouchableOpacity key={index} onPress={() => onRecommendedTourPress(tour, Navigator.SceneConfigs.FloatFromBottom)}>
@@ -110,7 +123,7 @@ class UserPage extends Component {
                                 ))}
                             </View>
                         </ScrollView>
-                        <ScrollView tabLabel='Interests'>
+                        <ScrollView tabLabel='Interests' style={{backgroundColor:'rgba(255, 255, 255, 0.7)' }}>
                             <CardView
                                 cardElevation={5}
                                 cardMaxElevation={5}
@@ -150,11 +163,13 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent:'center',
         // flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: "#3f82f7"
     },
     container2: {
         flex: 1,
         justifyContent:'center',
+        // color: "white"
         // height: 500
     },
     toolbar: {
@@ -162,11 +177,13 @@ const styles = StyleSheet.create({
         height: 56,
     },
     userphoto: {
-        flex: 1,
+        // flex: 1,
         justifyContent:'center',
         alignItems: 'center',
-        marginTop: 55,
-        height: 50
+        marginTop: 60,
+        width: 100,
+        height: 100,
+        borderRadius: 100
     },
     userform: {
         flex: 1,

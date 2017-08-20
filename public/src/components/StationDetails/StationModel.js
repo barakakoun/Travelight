@@ -77,7 +77,7 @@ class StationModel extends Component {
         //const url = 'http://lacavewebradio.chickenkiller.com:8000/stream.mp3';
         this.props.store.setAudio();
         return (
-            <Modal style={[styles.modal, styles.modelStation]} backdrop={true}  backButtonClose={true} swipeToClose={false} transparent={true}
+            <Modal style={styles.modal} backdrop={true}  backButtonClose={true} swipeToClose={false} transparent={true}
                    backdropOpacity={0.5} onClosed={()=>this.closeModal()} ref="modalStation">
                 <View style={styles.container} >
 
@@ -85,7 +85,7 @@ class StationModel extends Component {
                         <Text style={[styles.text, {}]}>{chosenStation.name}
                         </Text>
 
-                        <TouchableOpacity style={{position: 'absolute', flex: 1, justifyContent: 'center', right: rightForIcon, backgroundColor: 'white', height: 60}}
+                        <TouchableOpacity style={{position: 'absolute', flex: 1, justifyContent: 'center', right: rightForIcon, backgroundColor: '#dae7fe', height: 60}}
                                           onPress={() => this.stationInfo()}>
                             <Icon name="info" color="rgba(0,0,0,.9)" size={40} />
                         </TouchableOpacity>
@@ -123,17 +123,17 @@ class StationModel extends Component {
                     </View> */ }
                     {chosenStation.audio ?
                     <View style={styles.player}>
-                        <Button name="reply" color="rgba(0,0,0,.9)" backgroundColor="rgba(255,255,255,0.5)" size={45} onPress={()=>{
+                        <Button name="reply" color="rgba(0,0,0,.9)" backgroundColor="#dae7fe" size={45} onPress={()=>{
                             this.props.store.stopAudio();
                             this.props.store.playAudio();
                         }}/>
-                        <Button name="play" color="rgba(0,0,0,.9)" backgroundColor="rgba(255,255,255,0.5)" size={45} onPress={()=>{
+                        <Button name="play" color="rgba(0,0,0,.9)" backgroundColor="#dae7fe" size={45} onPress={()=>{
                             this.props.store.playAudio();
                         }}/>
-                        <Button name="pause" color="rgba(0,0,0,.9)" backgroundColor="rgba(255,255,255,0.5)" size={45} onPress={()=>{
+                        <Button name="pause" color="rgba(0,0,0,.9)" backgroundColor="#dae7fe" size={45} onPress={()=>{
                              this.props.store.pauseAudio();
                         }}/>
-                        <Button name="stop" color="rgba(0,0,0,.9)" backgroundColor="rgba(255,255,255,0.5)" size={45} onPress={()=>{
+                        <Button name="stop" color="rgba(0,0,0,.9)" backgroundColor="#dae7fe" size={45} onPress={()=>{
                               this.props.store.stopAudio();
                         }}/>
                     </View> : null
@@ -146,12 +146,11 @@ class StationModel extends Component {
 const styles = StyleSheet.create({
     modal: {
         justifyContent: 'center',
-        alignItems: 'center'
-    },
-    modelStation:{
+        alignItems: 'center',
+        borderRadius: 5,
         height: 400,
-        width: 300,
-        backgroundColor: "rgba(255,255,255,1)"
+        width: 310,
+        backgroundColor: "#dae7fe"
     },
     container: {
         flex: 1,

@@ -66,7 +66,7 @@ class EventsPage extends Component {
 
         return (
             <View style={styles.container}>
-                <MaterialToolbar title={'Recommended for you'}
+                <MaterialToolbar title={'Events Near You'}
                                  primary={'googleBlue'}/>
                 <Text style={styles.text}>Here are some events which happens around you</Text>
                 <Divider style={{ marginBottom: 2 }}/>

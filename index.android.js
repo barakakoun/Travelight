@@ -83,6 +83,10 @@ export default class travelight extends Component {
                 style={{backgroundColor:'#91b6f2'}}
                 configureScene={(route) => {
             if (route.configureScene) {
+                {/*console.warn(route.id);*/}
+                if (route.id=="UserPage"){
+                    return {...route.configureScene,gestures: false};
+                }
               return route.configureScene;
             }
             return Navigator.SceneConfigs.FloatFromRight;

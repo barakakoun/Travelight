@@ -810,7 +810,7 @@ class Store {
         fetch(url)
             .then(response => response.json())
             .then(result => {
-                console.warn(JSON.stringify(result,null,3));
+                //console.warn(JSON.stringify(result,null,3));
                 this.tourReviews = result;
             })
             .catch(error => {
@@ -819,13 +819,13 @@ class Store {
     }
 
     @action getRecommendedTours() {
-        console.warn("Recommended");
+        //console.warn("Recommended");
         const url = `${URL_RECOMMENDATION_CB}${this.currentUser.email}/ISRAEL`;
-        console.warn(url);
+        //console.warn(url);
         fetch(url)
             .then(response => response.json())
             .then(result => {
-                console.warn(JSON.stringify(result, null ,3));
+                //console.warn(JSON.stringify(result, null ,3));
                 this.recommendedTours = result;
             })
             .catch(err => {console.warn("Error in getRecommendedTours " + err)});
@@ -833,14 +833,14 @@ class Store {
 
     @action onRecommendedTourPress(tour, configureScene) {
         const url = `${URL_GET_TOUR_DETAILS}${tour.key}`;
-        console.warn(url);
+        //console.warn(url);
         fetch(url)
             .then(response => response.json())
             .then(result => {
                 // console.warn(JSON.stringify(result, null ,3));
                 this.chosenTour = result;
                 this.getTourStations();
-                console.warn(JSON.stringify(this.chosenTour, null ,3));
+                //console.warn(JSON.stringify(this.chosenTour, null ,3));
                 this.appNavigator.push({
                     id: 'TourDetailsPage',
                     chosenTour: this.chosenTour,
@@ -852,11 +852,11 @@ class Store {
 
     @action getHistoryTours() {
         const url = `${TOURS_HISTORY}${this.currentUser.email}`;
-        console.warn(url);
+        // console.warn(url);
         fetch(url)
             .then(response => response.json())
             .then(result => {
-                console.warn(JSON.stringify(result, null ,3));
+                // console.warn(JSON.stringify(result, null ,3));
                 this.historyTours = result;
             })
             .catch(err => console.warn(err))
@@ -867,11 +867,11 @@ class Store {
         var tourId = this.chosenTour.key;
         // TODO: Implement!
         const url = `${URL_ADD_TOUR}${this.currentUser.email}`;
-        console.warn(url);
+        // console.warn(url);
         fetch(url)
             .then(response => response.json())
             .then(result => {
-                console.warn(JSON.stringify(result, null ,3));
+                //console.warn(JSON.stringify(result, null ,3));
                 this.historyTours = result;
             })
             .catch(err => console.warn(err))
