@@ -66,7 +66,7 @@ class TourReviews extends Component {
         const { chosenTour,
                 tourReviews } = this.props.store;
         return (
-            <ScrollView style={{ backgroundColor: '#f3f3f3'}}>
+            <ScrollView style={{ backgroundColor: '#dae7fe'}}>
                 <Text style={{ color: 'black', fontSize: 32,  marginTop: 60, fontWeight: 'bold', marginLeft: 4,justifyContent: 'center'}}>{chosenTour.name}</Text>
                 <View style={styles.oneByOne}>
                     <Stars

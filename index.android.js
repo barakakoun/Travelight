@@ -84,7 +84,7 @@ export default class travelight extends Component {
                 configureScene={(route) => {
             if (route.configureScene) {
                 {/*console.warn(route.id);*/}
-                if (route.id=="UserPage"){
+                if ((route.id=="UserPage") || (route.id=="RecommendedPage") || (route.id=="EventsPage") || (route.id=="EventWebView")){
                     return {...route.configureScene,gestures: false};
                 }
               return route.configureScene;

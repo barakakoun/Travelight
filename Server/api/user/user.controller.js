@@ -68,9 +68,6 @@ exports.toursHistory = function (req,res) {
     db.closeDB(connection);
 };
 
-exports.addTour = function (req,res) {
-    res.send("do me");
-}
 exports.loginUser = function (req,res) {
     var user = req.body;
     connection = db.initDB();
