@@ -88,6 +88,7 @@ exports.getTours = function(req, res) {
 // Get tour by ID
 exports.getTourDetails = function(req,res) {
    var tourId =  req.param('tourId');
+   console.log(tourId);
     //Connect to the DB
     connection = db.initDB();
     connection.query('SELECT T.id, T.name, T.description,T.duration,T.distance,T.img from tour T where ID=?',tourId,

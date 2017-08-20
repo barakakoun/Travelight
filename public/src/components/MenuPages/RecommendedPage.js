@@ -11,7 +11,7 @@ import {
     Dimensions,
     ScrollView
 } from 'react-native';
-import { Toolbar as MaterialToolbar, Icon, Avatar, Card } from 'react-native-material-design';
+import { Toolbar as MaterialToolbar, Icon, Card, Divider } from 'react-native-material-design';
 import SideNavigation from '../Navigation/SideNavigation';
 import {observer} from 'mobx-react/native';
 
@@ -39,7 +39,6 @@ class RecommendedPage extends Component {
     }
 
     componentDidMount() {
-        this.props.store.getRecommendedTours();
         BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
     }
 
@@ -64,12 +63,13 @@ class RecommendedPage extends Component {
                 onRecommendedTourPress
                 } = this.props.store;
         return (
-                <ScrollView  style={styles.container}>
-                    <MaterialToolbar title={'Recommended for you'}
-                                     primary={'googleBlue'}/>
-                    <Text style={styles.title}>Hello {currentUser.firstName},</Text>
-                    <Text style={styles.text}>Here are some tours we think are perfect for you</Text>
-                    <View style={styles.oneUnderOne}>
+            <View style={styles.container}>
+                <MaterialToolbar title={'Recommended for you'}
+                                 primary={'googleBlue'}/>
+                <Text style={styles.text}>Here are some tours we believe would be perfect for you!</Text>
+                <Divider style={{ marginBottom: 2 }}/>
+                <ScrollView  >
+                    <View style={[styles.oneUnderOne, {paddingBottom:80}]}>
                         { recommendedTours.map((tour, index) => (
                             <TouchableOpacity key={index} onPress={() => onRecommendedTourPress(tour, Navigator.SceneConfigs.FloatFromBottom)}>
                                 <Card key={index}>
@@ -77,7 +77,7 @@ class RecommendedPage extends Component {
                                         image={<Image source={{uri: tour.img}} />}
                                         overlay
                                     >
-                                        <Text style={{fontSize: 30, color: 'white'}}>{tour.name}</Text>
+                                        <Text style={{fontSize: 26, color: 'white'}}>{tour.name}</Text>
                                     </Card.Media>
                                     <Card.Body style={styles.oneByOne}>
                                         <View style={styles.twoSides}>
@@ -98,6 +98,7 @@ class RecommendedPage extends Component {
                         ))}
                     </View>
                 </ScrollView>
+            </View>
         );
     }
 }
@@ -122,7 +123,8 @@ var NavigationBarRouteMapper = {
 
 const styles = StyleSheet.create({
     text: {
-        fontSize: 20,
+        marginTop: 60,
+        fontSize: 18,
         color: 'black',
         marginLeft: 4 ,
     },

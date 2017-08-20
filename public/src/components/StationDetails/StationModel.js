@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import Modal from 'react-native-modalbox';
 import {Avatar, Divider, Icon} from 'react-native-material-design';
 import {Button} from 'react-native-vector-icons/FontAwesome';
-import Sound from 'react-native-sound';
 import {
     Text,
     StyleSheet,

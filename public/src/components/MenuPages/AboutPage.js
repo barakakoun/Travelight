@@ -52,7 +52,7 @@ class AboutPage extends Component {
                                  primary={'googleBlue'}/>
                 <Text style={{color: 'white', fontSize: 32,  marginTop: 60 }}>Travelight</Text>
                 <Text style={{color: 'white', fontSize: 26, marginBottom: 20}}>Tour Guide In Your Pocket!</Text>
-                <Text style={{color:'white', fontSize: 18, marginLeft: 2}}>
+                <Text style={{color: 'white', fontSize: 18, margin: 10}}>
                     Our application will replace the human tour guide in a way that allows you to
                     travel freely in all the city’s tour sites using your smartphones .{"\n"}
                     {"\n"}

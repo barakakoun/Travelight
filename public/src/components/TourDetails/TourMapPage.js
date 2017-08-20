@@ -209,7 +209,7 @@ class TourMapPage extends Component {
         setTimeout(() => {
             // this.map.animateToRegion(this.props.store.currRegion, 1);
             this.map.fitToElements(true);
-        }, 200);
+        }, 500);
 
         BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
 
@@ -242,7 +242,6 @@ class TourMapPage extends Component {
         const {onStationPress} = this.props.store;
         const NavigationBarRouteMapper = {
             LeftButton(route, navigator, index, navState) {
-                Alert.alert("left button");
                 return (
                     <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
                                       onPress={() => this._handleBackPress()}>

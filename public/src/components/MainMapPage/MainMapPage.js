@@ -19,8 +19,7 @@ import TourDetailsModal from '../TourDetails/TourDetailsModal';
 import { Toolbar as MaterialToolbar, Icon } from 'react-native-material-design';
 import SideNavigation from '../Navigation/SideNavigation';
 import { observer } from 'mobx-react/native';
-import _ from 'lodash';
-
+const tourPin = require('../../../assets/tourPin.png');
 const nativeImageSource = require('nativeImageSource');
 
 @observer
@@ -92,6 +91,8 @@ class MainMapPage extends Component {
     }
 
     onOpenBurger(e) {
+        this.props.store.getHistoryTours();
+        this.props.store.getRecommendedTours();
         this.state.drawer.openDrawer();
     }
 
@@ -240,7 +241,7 @@ class MainMapPage extends Component {
     }
 
     componentWillMount() {
-        this.getLocation();
+        //this.getLocation();
         this.props.store.getUserData();
         this.props.store.getAvailableTours();
     }
@@ -531,8 +532,7 @@ class MainMapPage extends Component {
                         <MapView.Marker
                             key={currTour.key}
                             coordinate={currTour.coordinate}
-                            // image={barakpin}
-                            pinColor={"blue"}
+                            image={tourPin}
                             onPress={this.onTourPress.bind(this, currTour)}
                         />
                     ))}

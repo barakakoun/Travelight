@@ -174,13 +174,6 @@ const styles = StyleSheet.create({
         margin: 5,
         backgroundColor: 'white',
         borderRadius:10,
-        // shadowColor: '#000000',
-        // shadowOffset: {
-        //     width: 3,
-        //     height: 3
-        // },
-        // shadowRadius: 3,
-        // shadowOpacity: 1.0
     }
 });
 

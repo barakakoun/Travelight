@@ -12,6 +12,8 @@ import { LATITUDE_DELTA,
          TYPE_IMAGE,
 } from "../../../Consts/variables";
 import { LOGINUSER,
+         TOURS_HISTORY,
+            URL_ADD_TOUR,
          URL_TOURS_ENDPOINT,
          URL_REVIEWS_ENDPOINT,
          URL_RECOMMENDED_TOURS,
@@ -42,6 +44,7 @@ class Store {
     @observable chosenStation = null;
     @observable tourKeyForRanking = null;
     @observable tourStations = [];
+    @observable cityEvents = [];
     @observable counter = 0;
     @observable region = null;
     @observable currRegion = null;
@@ -59,6 +62,7 @@ class Store {
     };
     @observable tourReviews = [];
     @observable recommendedTours = [];
+    @observable historyTours = [];
 
     constructor() {
         this.setAppNavigator = this.setAppNavigator.bind(this);
@@ -83,6 +87,7 @@ class Store {
         this.setTourModalOpen = this.setTourModalOpen.bind(this);
         this.setStationModalOpen = this.setStationModalOpen.bind(this);
         this.setRankModalOpen = this.setRankModalOpen.bind(this);
+        this.getCityEvents = this.getCityEvents.bind(this);
         this.getUserFromStorage = this.getUserFromStorage.bind(this);
         this.mapFacebookDataToUser.bind(this);
         this.playAudio = this.playAudio.bind(this);
@@ -96,6 +101,8 @@ class Store {
         this.getTourReviews = this.getTourReviews.bind(this);
         this.getRecommendedTours = this.getRecommendedTours.bind(this);
         this.onRecommendedTourPress = this.onRecommendedTourPress.bind(this);
+        this.getHistoryTours = this.getHistoryTours.bind(this);
+        this.updateHistoryTours = this.updateHistoryTours.bind(this);
         this.mapStationsToScreen = this.mapStationsToScreen.bind(this);
     }
 
@@ -160,13 +167,13 @@ class Store {
     @action loginWithFacebook() {
         LoginManager.logInWithReadPermissions(['public_profile','email','user_birthday'])
             .then(result => {
-                console.warn(JSON.stringify(result, null, 3));
+                //console.warn(JSON.stringify(result, null, 3));
                 if (result.isCancelled) {
                     alert('Login was cancelled');
                 } else {
                     AccessToken.getCurrentAccessToken().then(
                         (data) => {
-                            console.warn(_.values(data));
+                            //console.warn(_.values(data));
                             this.loginType = FACEBOOK_LOGIN;
                             this.accessToken = data.accessToken;
                             this.navigatorReplace('MainMapPage');
@@ -296,7 +303,7 @@ class Store {
                     this.availableTours = result;
                 })
                 .catch(error => {
-                    console.warn(error);
+                    //console.warn(error);
                 });
         } else {
             this.availableTours = [
@@ -375,7 +382,7 @@ class Store {
                     this.tourStations = result.map(this.mapStationsToScreen);
                 })
                 .catch(error => {
-                    console.warn(error);
+                    //console.warn(error);
                 });
         } else {
             switch(this.chosenTour.key) {
@@ -691,6 +698,32 @@ class Store {
         this.isRankModalOpen = value;
     }
 
+    @action getCityEvents() {
+        var currEvents = [
+            {
+                key: 1,
+                name: "White night",
+                description: "A night when everybody stays awake and party!",
+                url: "http://www.mouse.co.il/special-events/1.3474650",
+                img: "http://img.mako.co.il/2010/06/27/IMG_0435c.jpg"
+            },{
+                key: 2,
+                name: "Food festival",
+                description: "Try and buy local food",
+                url: "http://food.nana10.co.il/Article/?ArticleID=1187583",
+                img: "http://cdn.be106.net/p/EF7848100fd4895.jpg"
+            },{
+                key: 2,
+                name: "Pride parade",
+                description: "The famous pride parade of TLV",
+                url: "http://www.maariv.co.il/news/israel/Article-587365",
+                img: "http://images1.ynet.co.il//PicServer4/2016/05/20/7016030/70160024941683640360no.jpg"
+            }
+        ];
+
+        this.cityEvents = currEvents;
+    }
+
     @action logOff() {
         this.currentUser = {
             img: "http://www.worldofbuzz.com/wp-content/uploads/2015/04/noprofilemale.gif?x82567",
@@ -795,6 +828,7 @@ class Store {
     }
 
     @action onRecommendedTourPress(tour, configureScene) {
+        console.warn(JSON.stringify(tour, null ,3));
         const url = `${URL_GET_TOUR_DETAILS}${tour.key}`;
         fetch(url)
             .then(response => response.json())
@@ -802,12 +836,39 @@ class Store {
                 // console.warn(JSON.stringify(result, null ,3));
                 this.chosenTour = result;
                 this.getTourStations();
-                console.warn(JSON.stringify(this.chosenTour, null ,3));
+                //console.warn(JSON.stringify(this.chosenTour, null ,3));
                 this.appNavigator.push({
                     id: 'TourDetailsPage',
                     chosenTour: this.chosenTour,
                     configureScene: configureScene
                 });
+            })
+            .catch(err => console.warn(err))
+    }
+
+    @action getHistoryTours() {
+        const url = `${TOURS_HISTORY}${this.currentUser.email}`;
+        console.warn(url);
+        fetch(url)
+            .then(response => response.json())
+            .then(result => {
+                console.warn(JSON.stringify(result, null ,3));
+                this.historyTours = result;
+            })
+            .catch(err => console.warn(err))
+    }
+
+    @action updateHistoryTours(email, tourId) {
+        var email = this.currentUser.email;
+        var tourId = this.chosenTour.key;
+        // TODO: Implement!
+        const url = `${URL_ADD_TOUR}${this.currentUser.email}`;
+        console.warn(url);
+        fetch(url)
+            .then(response => response.json())
+            .then(result => {
+                console.warn(JSON.stringify(result, null ,3));
+                this.historyTours = result;
             })
             .catch(err => console.warn(err))
     }

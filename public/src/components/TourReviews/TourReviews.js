@@ -66,22 +66,17 @@ class TourReviews extends Component {
         const { chosenTour,
                 tourReviews } = this.props.store;
         return (
-            <ScrollView style={{ backgroundColor: '#FFFFFF'}}>
-                <Text style={{ color: 'black', fontSize: 32,  marginTop: 60, fontWeight: 'bold', marginLeft: 4,}}>{chosenTour.name}</Text>
+            <ScrollView style={{ backgroundColor: '#f3f3f3'}}>
+                <Text style={{ color: 'black', fontSize: 32,  marginTop: 60, fontWeight: 'bold', marginLeft: 4,justifyContent: 'center'}}>{chosenTour.name}</Text>
                 <View style={styles.oneByOne}>
-                    <Text style={{marginTop: 10, marginRight: 2, fontSize: 20, marginLeft: 4,}}>
-                        {chosenTour.rating}
-                    </Text>
                     <Stars
+                        style={{marginTop: 10, marginLeft: 4}}
                         isActive={false}
                         rateMax={5}
                         isHalfStarEnabled={true}
                         rate={chosenTour.rating}
                         size={40}
                     />
-                    <Text style={{marginTop: 10, fontSize: 14, marginLeft: 4,}}>
-                        { tourReviews.length } reviews
-                    </Text>
                 </View>
                 <View style={styles.oneUnderOne}>
                     { tourReviews.map((review, index) => (
@@ -168,7 +163,7 @@ const styles = StyleSheet.create({
     oneByOne: {
         flex:1,
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
         alignItems: 'flex-start'
     },
     twoSides: {

@@ -5,12 +5,14 @@ import {
     Text,
     Image,
     Navigator,
+    Alert,
     StyleSheet,
     TouchableOpacity,
     BackAndroid,
-    Dimensions
+    Dimensions,
+    ScrollView,
 } from 'react-native';
-import { Toolbar as MaterialToolbar, Icon,Avatar } from 'react-native-material-design';
+import { Toolbar as MaterialToolbar, Divider,Card } from 'react-native-material-design';
 import SideNavigation from '../Navigation/SideNavigation';
 import {observer} from 'mobx-react/native';
 
@@ -24,6 +26,8 @@ class EventsPage extends Component {
         super(props);
 
         this._handleBackPress = this._handleBackPress.bind(this);
+
+        this.props.store.getCityEvents();
     }
 
     _handleBackPress() {
@@ -39,6 +43,13 @@ class EventsPage extends Component {
         BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPress);
     }
 
+    onEventPress(url) {
+        this.props.store.appNavigator.push({
+            id: 'EventWebView',
+            url: url
+        });
+    }
+
 
     render() {
         //const {appNavigator} = this.props.store;
@@ -51,16 +62,35 @@ class EventsPage extends Component {
     }
 
     renderScene(route, navigator) {
+        const { cityEvents } = this.props.store;
 
         return (
-            <View  style={styles.container}>
-                <MaterialToolbar title={'Event Page'}
+            <View style={styles.container}>
+                <MaterialToolbar title={'Recommended for you'}
                                  primary={'googleBlue'}/>
-                <Image
-                    resizeMode='stretch'
-                    style={styles.image}
-                    source={comingsoon}
-                />
+                <Text style={styles.text}>Here are some events which happens around you</Text>
+                <Divider style={{ marginBottom: 2 }}/>
+                <ScrollView>
+                    <View style={[styles.oneUnderOne, {paddingBottom:80}]}>
+                        { cityEvents.map((event, index) => (
+                            <TouchableOpacity key={index} onPress={() => this.onEventPress(event.url)}>
+                                <Card key={index}>
+                                    <Card.Media
+                                        image={<Image source={{uri: event.img}} />}
+                                        overlay
+                                    >
+                                        <Text style={{fontSize: 30, color: 'white'}}>{event.name}</Text>
+                                    </Card.Media>
+                                    <Card.Body style={styles.oneByOne}>
+                                        <Text>
+                                            {event.description}
+                                        </Text>
+                                    </Card.Body>
+                                </Card>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                </ScrollView>
             </View>
         );
     }
@@ -93,7 +123,10 @@ var NavigationBarRouteMapper = {
 
 const styles = StyleSheet.create({
     text: {
-        fontSize: 16,
+        marginTop: 60,
+        fontSize: 18,
+        color: 'black',
+        marginLeft: 4 ,
     },
     image: {
         width,
@@ -101,13 +134,23 @@ const styles = StyleSheet.create({
         flex: 1
     },
     container: {
-        backgroundColor: '#FFFFFF',
-        flex: 1,
-        justifyContent: 'flex-end',
+        backgroundColor: '#FFFFFF'
     },
     toolbar: {
         backgroundColor: '#e9eaed',
         height: 56,
+    },
+    oneUnderOne: {
+        // backgroundColor: '#5592f4',
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'flex-start'
+    },
+    oneByOne: {
+        flex:1,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start'
     },
 });
 
