@@ -77,7 +77,7 @@ class RecommendedPage extends Component {
                                         image={<Image source={{uri: tour.img}} />}
                                         overlay
                                     >
-                                        <Text style={{fontSize: 30, color: 'white'}}>{tour.name}</Text>
+                                        <Text style={{fontSize: 26, color: 'white'}}>{tour.name}</Text>
                                     </Card.Media>
                                     <Card.Body style={styles.oneByOne}>
                                         <View style={styles.twoSides}>
@@ -124,7 +124,7 @@ var NavigationBarRouteMapper = {
 const styles = StyleSheet.create({
     text: {
         marginTop: 60,
-        fontSize: 14,
+        fontSize: 18,
         color: 'black',
         marginLeft: 4 ,
     },

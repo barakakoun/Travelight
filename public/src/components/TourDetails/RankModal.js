@@ -42,8 +42,15 @@ class RankModal extends Component {
 
     submitRate() {
         // TODO: call function(tourKeyForRanking, this.userTourRate, this.text)
+        this.props.store.addRank(this.userTourRate, this.text);
         this.refs.modalRank.close();
     }
+
+    onStarRatingPress(ranking) {
+        this.isText = true;
+        this.userTourRate = ranking;
+    }
+
 
     render() {
 
@@ -67,7 +74,7 @@ class RankModal extends Component {
                             isActive={true}
                             rateMax={5}
                             isHalfStarEnabled={true}
-                            onStarPress={() => this.isText=true}
+                            onStarPress={(rating) => this.onStarRatingPress(rating)}
                             rate={this.userTourRate}
                             size={55}
                         />

@@ -19,6 +19,8 @@ import { LOGINUSER,
          URL_RECOMMENDED_TOURS,
          URL_GET_TOUR_DETAILS,
          URL_RECOMMENDATION_CB,
+         URL_ADD_REVIEW,
+         URL_ADD_TOUR_USER,
        } from "../../../Consts/urls";
 import FBSDK from 'react-native-fbsdk';
 import React from 'react';
@@ -88,7 +90,6 @@ class Store {
         this.getCityEvents = this.getCityEvents.bind(this);
         this.getUserFromStorage = this.getUserFromStorage.bind(this);
         this.mapFacebookDataToUser.bind(this);
-        this.setAudio = this.setAudio.bind(this);
         this.playAudio = this.playAudio.bind(this);
         this.stopAudio = this.stopAudio.bind(this);
         this.pauseAudio = this.pauseAudio.bind(this);
@@ -106,7 +107,8 @@ class Store {
     }
 
     sendFacebookLoginDataToServer(){
-        fetch(LOGINUSER,{method: 'POST',
+        fetch(LOGINUSER,
+            {method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -732,9 +734,6 @@ class Store {
         this.navigatorReplace('Exit');
     }
 
-    @action setAudio(){
-    }
-
     @action playAudio(){
         if (this.chosenStation.audio) {
             this.chosenStation.audio.play(success => {
@@ -819,13 +818,10 @@ class Store {
     }
 
     @action getRecommendedTours() {
-        //console.warn("Recommended");
         const url = `${URL_RECOMMENDATION_CB}${this.currentUser.email}/ISRAEL`;
-        //console.warn(url);
         fetch(url)
             .then(response => response.json())
             .then(result => {
-                //console.warn(JSON.stringify(result, null ,3));
                 this.recommendedTours = result;
             })
             .catch(err => {console.warn("Error in getRecommendedTours " + err)});
@@ -833,11 +829,9 @@ class Store {
 
     @action onRecommendedTourPress(tour, configureScene) {
         const url = `${URL_GET_TOUR_DETAILS}${tour.key}`;
-        //console.warn(url);
         fetch(url)
             .then(response => response.json())
             .then(result => {
-                // console.warn(JSON.stringify(result, null ,3));
                 this.chosenTour = result;
                 this.getTourStations();
                 //console.warn(JSON.stringify(this.chosenTour, null ,3));
@@ -877,8 +871,6 @@ class Store {
             .catch(err => console.warn(err))
     }
 
-
-
     mapStationsToScreen(station) {
         const stationImg = _
             .chain(station.data)
@@ -897,6 +889,61 @@ class Store {
             text: text ? text.data : null,
         }
     }
+
+    @action addRank(userRank, reviewText) {
+        const body = {
+            userId: this.currentUser.email,
+            rank: userRank,
+            reviewText,
+            tourId: this.chosenTour.key,
+        };
+
+        fetch(URL_ADD_REVIEW,
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            })
+            .then(response => response.json())
+            .then(response => {
+                if(response.status === '200') {
+
+                } else {
+                    console.warn(response.error);
+                }
+            })
+
+    }
+
+    @action addTourToUser() {
+        const body = {
+            userId: this.currentUser.email,
+            tourId: this.chosenTour.key
+        };
+
+        fetch(URL_ADD_TOUR_USER,
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            })
+            .then(response => response.json())
+            .then(response => {
+                if(response.error) {
+                    console.warn(response.error);
+                } else {
+                    // console.warn(response.message);
+                }
+            })
+            .catch(err => console.warn(err));
+    }
+
 }
 
 const store = new Store();

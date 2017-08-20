@@ -124,7 +124,7 @@ var NavigationBarRouteMapper = {
 const styles = StyleSheet.create({
     text: {
         marginTop: 60,
-        fontSize: 14,
+        fontSize: 18,
         color: 'black',
         marginLeft: 4 ,
     },

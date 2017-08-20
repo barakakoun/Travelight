@@ -21,7 +21,15 @@ exports.toursHistory = function (req,res) {
                 res.send(messages.selectTourFailed);
             }
             else {
-                res.send(tours);
+                const resTours = tours.map(tour => ({
+                    key: tour.id,
+                    name: tour.name,
+                    description: tour.description,
+                    distance: tour.distance,
+                    duration: tour.duration,
+                    img: tour.img,
+                }));
+                res.send(resTours);
             }
 
             // const reviewsQuery = 'SELECT R.id, R.rank' +

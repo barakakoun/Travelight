@@ -14,7 +14,6 @@ import {
 import { Toolbar as MaterialToolbar, Avatar, Icon, Card, CheckboxGroup, Checkbox } from 'react-native-material-design';
 import SideNavigation from '../Navigation/SideNavigation';
 import {observer} from 'mobx-react/native';
-import ScrollableTabView, { DefaultTabBar, } from 'react-native-scrollable-tab-view';
 import CardView from 'react-native-cardview';
 // import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -147,7 +146,6 @@ class UserPage extends Component {
                                     }]}
                                 />
                             </CardView>
-
                         </ScrollView>
                     </ScrollableTabView>
                 </View>

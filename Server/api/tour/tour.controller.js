@@ -29,73 +29,6 @@ exports.test = function(req, res) {
     db.closeDB(connection)
 };
 
-// exports.getTours = function(req, res) {
-//     const tours = [
-//         {
-//             key: 1,
-//             name: 'The history of Rabin Square',
-//             description: 'Get to know Rabin Square from the beginning to present. get to know the full history of formerly kings of Israel square',
-//             duration: '1.30',
-//             accessible: true,
-//             distance: '2',
-//             reviews: 5,
-//             rating: 4.5,
-//             coordinate: {
-//                 latitude: 32.0802627,
-//                 longitude: 34.7808783
-//             },
-//             img: 'http://www.mapa.co.il/WWWTemp/UDP/105936_800_600.jpeg'
-//         },
-//         {
-//             key: 2,
-//             name: 'Dizingoff street as you never seen before',
-//             description: 'Dizengoff Street is a major street in central Tel Aviv, named after Tel Avivs first mayor, Meir Dizengoff.',
-//             duration: '1.30',
-//             accessible: false,
-//             distance: '1.5',
-//             reviews: 9,
-//             rating: 3.7,
-//             coordinate: {
-//                 latitude: 32.0745575,
-//                 longitude: 34.7772692
-//             },
-//             img: 'http://www.sea-hotel.co.il/sites/sea/UserContent/images/Attractions/%D7%93%D7%99%D7%96%D7%99%D7%A0%D7%92%D7%95%D7%A3%20%D7%A1%D7%A0%D7%98%D7%A8.jpg'
-//         },
-//         {
-//             key: 3,
-//             name: 'Beautiful tour in Rothschild Boulevard',
-//             description: 'Rothschild Boulevard is one of the principal streets in the center of Tel Aviv, Israel, beginning in Neve Tzedek at its southwestern edge and running north to Habima Theatre.',
-//             duration: '2',
-//             accessible: true,
-//             distance: '3.2',
-//             reviews: 20,
-//             rating: 5,
-//             coordinate: {
-//                 latitude: 32.0633612,
-//                 longitude: 34.7730913
-//             },
-//             img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/PikiWiki_Israel_8331_rotshild_blvd._tel-aviv.jpg/800px-PikiWiki_Israel_8331_rotshild_blvd._tel-aviv.jpg'
-//         },
-//         {
-//             key: 4,
-//             name: 'History of Petach Tikva',
-//             description: 'Learn about Petach Tikva. a city that grew in the last few years',
-//             duration: '0.50',
-//             accessible: false,
-//             distance: '1.5',
-//             reviews: 0,
-//             rating: 0,
-//             coordinate: {
-//                 latitude: 32.078801,
-//                 longitude: 34.907979
-//             },
-//             img: 'http://images1.ynet.co.il/xnet//PicServer2/pic/012012/154037/31_735.jpg'
-//         }
-//     ];
-//
-//     res.send(tours);
-// };
-
 exports.getTours = function(req, res) {
     let connection = db.initDB();
 
@@ -120,7 +53,7 @@ exports.getTours = function(req, res) {
                 const tours = _
                     .chain(rows).map(row => {
                         let tourReviews = reviews.filter(review => review.TOUR_ID === row.id);
-                        console.log(JSON.stringify(tourReviews,null,3));
+                        // console.log(JSON.stringify(tourReviews,null,3));
                         let sum = 0;
                         for(let i=0; i<tourReviews.length; i++) {
                             sum += tourReviews[i].RANK;
@@ -155,6 +88,7 @@ exports.getTours = function(req, res) {
 // Get tour by ID
 exports.getTourDetails = function(req,res) {
    var tourId =  req.param('tourId');
+   console.log(tourId);
     //Connect to the DB
     connection = db.initDB();
     connection.query('SELECT T.id, T.name, T.description,T.duration,T.distance,T.img from tour T where ID=?',tourId,
@@ -346,9 +280,25 @@ exports.getStations = function (req,res) {
 
                 return station;
             });
-            console.log(JSON.stringify(resultStations, null, 3));
+            // console.log(JSON.stringify(resultStations, null, 3));
             res.send(resultStations);
         }
     });
     db.closeDB(connection);
-}
+};
+
+exports.addTourToUser = function ({body:{userId, tourId}} ,res) {
+    console.log(userId);
+    console.log(tourId);
+    connection = db.initDB();
+    connection.query('SELECT 1 FROM user_tour WHERE email = ? and tour_id = ?',[userId,tourId],function (err,result) {
+        err ? res.send({error: err}) : null;
+        if (result.length > 0) {
+            res.send({message: "record exists"});
+        } else {
+            connection.query('INSERT INTO user_tour set email = ?, tour_id = ?',[userId,tourId],function (err2,result2) {
+                err2 ? res.send({error: err}) : res.send({message: "record added!"});
+            });
+        }
+    });
+};

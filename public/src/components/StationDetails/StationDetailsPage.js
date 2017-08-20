@@ -103,7 +103,8 @@ class StationDetailsPage extends Component {
                                     {chosenStation.text}
                                 </Text>
                             </ScrollView>
-                        </CardView> : null
+                        </CardView> :
+                        <Text>Sorry! No Information at this point...</Text>
                     }
                 </View>
         );

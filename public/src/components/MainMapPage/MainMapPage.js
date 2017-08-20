@@ -241,7 +241,7 @@ class MainMapPage extends Component {
     }
 
     componentWillMount() {
-        this.getLocation();
+        //this.getLocation();
         this.props.store.getUserData();
         this.props.store.getAvailableTours();
     }
@@ -267,7 +267,7 @@ class MainMapPage extends Component {
     _handleBackPressExit() {
         Alert.alert(
             'Exit',
-            'Sure you want to exit?',
+            'Sure you wanna exit?',
             [
                 {text: 'Yes', onPress: () => BackAndroid.exitApp()},
                 {text: 'No', onPress: () => console.log('Cancel Exit'), style: 'cancel'},
