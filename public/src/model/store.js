@@ -57,6 +57,7 @@ class Store {
     };
     @observable tourReviews = [];
     @observable recommendedTours = [];
+    @observable selectedLanguage = 'EN';
 
     constructor() {
         this.setAppNavigator = this.setAppNavigator.bind(this);
@@ -77,6 +78,7 @@ class Store {
         this.getUserData = this.getUserData.bind(this);
         this.loginWithFacebook = this.loginWithFacebook.bind(this);
         this.loginWithGoogle = this.loginWithGoogle.bind(this);
+        this.changeSystemLanguage = this.changeSystemLanguage.bind(this);
         this.getFacebookUserData = this.getFacebookUserData.bind(this);
         this.setTourModalOpen = this.setTourModalOpen.bind(this);
         this.setStationModalOpen = this.setStationModalOpen.bind(this);
@@ -109,6 +111,7 @@ class Store {
                 FIRST_NAME: this.currentUser.firstName,
                 LAST_NAME: this.currentUser.lastName,
                 BIRTH_DATE: this.currentUser.birthDate,
+                LANGUAGE: this.currentUser.language,
                 LOGIN_TYPE: '1',
                 IMG: this.currentUser.img,
 
@@ -135,7 +138,12 @@ class Store {
                 this.accessToken = value;
                 this.loginType = FACEBOOK_LOGIN;
             }
-    });
+        });
+    }
+
+    @action changeSystemLanguage(lang) {
+        this.currentUser.language = lang;
+        this.selectedLanguage = lang;
     }
 
     initUser() {
@@ -145,6 +153,7 @@ class Store {
         this.currentUser.name='';
         this.currentUser.img = null;
         this.currentUser.birthDate = null;
+        this.currentUser.language = null;
     }
 
     @action logoutUser() {
@@ -209,6 +218,7 @@ class Store {
                     lastName: result.last_name,
                     email: result.email,
                     birthDate: result.birthday,
+                    language: "EN",
                 };
                 AsyncStorage.setItem('token', this.accessToken);
                 this.sendFacebookLoginDataToServer()

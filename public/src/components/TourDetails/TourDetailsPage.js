@@ -223,7 +223,10 @@ class TourDetailsPage extends Component {
                             {chosenTour.description}
                         </Text>
                     </ScrollView>
-                    <Button onPress={() => this.startTour()} title="Start Tour" style={styles.btn}/>
+                    { this.props.selectedLanguage == "HE" ?
+                        <Button onPress={() => this.startTour()} title="התחל סיור" style={styles.btn}/> :
+                        <Button onPress={() => this.startTour()} title="Start Tour" style={styles.btn}/>
+                    }
                 </View>
             </View>
         );
