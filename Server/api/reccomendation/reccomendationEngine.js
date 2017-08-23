@@ -77,10 +77,11 @@ exports.updateTourProfile=function (tour) {
         function (err, rows, fields) {
         if(!err)
         {
-        if(rows.userNum > 5)
+           // console.log("number of records:"+rows[0].userNum);
+        if(rows[0].userNum > 5)
         {
-            connection.query('SELECT usrP.category,avg(usrP.rating) from user_profile usrP where usrP.user_id in(' +
-                'select usrT.user_id from user_tour usrT where usrT.tour_id = ?) group by usrP.category order by category',tour,
+            connection.query('SELECT usrP.category_id,avg(usrP.rating) as rating from user_profile usrP where usrP.user_id in(' +
+                'select usrT.email from user_tour usrT where usrT.tour_id = ?) group by usrP.category_id order by usrP.category_id',tour,
                 function (err1, rows1, fields1) {
                     if (!err1) {
                        //delete old ratings
@@ -91,15 +92,22 @@ exports.updateTourProfile=function (tour) {
                         }
                         else
                         {
-                            //insert new ratings
-                            connection.query('INSERT INTO tour_profile values?',rows1,function (insertError,insertResult) {
+                            let myMatrix = new Array();
+                            rows1.map(row =>{
+                                let profile = [parseInt(tour),row.category_id,row.rating];
+                                myMatrix.push(profile);}
+                            )
+
+                            console.log(myMatrix);
+                            connection.query('INSERT INTO tour_profile(tour_id,category_id,rating) VALUES ?',[myMatrix],function (insertError,insertResult) {
                                 if(insertError)
                                 {
                                     console.log(insertError);
                                 }
                                 else
                                 {
-                                    console.log("effected rows:"+ insertResult.affectedRows);
+                                    //console.log("effected rows:"+ insertResult.affectedRows);
+                                    db.closeDB(connection);
                                 }
 
                             });
@@ -112,25 +120,29 @@ exports.updateTourProfile=function (tour) {
                     }
                 });
         }
+        else
+        {
+            db.closeDB(connection);
+        }
         }
         else
         {console.log(err)}}
         );
 
-    db.closeDB(connection);
   //get all users that took this tour and get their taste profile
 };
 
 exports.updateUserProfile=function (user) {
     var connection = db.initDB();
-    connection.query('SELECT count(*) as tourNum from user_tour where user_id = ? ',user,
+    connection.query('SELECT count(*) as tourNum from user_tour where email = ? ',user,
         function (err, rows, fields) {
             if(!err)
             {
-                if(rows.userNum > 5)
+               // console.log("number of records " +rows[0].tourNum )
+                if(rows[0].tourNum > 3)
                 {
-                    connection.query('SELECT tourP.category,avg(tourP.rating) from tour_profile tourP where tourP.tour_id in(' +
-                        'select usrT.tour_id from user_tour usrT where usrT.user_id = ?) group by tourP.category order by category',user,
+                    connection.query('SELECT tourP.category_id,avg(tourP.rating) as rating from tour_profile tourP where tourP.tour_id in(' +
+                        'select usrT.tour_id from user_tour usrT where usrT.email = ?) group by tourP.category_id order by tourP.category_id',user,
                         function (err1, rows1, fields1) {
                             if (!err1) {
                                 //delete old ratings
@@ -141,15 +153,23 @@ exports.updateUserProfile=function (user) {
                                     }
                                     else
                                     {
+                                        let myMatrix = new Array();
+                                        rows1.map(row =>{
+                                            let profile = [user,row.category_id,row.rating];
+                                            myMatrix.push(profile);}
+                                            )
+
+                                        console.log(myMatrix);
                                         //insert new ratings
-                                        connection.query('INSERT INTO user_profile values?',rows1,function (insertError,insertResult) {
+                                        connection.query('INSERT INTO user_profile values ?',[myMatrix],function (insertError,insertResult) {
                                             if(insertError)
                                             {
                                                 console.log(insertError);
                                             }
                                             else
                                             {
-                                                console.log("effected rows:"+ insertResult.affectedRows);
+
+                                                db.closeDB(connection);
                                             }
 
                                         });
@@ -162,12 +182,16 @@ exports.updateUserProfile=function (user) {
                             }
                         });
                 }
+                else
+                {
+                    db.closeDB(connection);
+                }
             }
             else
             {console.log(err)}}
     );
 
-    db.closeDB(connection);
+
     //get all users that took this tour and get their taste profile
 };
 
@@ -279,7 +303,6 @@ function calcSquertDistance(ratings) {
 function getTourDetails(tour,connection)
 {
     const query = 'SELECT id,name,img,duration FROM tour WHERE ID = ?';
-    console.log('sdasdas');
     connection.query(query,[tour.tour],function(err,rows)
     {
         if (err)
@@ -289,7 +312,6 @@ function getTourDetails(tour,connection)
         }
         else
         {
-            console.log('sdasdas2');
             JSON.stringify(rows);
             return ({name:rows[0].name,img:rows[0].img,duration:rows[0].duration,distance:2});
         }
