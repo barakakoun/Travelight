@@ -10,4 +10,5 @@ const bodyparser = require('body-parser');
 const router = express.Router();
 
 router.get('/:tourId',controller.getTourReviews);
+router.post('/create',controller.addReviewToTour);
 module.exports = router;

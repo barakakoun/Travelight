@@ -1,14 +1,16 @@
 import React, {Component} from 'react';
 import Modal from 'react-native-modalbox';
-import {Avatar, Icon, Divider} from 'react-native-material-design';
+import {Avatar, Divider, Icon} from 'react-native-material-design';
 import {Button} from 'react-native-vector-icons/FontAwesome';
-import Sound from 'react-native-sound';
 import {
     Text,
     StyleSheet,
     View,
     Image,
+    Navigator,
     Dimensions,
+    TouchableOpacity,
+    Alert,
 } from 'react-native';
 import {observer} from 'mobx-react/native';
 const { width } = Dimensions.get('window');
@@ -36,38 +38,55 @@ class StationModel extends Component {
         }
     }
 
-    loadAudioIcon() {
-        const {chosenStation} = this.props.store;
-         if(chosenStation.audio)
-        {
-            return (<Icon name="audiotrack" color="rgba(0,0,0,.9)" size={45}/>);
-        }
+    // loadAudioIcon() {
+    //     const {chosenStation} = this.props.store;
+    //      if(chosenStation.audio)
+    //     {
+    //         return (<Icon name="audiotrack" color="rgba(0,0,0,.9)" size={45}/>);
+    //     }
+    //
+    // }
 
-    }
+    // loadInfoIcon() {
+    //     const {chosenStation} = this.props.store;
+    //     // if(chosenStation.info)
+    //     if(true)
+    //     {
+    //         return (
+    //             //<Icon.Button name="info-circle" backgroundColor="#3b5998" onPress={this.barakFunction}>
+    //             //</Icon.Button>
+    //             <Icon name="info" style={styles.info} color="rgba(0,0,0,.9)" size={45}/>
+    //     );
+    //     }
+    // }
 
-    loadInfoIcon() {
-        const {chosenStation} = this.props.store;
-        if(chosenStation.info)
-        {
-            return (<Icon name="info" style={styles.info} color="rgba(0,0,0,.9)" size={45}/>);
-        }
+    stationInfo() {
+        this.props.store.navigatorOpenStationDetails('StationDetailsPage', Navigator.SceneConfigs.FloatFromBottom);
+
     }
 
     render() {
         const {chosenStation} = this.props.store;
+        const rightForIcon = ((width - 300)/2);
+        const leftForText = ((width - 300)/2) + 40;
+
         if (!chosenStation) {
             return null;
         }
 
         //const url = 'http://lacavewebradio.chickenkiller.com:8000/stream.mp3';
-        this.props.store.setAudio();
         return (
-            <Modal style={[styles.modal, styles.modelStation]} backdrop={true}  backButtonClose={true} swipeToClose={false} transparent={true}
+            <Modal style={styles.modal} backdrop={true}  backButtonClose={true} swipeToClose={false} transparent={true}
                    backdropOpacity={0.5} onClosed={()=>this.closeModal()} ref="modalStation">
                 <View style={styles.container} >
-                    {this.loadInfoIcon()}
-                    <View style={styles.name}>
-                        <Text style={styles.text}>{chosenStation.name}</Text>
+
+                    <View style={[styles.name, {paddingLeft:rightForIcon, paddingRight:leftForText }]}>
+                        <Text style={[styles.text, {}]}>{chosenStation.name}
+                        </Text>
+                        <TouchableOpacity style={{position: 'absolute', flex: 1, justifyContent: 'center', right: rightForIcon, backgroundColor: '#dae7fe', height: 60}}
+                                          onPress={() => this.stationInfo()}>
+                            <Icon name="info" color="rgba(0,0,0,.9)" size={40} />
+                        </TouchableOpacity>
                     </View>
                     <Swiper style={{marginTop: 60, marginBottom: 10}}
                             height={280}
@@ -85,11 +104,14 @@ class StationModel extends Component {
                                         resizeMode='stretch'
                                         style={styles.image}
                                         source={{uri: image.toString()}}
-                                    />
+                                    >
+
+                                    </Image>
                                 </View>
                             ))
                         }
                     </Swiper>
+
                     <Divider style={{ marginBottom: 10 }}/>
                     { /* <View style={styles.icons}>
                         {this.loadInfoIcon()}
@@ -97,17 +119,17 @@ class StationModel extends Component {
                     </View> */ }
                     {chosenStation.audio ?
                     <View style={styles.player}>
-                        <Button name="reply" color="rgba(0,0,0,.9)" backgroundColor="rgba(255,255,255,0.5)" size={45} onPress={()=>{
+                        <Button name="reply" color="rgba(0,0,0,.9)" backgroundColor="#dae7fe" size={45} onPress={()=>{
                             this.props.store.stopAudio();
                             this.props.store.playAudio();
                         }}/>
-                        <Button name="play" color="rgba(0,0,0,.9)" backgroundColor="rgba(255,255,255,0.5)" size={45} onPress={()=>{
+                        <Button name="play" color="rgba(0,0,0,.9)" backgroundColor="#dae7fe" size={45} onPress={()=>{
                             this.props.store.playAudio();
                         }}/>
-                        <Button name="pause" color="rgba(0,0,0,.9)" backgroundColor="rgba(255,255,255,0.5)" size={45} onPress={()=>{
+                        <Button name="pause" color="rgba(0,0,0,.9)" backgroundColor="#dae7fe" size={45} onPress={()=>{
                              this.props.store.pauseAudio();
                         }}/>
-                        <Button name="stop" color="rgba(0,0,0,.9)" backgroundColor="rgba(255,255,255,0.5)" size={45} onPress={()=>{
+                        <Button name="stop" color="rgba(0,0,0,.9)" backgroundColor="#dae7fe" size={45} onPress={()=>{
                               this.props.store.stopAudio();
                         }}/>
                     </View> : null
@@ -120,12 +142,11 @@ class StationModel extends Component {
 const styles = StyleSheet.create({
     modal: {
         justifyContent: 'center',
-        alignItems: 'center'
-    },
-    modelStation:{
+        alignItems: 'center',
+        borderRadius: 5,
         height: 400,
-        width: 300,
-        backgroundColor: "rgba(255,255,255,1)"
+        width: 310,
+        backgroundColor: "#dae7fe"
     },
     container: {
         flex: 1,
@@ -146,7 +167,8 @@ const styles = StyleSheet.create({
     },
     name:{
         flex: 1,
-        justifyContent:'flex-start',
+        height: 60,
+        justifyContent:'center',
         alignItems:'center'
     },
     text: {

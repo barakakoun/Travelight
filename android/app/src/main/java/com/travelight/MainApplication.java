@@ -13,6 +13,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.modules.i18nmanager.I18nUtil;
+import com.reactlibrary.RNCardViewPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +37,8 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new RNSoundPackage(),
              new FBSDKPackage(mCallbackManager),
-            new MapsPackage()
+            new MapsPackage(),
+			new RNCardViewPackage()
       );
     }
   };

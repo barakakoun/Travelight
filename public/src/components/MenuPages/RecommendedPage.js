@@ -8,11 +8,10 @@ import {
     StyleSheet,
     TouchableOpacity,
     BackAndroid,
-    DrawerLayoutAndroid,
     Dimensions,
     ScrollView
 } from 'react-native';
-import { Toolbar as MaterialToolbar, Icon, Avatar, Card } from 'react-native-material-design';
+import { Toolbar as MaterialToolbar, Icon, Card, Divider } from 'react-native-material-design';
 import SideNavigation from '../Navigation/SideNavigation';
 import {observer} from 'mobx-react/native';
 
@@ -24,9 +23,7 @@ import comingsoon from '../../../assets/comingsoon.png';
 class RecommendedPage extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            drawer: null
-        };
+
         this.goToTourDetails = this.goToTourDetails.bind(this);
         this._handleBackPress = this._handleBackPress.bind(this);
 
@@ -36,52 +33,12 @@ class RecommendedPage extends Component {
         this.props.store.navigatorOpenTourModal('TourDetailsPage', Navigator.SceneConfigs.FloatFromBottom);
     }
 
-    openDrawer() {
-        this.setState({
-            drawerOpen: true
-        });
-        console.log("drawer listener added");
-        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
-    }
-
-    closeDrawer() {
-        this.setState({
-            drawerOpen: false
-        });
-        console.log("drawer listener removed");
-        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
-    }
-
-    _handleBackPressInDrawer() {
-        if (this.state.drawerOpen) {
-            this.closeDrawer();
-            this.state.drawer.closeDrawer();
-            return true;
-        }
-        return false;
-    }
-
-    onOpenBurger(e) {
-        this.state.drawer.openDrawer();
-    }
-
-    setDrawer = (drawer) => {
-        this.setState({
-            drawer
-        });
-    };
-
-    PushToNavigator(id) {
-        this.props.store.navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft);
-    }
-
     _handleBackPress() {
         this.props.store.navigatorPop();
         return true;
     }
 
     componentDidMount() {
-        this.props.store.getRecommendedTours();
         BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
     }
 
@@ -101,31 +58,18 @@ class RecommendedPage extends Component {
     }
 
     renderScene(route, navigator) {
-        const { navigatorOpenDrawer,
-                currentUser,
+        const { currentUser,
                 recommendedTours,
                 onRecommendedTourPress
                 } = this.props.store;
         return (
-            <DrawerLayoutAndroid
-                onDrawerOpen={this.openDrawer.bind(this)}
-                onDrawerClose={this.closeDrawer.bind(this)}
-                drawerWidth={200}
-                drawerPosition={DrawerLayoutAndroid.positions.Left}
-                renderNavigationView={() => <SideNavigation
-                    store={this.props.store}
-                    navigator={navigator}
-                    onChangeScene={(id) => {navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft)}}
-                />}
-                ref={(drawer) => { !this.state.drawer ? this.setDrawer(drawer) : null }}>
-                <ScrollView  style={styles.container}>
-                    <MaterialToolbar title={'Recommended for you'}
-                                     primary={'googleBlue'}
-                                     icon="menu"
-                                     onIconPress={this.onOpenBurger.bind(this)}/>
-                    <Text style={styles.title}>Hello {currentUser.firstName},</Text>
-                    <Text style={styles.text}>Here are some tours we think are perfect for you</Text>
-                    <View style={styles.oneUnderOne}>
+            <View style={styles.container}>
+                <MaterialToolbar title={'Recommended for you'}
+                                 primary={'googleBlue'}/>
+                <Text style={styles.text}>Here are some tours we believe would be perfect for you!</Text>
+                <Divider style={{ marginBottom: 2 }}/>
+                <ScrollView  >
+                    <View style={[styles.oneUnderOne, {paddingBottom:80}]}>
                         { recommendedTours.map((tour, index) => (
                             <TouchableOpacity key={index} onPress={() => onRecommendedTourPress(tour, Navigator.SceneConfigs.FloatFromBottom)}>
                                 <Card key={index}>
@@ -133,7 +77,7 @@ class RecommendedPage extends Component {
                                         image={<Image source={{uri: tour.img}} />}
                                         overlay
                                     >
-                                        <Text style={{fontSize: 30, color: 'white'}}>{tour.name}</Text>
+                                        <Text style={{fontSize: 26, color: 'white'}}>{tour.name}</Text>
                                     </Card.Media>
                                     <Card.Body style={styles.oneByOne}>
                                         <View style={styles.twoSides}>
@@ -154,7 +98,7 @@ class RecommendedPage extends Component {
                         ))}
                     </View>
                 </ScrollView>
-            </DrawerLayoutAndroid>
+            </View>
         );
     }
 }
@@ -179,7 +123,8 @@ var NavigationBarRouteMapper = {
 
 const styles = StyleSheet.create({
     text: {
-        fontSize: 20,
+        marginTop: 60,
+        fontSize: 14,
         color: 'black',
         marginLeft: 4 ,
     },

@@ -30,18 +30,17 @@ class TourDetailsModal extends Component {
     }
 
     render() {
-        var {chosenTour} = this.props.store;
+        const {chosenTour} = this.props.store;
         if (!chosenTour) {
             return null;
         }
         return (
-
             <Modal style={[styles.modal, styles.modalTourDetails]} backdrop={false} backButtonClose={true}
                    position={"bottom"} ref="modalTourDetails"
                    onClosed={this.props.onModalTourDetailsClosed.bind(this)}>
-                <TouchableHighlight underlayColor="white" onPress={this.props.goToTourDetails.bind(this)}>
+                <TouchableHighlight underlayColor="#dae7fe" onPress={this.props.goToTourDetails.bind(this)}>
                     <View style={[styles.modal, styles.modal2]}>
-                <Image resizeMode='cover' style={styles.img} source={{uri:chosenTour.img}}/>
+                        <Image resizeMode='cover' style={styles.img} source={{uri:chosenTour.img}}/>
                         <Text style={styles.text}>
                             {"\n"}
                             {chosenTour.name}
@@ -70,10 +69,10 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     modalTourDetails: {
-        height: 200,
-        backgroundColor: "white",
-        // borderTopColor: "#4286f5",
-        //borderTopWidth: 6
+        height: 250,
+        backgroundColor: "#dae7fe",
+        borderTopColor: "#4286f5",
+        borderTopWidth: 6
     },
     text: {
         color: "black",
@@ -84,7 +83,9 @@ const styles = StyleSheet.create({
         width: 300,
         height: 130,
         backgroundColor: "white",
-        marginTop: 10
+        marginTop: 10,
+        borderWidth: 2,
+        borderColor: '#4286f5'
     },
     // btn: {
     //     margin: 10,

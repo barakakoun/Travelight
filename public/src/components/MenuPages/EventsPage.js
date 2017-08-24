@@ -5,13 +5,14 @@ import {
     Text,
     Image,
     Navigator,
+    Alert,
     StyleSheet,
     TouchableOpacity,
     BackAndroid,
-    DrawerLayoutAndroid,
-    Dimensions
+    Dimensions,
+    ScrollView,
 } from 'react-native';
-import { Toolbar as MaterialToolbar, Icon,Avatar } from 'react-native-material-design';
+import { Toolbar as MaterialToolbar, Divider,Card } from 'react-native-material-design';
 import SideNavigation from '../Navigation/SideNavigation';
 import {observer} from 'mobx-react/native';
 
@@ -23,45 +24,33 @@ import comingsoon from '../../../assets/comingsoon.png';
 class EventsPage extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            drawer: null
-        };
-    }
-    openDrawer() {
-        this.setState({
-            drawerOpen: true
-        });
-        console.log("drawer listener added");
-        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+
+        this._handleBackPress = this._handleBackPress.bind(this);
+
+        this.props.store.getCityEvents();
     }
 
-    closeDrawer() {
-        this.setState({
-            drawerOpen: false
-        });
-        console.log("drawer listener removed");
-        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+    _handleBackPress() {
+        this.props.store.navigatorPop();
+        return true;
     }
 
-    _handleBackPressInDrawer() {
-        if (this.state.drawerOpen) {
-            this.closeDrawer();
-            this.state.drawer.closeDrawer();
-            return true;
-        }
-        return false;
+    componentDidMount() {
+        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
     }
-    onOpenBurger(e) {
-        this.state.drawer.openDrawer();
+
+    componentWillUnmount() {
+        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPress);
     }
-    setDrawer = (drawer) => {
-        this.setState({
-            drawer
+
+    onEventPress(url) {
+        this.props.store.appNavigator.push({
+            id: 'EventWebView',
+            url: url
         });
-    };
-    PushToNavigator(id) {
-        this.props.store.navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft);
     }
+
+
     render() {
         //const {appNavigator} = this.props.store;
         return (
@@ -73,32 +62,36 @@ class EventsPage extends Component {
     }
 
     renderScene(route, navigator) {
-        const { navigatorOpenDrawer } = this.props.store;
+        const { cityEvents } = this.props.store;
 
         return (
-            <DrawerLayoutAndroid
-                onDrawerOpen={this.openDrawer.bind(this)}
-                onDrawerClose={this.closeDrawer.bind(this)}
-                drawerWidth={200}
-                drawerPosition={DrawerLayoutAndroid.positions.Left}
-                renderNavigationView={() => <SideNavigation
-                    store={this.props.store}
-                    navigator={navigator}
-                    onChangeScene={(id) => {navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft)}}
-                />}
-                ref={(drawer) => { !this.state.drawer ? this.setDrawer(drawer) : null }}>
-            <View  style={styles.container}>
-                <MaterialToolbar title={'Event Page'}
-                                 primary={'googleBlue'}
-                                 icon="menu"
-                                 onIconPress={this.onOpenBurger.bind(this)}/>
-                <Image
-                    resizeMode='stretch'
-                    style={styles.image}
-                    source={comingsoon}
-                />
+            <View style={styles.container}>
+                <MaterialToolbar title={'Events Near You'}
+                                 primary={'googleBlue'}/>
+                <Text style={styles.text}>Here are some events which happens around you</Text>
+                <Divider style={{ marginBottom: 2 }}/>
+                <ScrollView>
+                    <View style={[styles.oneUnderOne, {paddingBottom:80}]}>
+                        { cityEvents.map((event, index) => (
+                            <TouchableOpacity key={index} onPress={() => this.onEventPress(event.url)}>
+                                <Card key={index}>
+                                    <Card.Media
+                                        image={<Image source={{uri: event.img}} />}
+                                        overlay
+                                    >
+                                        <Text style={{fontSize: 30, color: 'white'}}>{event.name}</Text>
+                                    </Card.Media>
+                                    <Card.Body style={styles.oneByOne}>
+                                        <Text>
+                                            {event.description}
+                                        </Text>
+                                    </Card.Body>
+                                </Card>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                </ScrollView>
             </View>
-            </DrawerLayoutAndroid>
         );
     }
 }
@@ -130,7 +123,10 @@ var NavigationBarRouteMapper = {
 
 const styles = StyleSheet.create({
     text: {
-        fontSize: 16,
+        marginTop: 60,
+        fontSize: 14,
+        color: 'black',
+        marginLeft: 4 ,
     },
     image: {
         width,
@@ -138,13 +134,23 @@ const styles = StyleSheet.create({
         flex: 1
     },
     container: {
-        backgroundColor: '#FFFFFF',
-        flex: 1,
-        justifyContent: 'flex-end',
+        backgroundColor: '#FFFFFF'
     },
     toolbar: {
         backgroundColor: '#e9eaed',
         height: 56,
+    },
+    oneUnderOne: {
+        // backgroundColor: '#5592f4',
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'flex-start'
+    },
+    oneByOne: {
+        flex:1,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start'
     },
 });
 

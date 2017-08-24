@@ -8,56 +8,35 @@ import {
     StyleSheet,
     TouchableOpacity,
     BackAndroid,
-    DrawerLayoutAndroid,
+    ScrollView,
+    Button,
 } from 'react-native';
-import { Toolbar as MaterialToolbar, Icon, Avatar } from 'react-native-material-design';
-import SideNavigation from '../Navigation/SideNavigation';
+import { Toolbar as MaterialToolbar, Avatar, Icon, Card, CheckboxGroup, Checkbox } from 'react-native-material-design';
 import {observer} from 'mobx-react/native';
+import CardView from 'react-native-cardview';
+import ScrollableTabView, { DefaultTabBar, } from 'react-native-scrollable-tab-view';
+
 
 @observer
 class UserPage extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            drawer: null
-        };
-    }
-    openDrawer() {
-        this.setState({
-            drawerOpen: true
-        });
-        console.log("drawer listener added");
-        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+
+        this._handleBackPress = this._handleBackPress.bind(this);
     }
 
-    closeDrawer() {
-        this.setState({
-            drawerOpen: false
-        });
-        console.log("drawer listener removed");
-        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+    _handleBackPress() {
+        this.props.store.navigatorPop();
+        return true;
     }
 
-    _handleBackPressInDrawer() {
-        if (this.state.drawerOpen) {
-            this.closeDrawer();
-            this.state.drawer.closeDrawer();
-            return true;
-        }
-        return false;
-    }
-    onOpenBurger(e) {
-        this.state.drawer.openDrawer();
+    componentDidMount() {
+        // this.props.store.getHistoryTours();
+        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
     }
 
-    setDrawer = (drawer) => {
-        this.setState({
-            drawer
-        });
-    };
-
-    PushToNavigator(id) {
-        this.props.store.navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft);
+    componentWillUnmount() {
+        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPress);
     }
 
     render() {
@@ -70,38 +49,96 @@ class UserPage extends Component {
     }
 
     renderScene(route, navigator) {
-        const { currentUser } = this.props.store;
-        const { navigatorOpenDrawer } = this.props.store;
+        const { currentUser,
+                historyTours,
+                onRecommendedTourPress
+                } = this.props.store;
 
         return (
-            <DrawerLayoutAndroid
-                onDrawerOpen={this.openDrawer.bind(this)}
-                onDrawerClose={this.closeDrawer.bind(this)}
-                drawerWidth={200}
-                drawerPosition={DrawerLayoutAndroid.positions.Left}
-                renderNavigationView={() => <SideNavigation
-                    store={this.props.store}
-                    navigator={navigator}
-                    onChangeScene={(id) => {navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft)}}
-                />}
-                ref={(drawer) => { !this.state.drawer ? this.setDrawer(drawer) : null }}>
                 <View style={styles.container}>
                     <MaterialToolbar title={'User Page'}
-                                 primary={'googleBlue'}
-                                 icon="menu"
-                                 onIconPress={this.onOpenBurger.bind(this)}/>
-                    <View style={styles.userphoto}>
-                        <Avatar size={150} image={<Image source={{uri:currentUser.img}}/>} />
-                    </View>
-                    <View style={styles.userform}>
-                        <Text style={{color: 'white', fontSize: 24,}}> First Name : {currentUser.firstName}</Text>
-                        <Text style={{color: 'white', fontSize: 24,}}> Last Name : {currentUser.lastName}</Text>
-                        <Text style={{color: 'white', fontSize: 24,}}> Email : {currentUser.email}</Text>
-                    </View>
+                                 primary={'googleBlue'}>
 
+                    </MaterialToolbar>
+
+                    <Image style={styles.userphoto}
+                           resizeMode='contain'
+                           source={{uri:currentUser.img}}>
+                    </Image>
+                    <Text style={{color:"white", fontSize: 20}}>{currentUser.firstName} {currentUser.lastName}</Text>
+
+                    <ScrollableTabView
+                        tabBarActiveTextColor="white"
+                        tabBarInactiveTextColor='rgba(255, 255, 255, 0.7)'
+                        tabBarUnderlineStyle={{backgroundColor:'rgba(255, 255, 255, 0.7)'}}
+                        style={[styles.container2, {marginTop:0}]}
+                        renderTabBar={()=><DefaultTabBar  />}
+                    >
+                        <ScrollView tabLabel='Details'  style={{backgroundColor:'rgba(255, 255, 255, 0.7)' }}>
+                            <View style={styles.userform}>
+                                <Text style={{color: 'white', fontSize: 24,}}> First Name : {currentUser.firstName}</Text>
+                                <Text style={{color: 'white', fontSize: 24,}}> Last Name : {currentUser.lastName}</Text>
+                                <Text style={{color: 'white', fontSize: 24,}}> Email : {currentUser.email}</Text>
+                            </View>
+
+                        </ScrollView>
+                        <ScrollView tabLabel='Tours History' style={{backgroundColor:'rgba(255, 255, 255, 0.7)' }}>
+                            <View style={[styles.oneUnderOne, {paddingBottom:80}]}>
+                                { historyTours.map((tour, index) => (
+                                    <TouchableOpacity key={index} onPress={() => onRecommendedTourPress(tour, Navigator.SceneConfigs.FloatFromBottom)}>
+                                        <Card key={index}>
+                                            <Card.Media
+                                                image={<Image source={{uri: tour.img}} />}
+                                                overlay
+                                            >
+                                                <Text style={{fontSize: 30, color: 'white'}}>{tour.name}</Text>
+                                            </Card.Media>
+                                            <Card.Body style={styles.oneByOne}>
+                                                <View style={styles.twoSides}>
+                                                    <View style={styles.oneByOne}>
+                                                        <Icon name="timer" color="#000000" style={styles.icon}/>
+                                                        <Text style={{fontSize: 18, color: "black"}}>
+                                                            {tour.duration}
+                                                        </Text>
+                                                    </View>
+                                                    <Text style={{fontSize: 15, color: 'black'}}>
+                                                        {tour.distance} Km
+                                                    </Text>
+                                                    <Icon name='directions-walk' color="#000000" style={styles.icon} />
+                                                </View>
+                                            </Card.Body>
+                                        </Card>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        </ScrollView>
+                        <ScrollView tabLabel='Interests' style={{backgroundColor:'rgba(255, 255, 255, 0.7)' }}>
+                            <CardView
+                                cardElevation={5}
+                                cardMaxElevation={5}
+                                cornerRadius={5}
+                                style={[styles.bubble, { padding: 5}]}>
+                                <CheckboxGroup
+                                    onSelect={(values) => { console.log(`${values} are currently selected`)}}
+                                    checked={[1, 3, 4]}
+                                    items={[{
+                                        value: 1, label: 'Sport'
+                                    }, {
+                                        value: 2, label: 'Art'
+                                    }, {
+                                        value: 3, label: 'Food'
+                                    }, {
+                                        value: 4, label: 'History'
+                                    }, {
+                                        value: 5, label: 'Night Life'
+                                    }, {
+                                        value: 6, label: 'Family'
+                                    }]}
+                                />
+                            </CardView>
+                        </ScrollView>
+                    </ScrollableTabView>
                 </View>
-
-            </DrawerLayoutAndroid>
         );
     }
 }
@@ -113,15 +150,28 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent:'center',
+        // flexDirection: 'column',
+        alignItems: 'center',
+        backgroundColor: "#3f82f7"
+    },
+    container2: {
+        flex: 1,
+        justifyContent:'center',
+        // color: "white"
+        // height: 500
     },
     toolbar: {
         backgroundColor: '#e9eaed',
         height: 56,
     },
     userphoto: {
-        flex: 1,
+        // flex: 1,
         justifyContent:'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 60,
+        width: 100,
+        height: 100,
+        borderRadius: 100
     },
     userform: {
         flex: 1,
@@ -132,6 +182,34 @@ const styles = StyleSheet.create({
     img: {
         height: '110',
         width: '110'
+    },
+    // icon: {
+    //     width: 300,
+    //     height: 300,
+    //     alignSelf: 'center',
+    // },
+    oneByOne: {
+        flex:1,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start'
+    },
+    twoSides: {
+        flex:1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start'
+    },
+    oneUnderOne: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'flex-start'
+    },
+    bubble:{
+        margin: 5,
+        backgroundColor: 'white',
+        borderRadius:10,
+        height: 400
     }
 });
 

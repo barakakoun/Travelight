@@ -24,7 +24,7 @@ class SplashPage extends Component {
             {
             navigatorReplace('LoginPage');
                 }
-        }, 1000);
+        }, 500);
     }
     render() {
 

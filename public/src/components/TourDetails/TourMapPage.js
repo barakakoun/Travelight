@@ -10,6 +10,7 @@ import {
     Alert,
     Button,
     BackAndroid,
+    Vibration,
 } from 'react-native';
 import MapView from 'react-native-maps';
 import StationModel from '../StationDetails/StationModel';
@@ -173,7 +174,7 @@ class TourMapPage extends Component {
         });
 
         // TODO: Change it!
-        if (minDistance <= 130000) {
+        if (minDistance <= 100) {
             tourStations[closestStation-1].isClosest = true;
         }
 
@@ -208,7 +209,7 @@ class TourMapPage extends Component {
         setTimeout(() => {
             // this.map.animateToRegion(this.props.store.currRegion, 1);
             this.map.fitToElements(true);
-        }, 200);
+        }, 500);
 
         BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
 
@@ -241,7 +242,6 @@ class TourMapPage extends Component {
         const {onStationPress} = this.props.store;
         const NavigationBarRouteMapper = {
             LeftButton(route, navigator, index, navState) {
-                Alert.alert("left button");
                 return (
                     <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
                                       onPress={() => this._handleBackPress()}>

@@ -6,6 +6,7 @@ import {
     Text,
     Navigator,
     Image,
+    BackAndroid,
 } from 'react-native';
 // import React, { Component, PropTypes, View, Text, Image } from 'react-native';
 
@@ -27,11 +28,6 @@ export default class SideNavigation extends Component {
         }
     }
 
-    componentWillMount()
-    {
-        this.props.store.getUserData();
-    }
-
     logout(){
         const { currentUser,
             navigatorReplace,
@@ -40,6 +36,11 @@ export default class SideNavigation extends Component {
         logoutUser();
         navigatorReplace('Exit');
     }
+
+    onItemPress(id) {
+        this.props.onChangeScene(id);
+    }
+
     render() {
         const { route } = this.state;
         const { currentUser,
@@ -48,13 +49,13 @@ export default class SideNavigation extends Component {
 
         return (
             <Drawer theme='light'>
-                <Drawer.Header backgroundColor='#4286f5' height={100}>
+                <Drawer.Header backgroundColor='#4286f5' height={140}>
                     <View style={styles.header}>
-                        <Avatar size={60}
+                        <Avatar size={70}
                                 image={<Image source={{uri:currentUser.img}}/>}
                         />
                         <Text style={[styles.text, COLOR.paperGrey50, TYPO.paperFontSubhead]}>
-                            {userFullName}
+                            Hello, {userFullName}
                         </Text>
                     </View>
                 </Drawer.Header>
@@ -64,8 +65,8 @@ export default class SideNavigation extends Component {
                         icon: 'face',
                         value: 'My Profile',
                         // active: !route || route === 'welcome',
-                        onPress: this.props.onChangeScene.bind(this, "UserPage"),
-                        onLongPress: this.props.onChangeScene.bind(this, "UserPage")
+                        onPress: this.onItemPress.bind(this, "UserPage"),
+                        onLongPress: this.onItemPress.bind(this, "UserPage")
                     }]}
                 />
                 <Divider style={{ marginTop: 8 }} />
@@ -75,15 +76,15 @@ export default class SideNavigation extends Component {
                         icon: 'thumb-up',
                         value: 'Recommended',
                         active: route === 'avatars',
-                        onPress: this.props.onChangeScene.bind(this, "RecommendedPage"),
-                        onLongPress: this.props.onChangeScene.bind(this, "RecommendedPage")
+                        onPress: this.onItemPress.bind(this, "RecommendedPage"),
+                        onLongPress: this.onItemPress.bind(this, "RecommendedPage")
                     }, {
                         icon: 'event',
                         value: 'Events',
                         active: route === 'buttons',
                         // label: '8',
-                        onPress: this.props.onChangeScene.bind(this, "EventsPage"),
-                        onLongPress: this.props.onChangeScene.bind(this, "EventsPage")
+                        onPress: this.onItemPress.bind(this, "EventsPage"),
+                        onLongPress: this.onItemPress.bind(this, "EventsPage")
                     }]}
                 />
                 <Divider style={{ marginTop: 8 }} />
@@ -96,16 +97,16 @@ export default class SideNavigation extends Component {
                             value: 'Settings',
                             // label: '10',
                             active: route === 'checkboxes',
-                            onPress: this.props.onChangeScene.bind(this, "SettingsPage"),
-                            onLongPress: this.props.onChangeScene.bind(this, "SettingsPage")
+                            onPress: this.onItemPress.bind(this, "SettingsPage"),
+                            onLongPress: this.onItemPress.bind(this, "SettingsPage")
                         },
                         {
                             icon: 'import-contacts',
                             value: 'About',
                             // label: '10',
                             active: route === 'dividers',
-                            onPress: this.props.onChangeScene.bind(this, "AboutPage"),
-                            onLongPress: this.props.onChangeScene.bind(this, "AboutPage")
+                            onPress: this.onItemPress.bind(this, "AboutPage"),
+                            onLongPress: this.onItemPress.bind(this, "AboutPage")
                         },
                         {
                             icon: 'exit-to-app',
@@ -127,12 +128,13 @@ export default class SideNavigation extends Component {
 const styles = {
     header: {
         paddingTop: 16,
+        marginBottom: 10,
         flex:1,
         justifyContent: 'center',
         alignItems: 'center'
     },
     text: {
-        marginTop: 0
+        marginTop: 15
     },
     barak: {
         backgroundColor: '#e9eaed'

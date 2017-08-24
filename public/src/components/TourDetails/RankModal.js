@@ -42,8 +42,15 @@ class RankModal extends Component {
 
     submitRate() {
         // TODO: call function(tourKeyForRanking, this.userTourRate, this.text)
+        this.props.store.addRank(this.userTourRate, this.text);
         this.refs.modalRank.close();
     }
+
+    onStarRatingPress(ranking) {
+        this.isText = true;
+        this.userTourRate = ranking;
+    }
+
 
     render() {
 
@@ -67,7 +74,7 @@ class RankModal extends Component {
                             isActive={true}
                             rateMax={5}
                             isHalfStarEnabled={true}
-                            onStarPress={() => this.isText=true}
+                            onStarPress={(rating) => this.onStarRatingPress(rating)}
                             rate={this.userTourRate}
                             size={55}
                         />
@@ -75,20 +82,24 @@ class RankModal extends Component {
                         {/*<Text style={{padding: 10, fontSize: 42}}>*/}
                             {/*{this.text.split(' ').map((word) => word && '🍕').join(' ')}*/}
                         {/*</Text>*/}
+                        {
+                            this.userTourRate ?
+                                <TextInput
+                                    style={{width:280, fontSize: 16}}
+                                    placeholder="Tell us what you think.."
+                                    onChangeText={(text) => this.text = text}
+                                    editable={this.isText}
+                                    multiline = {true}
+                                    numberOfLines = {4}
+                                /> :
+                                null
+                        }
 
-                        <TextInput
-                            style={{width:280, fontSize: 16}}
-                            placeholder="Tell us what you think.."
-                            onChangeText={(text) => this.text = text}
-                            editable={this.isText}
-                            multiline = {true}
-                            numberOfLines = {4}
-                        />
                     </View>
                 <View>
                     <Button
-                        style={{marginBottom:10}}
-                        title="Submit"
+                        style={{marginBottom:15}}
+                        title="Send"
                         color="#4285f4"
                         raised={true}
                         onPress={()=>this.submitRate()}/>
@@ -103,7 +114,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: "grey"
+        borderColor: "grey",
+        paddingBottom: 15
     },
     modalRank:{
         height: 280,

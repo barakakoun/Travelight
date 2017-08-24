@@ -10,17 +10,20 @@ import {
     BackAndroid,
 } from 'react-native';
 
-import MainMapPage from './public/src/components/MainMapPage/MainMapPage';
-import TourMapPage from './public/src/components/TourDetails/TourMapPage';
-import SplashPage from './public/src/components/Login/SplashPage';
-import LoginPage from './public/src/components/Login/LoginPage';
-import TourDetailsPage from './public/src/components/TourDetails/TourDetailsPage';
-import EventsPage from './public/src/components/MenuPages/EventsPage';
-import RecommendedPage from './public/src/components/MenuPages/RecommendedPage';
-import SettingsPage from './public/src/components/MenuPages/SettingsPage';
-import AboutPage from './public/src/components/MenuPages/AboutPage';
-import UserPage from './public/src/components/MenuPages/UserPage';
-import TourReviews from './public/src/components/TourReviews/TourReviews';
+import MainMapPage      from './public/src/components/MainMapPage/MainMapPage';
+import TourMapPage      from './public/src/components/TourDetails/TourMapPage';
+import SplashPage       from './public/src/components/Login/SplashPage';
+import LoginPage        from './public/src/components/Login/LoginPage';
+import TourDetailsPage  from './public/src/components/TourDetails/TourDetailsPage';
+import EventsPage       from './public/src/components/MenuPages/EventsPage';
+import RecommendedPage  from './public/src/components/MenuPages/RecommendedPage';
+import SettingsPage     from './public/src/components/MenuPages/SettingsPage';
+import AboutPage        from './public/src/components/MenuPages/AboutPage';
+import UserPage         from './public/src/components/MenuPages/UserPage';
+import EventWebView    from './public/src/components/MenuPages/EventWebView';
+import TourReviews      from './public/src/components/TourReviews/TourReviews';
+import StationDetailsPage from './public/src/components/StationDetails/StationDetailsPage';
+
 var nativeImageSource = require('nativeImageSource');
 
 import Store from './public/src/model/store';
@@ -80,6 +83,10 @@ export default class travelight extends Component {
                 style={{backgroundColor:'#91b6f2'}}
                 configureScene={(route) => {
             if (route.configureScene) {
+                {/*console.warn(route.id);*/}
+                if ((route.id=="UserPage") || (route.id=="RecommendedPage") || (route.id=="EventsPage") || (route.id=="EventWebView")){
+                    return {...route.configureScene,gestures: false};
+                }
               return route.configureScene;
             }
             return Navigator.SceneConfigs.FloatFromRight;
@@ -130,9 +137,20 @@ export default class travelight extends Component {
                     navigator={Store.appNavigator}
                     store={Store} />;
             }
+            if (routeId === 'StationDetailsPage') {
+                contentView = <StationDetailsPage
+                    navigator={Store.appNavigator}
+                    store={Store} />;
+            }
             if (routeId === 'EventsPage') {
                 contentView = <EventsPage
                     navigator={Store.appNavigator}
+                    store={Store} />;
+            }
+            if (routeId === 'EventWebView') {
+                contentView = <EventWebView
+                    navigator={Store.appNavigator}
+                    url={route.url}
                     store={Store} />;
             }
             if (routeId === 'RecommendedPage') {

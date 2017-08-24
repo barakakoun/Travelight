@@ -9,7 +9,6 @@ import {
     StyleSheet,
     TouchableOpacity,
     BackAndroid,
-    DrawerLayoutAndroid,
     Dimensions
 } from 'react-native';
 import { Toolbar as MaterialToolbar, Icon,Avatar } from 'react-native-material-design';
@@ -24,44 +23,21 @@ import comingsoon from '../../../assets/comingsoon.png';
 class SettingsPage extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            drawer: null
-        };
-    }
-    openDrawer() {
-        this.setState({
-            drawerOpen: true
-        });
-        console.log("drawer listener added");
-        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+
+        this._handleBackPress = this._handleBackPress.bind(this);
     }
 
-    closeDrawer() {
-        this.setState({
-            drawerOpen: false
-        });
-        console.log("drawer listener removed");
-        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPressInDrawer.bind(this));
+    _handleBackPress() {
+        this.props.store.navigatorPop();
+        return true;
     }
 
-    _handleBackPressInDrawer() {
-        if (this.state.drawerOpen) {
-            this.closeDrawer();
-            this.state.drawer.closeDrawer();
-            return true;
-        }
-        return false;
+    componentDidMount() {
+        BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
     }
-    onOpenBurger(e) {
-        this.state.drawer.openDrawer();
-    }
-    setDrawer = (drawer) => {
-        this.setState({
-            drawer
-        });
-    };
-    PushToNavigator(id) {
-        this.props.store.navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft);
+
+    componentWillUnmount() {
+        BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPress);
     }
 
     render() {
@@ -77,20 +53,15 @@ class SettingsPage extends Component {
     }
 
     renderScene(route, navigator) {
+<<<<<<< HEAD
         const { navigatorOpenDrawer, selectedLanguage } = this.props.store;
+=======
+>>>>>>> 8fd9912e68d160a3a9933a554b4711d64067a5d4
 
         return (
-            <DrawerLayoutAndroid
-                drawerWidth={200}
-                drawerPosition={DrawerLayoutAndroid.positions.Left}
-                renderNavigationView={() => <SideNavigation
-                    store={this.props.store}
-                    navigator={navigator}
-                    onChangeScene={(id) => {navigatorOpenDrawer(id, Navigator.SceneConfigs.SwipeFromLeft)}}
-                />}
-                ref={(drawer) => { !this.state.drawer ? this.setDrawer(drawer) : null }}>
             <View  style={styles.container}>
                 <MaterialToolbar title={'Settings'}
+<<<<<<< HEAD
                                  primary={'googleBlue'}
                                  icon="menu"
                                  onIconPress={this.onOpenBurger.bind(this)}/>
@@ -104,8 +75,15 @@ class SettingsPage extends Component {
                     <Picker.Item label="English" value="EN" />
                     <Picker.Item label="עברית" value="HE" />
                 </Picker>
+=======
+                                 primary={'googleBlue'}/>
+                <Image
+                    resizeMode='stretch'
+                    style={styles.image}
+                    source={comingsoon}
+                />
+>>>>>>> 8fd9912e68d160a3a9933a554b4711d64067a5d4
             </View>
-            </DrawerLayoutAndroid>
         );
     }
 }

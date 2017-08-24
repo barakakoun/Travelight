@@ -12,11 +12,14 @@ import { LATITUDE_DELTA,
          TYPE_IMAGE,
 } from "../../../Consts/variables";
 import { LOGINUSER,
+         TOURS_HISTORY,
          URL_TOURS_ENDPOINT,
          URL_REVIEWS_ENDPOINT,
          URL_RECOMMENDED_TOURS,
          URL_GET_TOUR_DETAILS,
          URL_RECOMMENDATION_CB,
+         URL_ADD_REVIEW,
+         URL_ADD_TOUR_USER,
        } from "../../../Consts/urls";
 import FBSDK from 'react-native-fbsdk';
 import React from 'react';
@@ -40,6 +43,7 @@ class Store {
     @observable chosenStation = null;
     @observable tourKeyForRanking = null;
     @observable tourStations = [];
+    @observable cityEvents = [];
     @observable counter = 0;
     @observable region = null;
     @observable currRegion = null;
@@ -57,7 +61,11 @@ class Store {
     };
     @observable tourReviews = [];
     @observable recommendedTours = [];
+<<<<<<< HEAD
     @observable selectedLanguage = 'EN';
+=======
+    @observable historyTours = [];
+>>>>>>> 8fd9912e68d160a3a9933a554b4711d64067a5d4
 
     constructor() {
         this.setAppNavigator = this.setAppNavigator.bind(this);
@@ -83,9 +91,9 @@ class Store {
         this.setTourModalOpen = this.setTourModalOpen.bind(this);
         this.setStationModalOpen = this.setStationModalOpen.bind(this);
         this.setRankModalOpen = this.setRankModalOpen.bind(this);
+        this.getCityEvents = this.getCityEvents.bind(this);
         this.getUserFromStorage = this.getUserFromStorage.bind(this);
         this.mapFacebookDataToUser.bind(this);
-        this.setAudio = this.setAudio.bind(this);
         this.playAudio = this.playAudio.bind(this);
         this.stopAudio = this.stopAudio.bind(this);
         this.pauseAudio = this.pauseAudio.bind(this);
@@ -97,11 +105,13 @@ class Store {
         this.getTourReviews = this.getTourReviews.bind(this);
         this.getRecommendedTours = this.getRecommendedTours.bind(this);
         this.onRecommendedTourPress = this.onRecommendedTourPress.bind(this);
+        this.getHistoryTours = this.getHistoryTours.bind(this);
         this.mapStationsToScreen = this.mapStationsToScreen.bind(this);
     }
 
     sendFacebookLoginDataToServer(){
-        fetch(LOGINUSER,{method: 'POST',
+        fetch(LOGINUSER,
+            {method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -117,7 +127,6 @@ class Store {
 
             })}).then((response) => response.json())
             .then((responseJson) => {
-            console.warn("After facebook login");
             if(responseJson.message === massages.loginUserSucess)
             {
                 //this.navigatorReplace('MainMapPage');
@@ -166,15 +175,15 @@ class Store {
     }
 
     @action loginWithFacebook() {
-        LoginManager.logInWithReadPermissions(['public_profile','email'])
+        LoginManager.logInWithReadPermissions(['public_profile','email','user_birthday'])
             .then(result => {
-                console.warn(JSON.stringify(result, null, 3));
+                //console.warn(JSON.stringify(result, null, 3));
                 if (result.isCancelled) {
                     alert('Login was cancelled');
                 } else {
                     AccessToken.getCurrentAccessToken().then(
                         (data) => {
-                            console.warn(_.values(data));
+                            //console.warn(_.values(data));
                             this.loginType = FACEBOOK_LOGIN;
                             this.accessToken = data.accessToken;
                             this.navigatorReplace('MainMapPage');
@@ -279,6 +288,13 @@ class Store {
         });
     }
 
+    @action navigatorOpenStationDetails(screenId,configureScene ) {
+        this.appNavigator.push({
+            id: screenId,
+            configureScene: configureScene
+        });
+    }
+
     @action navigatorOpenDrawer(screenId, configureScene) {
         this.appNavigator.push({
             id: screenId,
@@ -298,7 +314,7 @@ class Store {
                     this.availableTours = result;
                 })
                 .catch(error => {
-                    console.warn(error);
+                    //console.warn(error);
                 });
         } else {
             this.availableTours = [
@@ -377,7 +393,7 @@ class Store {
                     this.tourStations = result.map(this.mapStationsToScreen);
                 })
                 .catch(error => {
-                    console.warn(error);
+                    //console.warn(error);
                 });
         } else {
             switch(this.chosenTour.key) {
@@ -693,6 +709,32 @@ class Store {
         this.isRankModalOpen = value;
     }
 
+    @action getCityEvents() {
+        var currEvents = [
+            {
+                key: 1,
+                name: "White night",
+                description: "A night when everybody stays awake and party!",
+                url: "http://www.mouse.co.il/special-events/1.3474650",
+                img: "http://img.mako.co.il/2010/06/27/IMG_0435c.jpg"
+            },{
+                key: 2,
+                name: "Food festival",
+                description: "Try and buy local food",
+                url: "http://food.nana10.co.il/Article/?ArticleID=1187583",
+                img: "http://cdn.be106.net/p/EF7848100fd4895.jpg"
+            },{
+                key: 2,
+                name: "Pride parade",
+                description: "The famous pride parade of TLV",
+                url: "http://www.maariv.co.il/news/israel/Article-587365",
+                img: "http://images1.ynet.co.il//PicServer4/2016/05/20/7016030/70160024941683640360no.jpg"
+            }
+        ];
+
+        this.cityEvents = currEvents;
+    }
+
     @action logOff() {
         this.currentUser = {
             img: "http://www.worldofbuzz.com/wp-content/uploads/2015/04/noprofilemale.gif?x82567",
@@ -701,9 +743,6 @@ class Store {
         this.loginTokens = null;
         this.accessToken = null;
         this.navigatorReplace('Exit');
-    }
-
-    @action setAudio(){
     }
 
     @action playAudio(){
@@ -781,7 +820,7 @@ class Store {
         fetch(url)
             .then(response => response.json())
             .then(result => {
-                console.warn(JSON.stringify(result,null,3));
+                //console.warn(JSON.stringify(result,null,3));
                 this.tourReviews = result;
             })
             .catch(error => {
@@ -790,13 +829,10 @@ class Store {
     }
 
     @action getRecommendedTours() {
-        console.warn("Recommended");
         const url = `${URL_RECOMMENDATION_CB}${this.currentUser.email}/ISRAEL`;
-        console.warn(url);
         fetch(url)
             .then(response => response.json())
             .then(result => {
-                console.warn(JSON.stringify(result, null ,3));
                 this.recommendedTours = result;
             })
             .catch(err => {console.warn("Error in getRecommendedTours " + err)});
@@ -804,18 +840,29 @@ class Store {
 
     @action onRecommendedTourPress(tour, configureScene) {
         const url = `${URL_GET_TOUR_DETAILS}${tour.key}`;
-        console.warn(url);
         fetch(url)
             .then(response => response.json())
             .then(result => {
-                console.warn(result);
                 this.chosenTour = result;
                 this.getTourStations();
+                //console.warn(JSON.stringify(this.chosenTour, null ,3));
                 this.appNavigator.push({
                     id: 'TourDetailsPage',
                     chosenTour: this.chosenTour,
                     configureScene: configureScene
                 });
+            })
+            .catch(err => console.warn(err))
+    }
+
+    @action getHistoryTours() {
+        const url = `${TOURS_HISTORY}${this.currentUser.email}`;
+        // console.warn(url);
+        fetch(url)
+            .then(response => response.json())
+            .then(result => {
+                // console.warn(JSON.stringify(result, null ,3));
+                this.historyTours = result;
             })
             .catch(err => console.warn(err))
     }
@@ -838,6 +885,61 @@ class Store {
             text: text ? text.data : null,
         }
     }
+
+    @action addRank(userRank, reviewText) {
+        const body = {
+            userId: this.currentUser.email,
+            rank: userRank,
+            reviewText,
+            tourId: this.chosenTour.key,
+        };
+
+        fetch(URL_ADD_REVIEW,
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            })
+            .then(response => response.json())
+            .then(response => {
+                if(response.status === '200') {
+
+                } else {
+                    console.warn(response.error);
+                }
+            })
+
+    }
+
+    @action addTourToUser() {
+        const body = {
+            userId: this.currentUser.email,
+            tourId: this.chosenTour.key
+        };
+
+        fetch(URL_ADD_TOUR_USER,
+            {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            })
+            .then(response => response.json())
+            .then(response => {
+                if(response.error) {
+                    console.warn(response.error);
+                } else {
+                    // console.warn(response.message);
+                }
+            })
+            .catch(err => console.warn(err));
+    }
+
 }
 
 const store = new Store();
