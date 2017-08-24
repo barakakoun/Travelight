@@ -5,7 +5,6 @@ var db = require('../database');
 var userConsts = require('../../../consts/user');
 var messages = require('../../../consts/messages');
 
-
 exports.toursHistory = function (req,res) {
     var email =  req.param('email');
     connection = db.initDB();
@@ -131,6 +130,4 @@ exports.loginUser = function (req,res) {
             res.send(messages.loginUserFailed);
             throw err;
         }});
-
-
 };

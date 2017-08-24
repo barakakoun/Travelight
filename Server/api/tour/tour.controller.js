@@ -234,7 +234,7 @@ exports.selectByCity= function (req,res) {
 
 exports.getStations = function (req,res) {
     const tourKey = req.param('tourId');
-    const query ='SELECT ts.station_number, s.name, s.latitude, s.longitude, s.image, si.type, si.data' +
+    const query ='SELECT ts.station_number, s.name, s.latitude, s.longitude, s.image, si.type, si.data, si.language' +
         ' FROM tour_station ts inner join station s on  s.id = ts.station_id left join station_info si' +
         ' on s.id = si.station_id where tour_id = ?';
     connection = db.initDB();
@@ -257,6 +257,7 @@ exports.getStations = function (req,res) {
                     longitude:row.longitude},
                 type:row.type,
                 data:row.data,
+                language: row.language,
             })).value();
 
             const stationIds = _
@@ -276,7 +277,7 @@ exports.getStations = function (req,res) {
                 station.data = _
                     .chain(stationsData)
                     .filter(s => s.key === stationId.key)
-                    .map(row => ({type: row.type,data: row.data }))
+                    .map(row => ({type: row.type, data: row.data, language: row.language }))
                     .value();
 
                 return station;
