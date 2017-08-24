@@ -15,7 +15,7 @@ import { Toolbar as MaterialToolbar, Avatar, Icon, Card, CheckboxGroup, Checkbox
 import {observer} from 'mobx-react/native';
 import ScrollableTabView, { DefaultTabBar, } from 'react-native-scrollable-tab-view';
 import CardView from 'react-native-cardview';
-import ScrollableTabView, { DefaultTabBar, } from 'react-native-scrollable-tab-view';
+// import ScrollableTabView, { DefaultTabBar, } from 'react-native-scrollable-tab-view';
 
 
 @observer
