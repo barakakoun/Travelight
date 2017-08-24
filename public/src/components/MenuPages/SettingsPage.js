@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import {
     View,
     Text,
+    Picker,
     Image,
     Navigator,
     StyleSheet,
@@ -41,6 +42,8 @@ class SettingsPage extends Component {
 
     render() {
         //const {appNavigator} = this.props.store;
+        const { selectedLanguage } = this.props.store;
+
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}
@@ -50,16 +53,24 @@ class SettingsPage extends Component {
     }
 
     renderScene(route, navigator) {
+        const { navigatorOpenDrawer, selectedLanguage } = this.props.store;
 
         return (
             <View  style={styles.container}>
                 <MaterialToolbar title={'Settings'}
-                                 primary={'googleBlue'}/>
-                <Image
-                    resizeMode='stretch'
-                    style={styles.image}
-                    source={comingsoon}
-                />
+                                 primary={'googleBlue'}
+                                 icon="menu"
+                                 onIconPress={this.onOpenBurger.bind(this)}/>
+                { selectedLanguage == "EN" ?
+                    <Text style={{color: 'white', fontSize: 20, marginTop: 60}}>Choose tour language:</Text> :
+                    <Text style={{color: 'white', fontSize: 20, marginTop: 60}}>בחר את שפת הסיור:</Text>
+                }
+                <Picker
+                    selectedValue={selectedLanguage}
+                    onValueChange={(lang) => this.props.store.changeSystemLanguage(lang)}>
+                    <Picker.Item label="English" value="EN" />
+                    <Picker.Item label="עברית" value="HE" />
+                </Picker>
             </View>
         );
     }
@@ -93,9 +104,9 @@ const styles = StyleSheet.create({
         flex: 1
     },
     container: {
-        backgroundColor: '#FFFFFF',
+        justifyContent: 'flex-start',
+        //alignItems: 'center',
         flex: 1,
-        justifyContent: 'flex-end',
     },
     toolbar: {
         backgroundColor: '#e9eaed',
