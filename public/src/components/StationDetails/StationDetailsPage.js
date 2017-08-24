@@ -45,6 +45,36 @@ class StationDetailsPage extends Component {
 
     render() {
         const {chosenStation} = this.props.store;
+        const NavigationBarRouteMapper = {
+            LeftButton(route, navigator, index, navState) {
+                return (
+                    <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
+                                      onPress={() => navigator.parentNavigator.pop()}>
+                        <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 10,}} />
+                    </TouchableOpacity>
+                );
+            },
+            RightButton(route, navigator, index, navState) {
+                return null;
+            },
+            Title(route, navigator, index, navState) {
+                return (
+                    <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
+                        <Text style={{color: 'white', margin: 10, fontSize: 20}}>
+                            Station Details
+                        </Text>
+                    </TouchableOpacity>
+                );
+            }
+        };
+        return (
+            <Navigator
+                renderScene={this.renderScene.bind(this)}
+                navigator={this.props.navigator}
+                ref="StationDetailsNav"
+            />
+        );
+
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}
@@ -57,17 +87,16 @@ class StationDetailsPage extends Component {
     }
     renderScene(route, navigator) {
         const { chosenStation } = this.props.store;
-        const heightForText = height - 400;
+        const heightForText = height - 300;
 
         return (
                 <View style={styles.container} >
 
-                    <View style={{marginTop: 50}}>
-                        <Text style={styles.text}>
-                            {chosenStation.name}
-                        </Text>
-                    </View>
-
+                    <MaterialToolbar title={chosenStation.name}
+                                     primary={'googleBlue'}
+                                     icon="keyboard-backspace"
+                                     onIconPress={() => this._handleBackPress()}
+                    />
 
                     <Swiper style={styles.bubble}
                             height={280}
@@ -111,28 +140,7 @@ class StationDetailsPage extends Component {
     }
 }
 
-const NavigationBarRouteMapper = {
-    LeftButton(route, navigator, index, navState) {
-        return (
-            <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-                              onPress={() => navigator.parentNavigator.pop()}>
-                <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 10,}} />
-            </TouchableOpacity>
-        );
-    },
-    RightButton(route, navigator, index, navState) {
-        return null;
-    },
-    Title(route, navigator, index, navState) {
-        return (
-            <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
-                <Text style={{color: 'white', margin: 10, fontSize: 20}}>
-                    Station Details
-                </Text>
-            </TouchableOpacity>
-        );
-    }
-};
+
 
 const styles = StyleSheet.create({
     container: {
@@ -150,7 +158,8 @@ const styles = StyleSheet.create({
     image:{
         flex: 2,
         justifyContent:'flex-start',
-        alignItems:'center'
+        alignItems:'center',
+        marginTop: 50
     },
     img:{
         width,

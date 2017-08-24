@@ -3,7 +3,7 @@
  */
 // const URL_BASE = 'http://10.0.0.31:3000/';
 // const URL_BASE = 'http://192.168.1.28:3000/';
-const URL_BASE = 'http://192.168.14.19:3000/';
+const URL_BASE = 'http://192.168.43.82:3000/';
 
 /** USERS */
 const URL_USERS_ENDPOINT = URL_BASE+'users/';
