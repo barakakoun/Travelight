@@ -14,6 +14,7 @@ import {
 import { Toolbar as MaterialToolbar, Avatar, Icon, Card, CheckboxGroup, Checkbox } from 'react-native-material-design';
 import SideNavigation from '../Navigation/SideNavigation';
 import {observer} from 'mobx-react/native';
+import ScrollableTabView, { DefaultTabBar, } from 'react-native-scrollable-tab-view';
 import CardView from 'react-native-cardview';
 // import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -66,7 +67,10 @@ class UserPage extends Component {
                     {/*<View style={{justifyContent: "center", alignItems: "center", flexDirection: "row"}}>*/}
                         {/*<Avatar size={150} image={<Image source={{uri:currentUser.img}}/>} />*/}
                     {/*</View>*/}
-
+                    <ScrollableTabView
+                        style={[styles.container2, {marginTop:55}]}
+                        renderTabBar={()=><DefaultTabBar backgroundColor='rgba(255, 255, 255, 0.7)' />}
+                    >
                         <ScrollView tabLabel='Detailes'>
                             <View style={styles.userform}>
                                 <Text style={{color: 'white', fontSize: 24,}}> First Name : {currentUser.firstName}</Text>
@@ -130,6 +134,7 @@ class UserPage extends Component {
                                 />
                             </CardView>
                         </ScrollView>
+                    </ScrollableTabView>
                 </View>
         );
     }
