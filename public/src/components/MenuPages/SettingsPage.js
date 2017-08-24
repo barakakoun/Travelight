@@ -11,12 +11,9 @@ import {
     Dimensions
 } from 'react-native';
 import { Toolbar as MaterialToolbar, Icon,Avatar } from 'react-native-material-design';
-import SideNavigation from '../Navigation/SideNavigation';
 import {observer} from 'mobx-react/native';
 
 const { height, width } = Dimensions.get('window');
-
-import comingsoon from '../../../assets/comingsoon.png';
 
 @observer
 class SettingsPage extends Component {
@@ -40,7 +37,6 @@ class SettingsPage extends Component {
     }
 
     render() {
-        //const {appNavigator} = this.props.store;
         const { selectedLanguage } = this.props.store;
 
         return (

@@ -77,9 +77,13 @@ class UserPage extends Component {
                     >
                         <ScrollView tabLabel='Details'  style={{backgroundColor:'rgba(255, 255, 255, 0.7)' }}>
                             <View style={styles.userform}>
-                                <Text style={{color: 'white', fontSize: 24,}}> First Name : {currentUser.firstName}</Text>
-                                <Text style={{color: 'white', fontSize: 24,}}> Last Name : {currentUser.lastName}</Text>
-                                <Text style={{color: 'white', fontSize: 24,}}> Email : {currentUser.email}</Text>
+                                <Text style={{color: 'black', fontSize: 24, textAlign: 'center'}}>{'\n'} First Name:</Text>
+                                <Text style={{color: 'gray', fontSize: 24, textAlign: 'center'}}>{currentUser.firstName} {currentUser.lastName}</Text>
+                                {/*<Text style={{color: 'white', fontSize: 24, textAlign: 'center'}}> Last Name : {currentUser.lastName}</Text>*/}
+                                <Text style={{color: 'black', fontSize: 24, textAlign: 'center'}}>{'\n'} Email:</Text>
+                                <Text style={{color: 'gray', fontSize: 24, textAlign: 'center'}}>{currentUser.email}</Text>
+                                <Text style={{color: 'black', fontSize: 24, textAlign: 'center'}}>{'\n'} Birthday:</Text>
+                                <Text style={{color: 'gray', fontSize: 24, textAlign: 'center'}}>{currentUser.birthDate}</Text>
                             </View>
 
                         </ScrollView>

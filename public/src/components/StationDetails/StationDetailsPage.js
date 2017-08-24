@@ -25,8 +25,6 @@ class StationDetailsPage extends Component {
     constructor(props) {
         super(props);
 
-        // this.exitPage = this.exitPage.bind(this);
-        // this.showReviews = this.showReviews.bind(this);
         this._handleBackPress = this._handleBackPress.bind(this);
     }
 
@@ -45,28 +43,6 @@ class StationDetailsPage extends Component {
 
     render() {
         const {chosenStation} = this.props.store;
-        const NavigationBarRouteMapper = {
-            LeftButton(route, navigator, index, navState) {
-                return (
-                    <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-                                      onPress={() => navigator.parentNavigator.pop()}>
-                        <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 10,}} />
-                    </TouchableOpacity>
-                );
-            },
-            RightButton(route, navigator, index, navState) {
-                return null;
-            },
-            Title(route, navigator, index, navState) {
-                return (
-                    <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}>
-                        <Text style={{color: 'white', margin: 10, fontSize: 20}}>
-                            Station Details
-                        </Text>
-                    </TouchableOpacity>
-                );
-            }
-        };
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}
@@ -74,16 +50,6 @@ class StationDetailsPage extends Component {
                 ref="StationDetailsNav"
             />
         );
-
-        // return (
-        //     <Navigator
-        //         renderScene={this.renderScene.bind(this)}
-        //         navigator={this.props.navigator}
-        //         navigationBar={
-        //             <Navigator.NavigationBar style={{backgroundColor: '#246dd5'}}
-        //                                      routeMapper={NavigationBarRouteMapper} />
-        //         } />
-        // );
     }
     renderScene(route, navigator) {
         const { chosenStation } = this.props.store;
@@ -93,8 +59,8 @@ class StationDetailsPage extends Component {
                 <View style={styles.container} >
                     <MaterialToolbar title={chosenStation.name}
                                      primary={'googleBlue'}
-                                     icon="keyboard-backspace"
-                                     onIconPress={() => this._handleBackPress()}
+                                     // icon="keyboard-backspace"
+                                     // onIconPress={() => this._handleBackPress()}
                     />
 
                     <Swiper style={styles.bubble}

@@ -45,24 +45,7 @@ class MainMapPage extends Component {
 
     // When we press on a map marker (which represent tour)
     onTourPress(e, chosenTour) {
-
-        // We set the chosen tour as the clicked one
-        // this.setState({
-        //     chosenTour: e,
-        //     isTourModalOpen: false
-        // });
-        // this.setState({
-        //     isTourModalOpen: false
-        // });
         this.props.store.onTourPress(e);
-        //this.props.store.setTourModalOpen(true);
-
-
-        // setTimeout(() => {
-        //     if (this.props.store.chosenTour) {
-        //         this.props.store.setTourModalOpen(true);
-        //     }
-        // }, 500);
     }
 
     openDrawer() {
@@ -98,8 +81,6 @@ class MainMapPage extends Component {
 
     // AFTER we close the details modal
     onModalTourDetailsClosed() {
-        //this.setState({chosenTour: null});
-        // this.props.store.onTourPress(null);
         this.props.store.resetChosenTour();
     }
 
@@ -136,51 +117,10 @@ class MainMapPage extends Component {
         else {
             this.getLocation();
         }
-
-        // navigator.geolocation.getCurrentPosition(
-        //     ({coords}) => {
-        //         Alert.alert("ok");
-        //         const {latitude, longitude} = coords
-        //         this.setState({
-        //             position: {
-        //                 latitude,
-        //                 longitude,
-        //             },
-        //             region: {
-        //                 latitude,
-        //                 longitude,
-        //                 latitudeDelta: 0.005,
-        //                 longitudeDelta: 0.001,
-        //             }
-        //         })
-        //     },
-        //     (error) => alert(JSON.stringify(error)),
-        //     {enableHighAccuracy: true, timeout: 15000, maximumAge: 1000}
-        // )
     }
 
     paintCloseMarker() {
         Alert.alert(this.props.store.position.latitude.toString() + " " + this.props.store.position.longitude.toString());
-
-        // var currPoint = this.props.store.position;
-        // var closestStation = this.props.store.tourStations[3];
-        // var minDistance = this.calculateDistance(currPoint, this.props.store.tourStations[0].coordinate);
-        //
-        // this.props.store.tourStations.forEach((station) => {
-        //
-        //     var currDistance = this.props.store.calculateDistance(currPoint, station.coordinate);
-        //
-        //     if (currDistance < minDistance) {
-        //         minDistance = currDistance;
-        //         closestStation = station;
-        //     }
-        // });
-        //
-        // if (minDistance <= 6) {
-        //
-        // }
-
-
     }
 
     getLocation() {
@@ -188,56 +128,10 @@ class MainMapPage extends Component {
             ({coords}) => {
                 const {latitude, longitude} = coords;
                 this.props.store.setLocation(latitude,longitude,0.005,0.001);
-                // this.props.store.setRegion(latitude,longitude,0.005,0.001);
-                // this.props.store.setCurrRegion(latitude,longitude,0.005,0.001);
-                // this.props.store.setPosition(latitude,longitude);
-                // this.setState({
-                //     position: {
-                //         latitude,
-                //         longitude,
-                //     },
-                //     region: {
-                //         latitude,
-                //         longitude,
-                //         latitudeDelta: 0.005,
-                //         longitudeDelta: 0.001,
-                //     },
-                //     currRegion: {
-                //         latitude,
-                //         longitude,
-                //         latitudeDelta: 0.005,
-                //         longitudeDelta: 0.001,
-                //     }
-                // })
             },
             (error) => Alert.alert("Error: Are location services on?"),
             {enableHighAccuracy: true}
         );
-
-        // this.watchID = navigator.geolocation.watchPosition(
-        //     ({coords}) => {
-        //         // const {lat, long} = coords
-        //         // this.setState({
-        //         //     position: {
-        //         //         lat,
-        //         //         long
-        //         //     }
-        //         // })
-        //         const {latitude, longitude} = coords;
-        //         this.props.store.watchPosition(latitude,longitude,0.005,0.001);
-        //         // this.setState({
-        //         //     position: {
-        //         //         latitude,
-        //         //         longitude
-        //         //     },
-        //         //     currRegion: {
-        //         //         latitude,
-        //         //         longitude,
-        //         //         latitudeDelta: 0.005,
-        //         //         longitudeDelta: 0.001,
-        //         //     }
-        //         // })
-        //     });
     }
 
     componentWillMount() {
@@ -253,9 +147,6 @@ class MainMapPage extends Component {
         }, 800);
 
         BackAndroid.addEventListener('hardwareBackPress', this._handleBackPressExit);
-        // this._findMe();
-
-
 
         this.watchID = navigator.geolocation.watchPosition(
             ({coords}) => {

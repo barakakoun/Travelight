@@ -48,9 +48,6 @@ class LoginPage extends Component {
     }
 
     onLogin() {
-        // Login.start(config).then(tokens => {
-        //     this.setState({tokens: tokens});
-        // }).catch(() => this.setState({tokens: null}));
         this.props.store.navigatorReplace('MainMapPage');
     }
 
@@ -97,16 +94,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         margin: 32,
     },
-    // imageContainer: {
-    //     flex: 1,
-    //     // remove width and height to override fixed static size
-    //     width: null,
-    //     height: null,
-    // },
     background: {
         flex: 1,
         justifyContent: 'center',
-        // remove width and height to override fixed static size
         width: null,
         height: null,
     },
@@ -116,43 +106,5 @@ const styles = StyleSheet.create({
     },
 });
 
-//     onLogin(e, email, password) {
-//     console.log(email, password) // user credentials
-//     }
-//
-//     onResetPassword(e, email) {
-//         console.log(email)
-//     }
-//
-//     render() {
-//         return (
-//             <Navigator
-//                 renderScene={this.renderScene.bind(this)}
-//                 navigationBar={
-//             <Navigator.NavigationBar style={{backgroundColor: '#246dd5', alignItems: 'center'}}
-//                 routeMapper={NavigationBarRouteMapper} />
-//           } />
-//         );
-//     }
-//     renderScene(route, navigator) {
-//         return (
-//             <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-//                 <TouchableHighlight
-//                     onPress={this.gotoNext.bind(this)}>
-//                     <Text style={{color: 'red'}}>התחבר</Text>
-//                 </TouchableHighlight>
-//                 <Login
-//                     onLogin={this.onLogin.bind(this, email, password)}
-//                     onResetPassword={this.onResetPassword.bind(this, email)}
-//                 />
-//             </View>
-//         );
-//     }
-//     gotoNext() {
-//         this.props.navigator.replace({
-//             id: 'MainMapPage'
-//         });
-//     }
-// }
 
 module.exports = LoginPage;

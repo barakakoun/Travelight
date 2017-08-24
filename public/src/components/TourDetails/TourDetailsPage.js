@@ -156,22 +156,6 @@ class TourDetailsPage extends Component {
 
     render() {
         const {tourStations, selectedLanguage} = this.props.store;
-        const NavigationBarRouteMapper = {
-            LeftButton(route, navigator, index, navState) {
-                return (
-                    <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-                                      onPress={() => Alert.alert("exit2")}>
-                        <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 3,}} />
-                    </TouchableOpacity>
-                );
-            },
-            RightButton(route, navigator, index, navState) {
-                return null;
-            },
-            Title(route, navigator, index, navState) {
-                return null;
-            }
-        };
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}
@@ -179,16 +163,6 @@ class TourDetailsPage extends Component {
                 ref="TourDetailsNav"
             />
         );
-
-        // return (
-        //     <Navigator
-        //         renderScene={this.renderScene.bind(this)}
-        //         navigator={this.props.navigator}
-        //         navigationBar={
-        //             <Navigator.NavigationBar style={{backgroundColor: '#5592f4'}}
-        //                                      routeMapper={TourDetailsPage.NavigationBarRouteMapper(this.props)} />
-        //         } />
-        // );
     }
     renderScene(route, navigator) {
         const { chosenTour,
@@ -198,8 +172,8 @@ class TourDetailsPage extends Component {
             <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: '#FFFFFF'}}>
                 <MaterialToolbar title={chosenTour.name}
                                  primary={'googleBlue'}
-                                 icon="keyboard-backspace"
-                                 onIconPress={() => this._handleBackPress()}
+                                 // icon="keyboard-backspace"
+                                 // onIconPress={() => this._handleBackPress()}
                 />
                 <Swiper
                         height={280}

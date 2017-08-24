@@ -38,27 +38,6 @@ class StationModel extends Component {
         }
     }
 
-    // loadAudioIcon() {
-    //     const {chosenStation} = this.props.store;
-    //      if(chosenStation.audio)
-    //     {
-    //         return (<Icon name="audiotrack" color="rgba(0,0,0,.9)" size={45}/>);
-    //     }
-    //
-    // }
-
-    // loadInfoIcon() {
-    //     const {chosenStation} = this.props.store;
-    //     // if(chosenStation.info)
-    //     if(true)
-    //     {
-    //         return (
-    //             //<Icon.Button name="info-circle" backgroundColor="#3b5998" onPress={this.barakFunction}>
-    //             //</Icon.Button>
-    //             <Icon name="info" style={styles.info} color="rgba(0,0,0,.9)" size={45}/>
-    //     );
-    //     }
-    // }
 
     stationInfo() {
         this.props.store.navigatorOpenStationDetails('StationDetailsPage', Navigator.SceneConfigs.FloatFromBottom);
@@ -74,7 +53,6 @@ class StationModel extends Component {
             return null;
         }
 
-        //const url = 'http://lacavewebradio.chickenkiller.com:8000/stream.mp3';
         return (
             <Modal style={styles.modal} backdrop={true}  backButtonClose={true} swipeToClose={false} transparent={true}
                    backdropOpacity={0.5} onClosed={()=>this.closeModal()} ref="modalStation">
@@ -113,10 +91,7 @@ class StationModel extends Component {
                     </Swiper>
 
                     <Divider style={{ marginBottom: 10 }}/>
-                    { /* <View style={styles.icons}>
-                        {this.loadInfoIcon()}
-                        {this.loadAudioIcon()}
-                    </View> */ }
+
                     {chosenStation.audio ?
                     <View style={styles.player}>
                         <Button name="reply" color="rgba(0,0,0,.9)" backgroundColor="#dae7fe" size={45} onPress={()=>{

@@ -48,7 +48,6 @@ class RecommendedPage extends Component {
 
     render() {
         const { recommendedTours } = this.props.store;
-        //const {appNavigator} = this.props.store;
         return (
             <Navigator
                 renderScene={this.renderScene.bind(this)}

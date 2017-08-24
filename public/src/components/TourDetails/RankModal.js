@@ -79,9 +79,6 @@ class RankModal extends Component {
                             size={55}
                         />
 
-                        {/*<Text style={{padding: 10, fontSize: 42}}>*/}
-                            {/*{this.text.split(' ').map((word) => word && '🍕').join(' ')}*/}
-                        {/*</Text>*/}
                         {
                             this.userTourRate ?
                                 <TextInput

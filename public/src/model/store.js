@@ -914,25 +914,6 @@ class Store {
             .catch(err => console.warn(err))
     }
 
-    // mapStationsToScreen(station) {
-    //     const stationImg = _
-    //         .chain(station.data)
-    //         .filter(row => row.type === TYPE_IMAGE)
-    //         .map(row => row.data)
-    //         .value();
-    //     const audio = _.find(station.data,row => row.type === TYPE_SOUND);
-    //     const text = _.find(station.data,row => row.type === TYPE_TEXT);
-    //
-    //     return {
-    //         key: station.key,
-    //         name: station.name,
-    //         coordinate: station.coordinate,
-    //         img: stationImg,
-    //         audio: audio ? new Sound(audio.data,Sound.MAIN_BUNDLE) : null,
-    //         text: text ? text.data : null,
-    //     }
-    // }
-
     mapStationsToScreen(station) {
         const stationImg = _
             .chain(station.data)
@@ -941,7 +922,6 @@ class Store {
             .value();
         const audio = _.find(station.data,row => row.type === TYPE_SOUND && row.language === this.selectedLanguage);
         const text = _.find(station.data,row => row.type === TYPE_TEXT && row.language === this.selectedLanguage);
-        console.warn(this.selectedLanguage);
         var noAvailable = this.selectedLanguage == 'en' ? new Sound(unavailbleRecording,Sound.MAIN_BUNDLE) : new Sound(unavailbleRecordingHe,Sound.MAIN_BUNDLE);
 
         return {

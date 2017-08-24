@@ -86,11 +86,6 @@ class TourMapPage extends Component {
         this.props.store.onStationPress(null);
     }
 
-    // onRankModalClosed() {
-    //     // this.refs.TourMapNav.refs.RankModal.closeModal();
-    //     // this.props.store.onRankIconPress(null);
-    // }
-
     onStationPress(e,currStation) {
         this.props.store.onStationPress(e);
     }
@@ -110,7 +105,6 @@ class TourMapPage extends Component {
     }
 
     paintCloseMarker() {
-        // Alert.alert(this.props.store.position.latitude.toString() + " " + this.props.store.position.longitude.toString());
 
         var tourStations = this.props.store.tourStations;
         var currPoint = this.props.store.position;
@@ -137,7 +131,6 @@ class TourMapPage extends Component {
             tourStations[closestStation-1].isClosest = true;
         }
 
-        // this.props.store.setTourStations(tourStations);
 
         this.setState({
             tourStations: tourStations
@@ -189,12 +182,8 @@ class TourMapPage extends Component {
 
     increment() {
         Alert.alert(this.counter.toString());
-        // Alert.alert(this.props.toString());
         Alert.alert(this.props.store.counter.toString());
         this.props.store.setCounter(this.props.store.counter+1);
-        // this.setState({
-        //     counter: this.state.counter + 1
-        // });
     }
 
     render() {
@@ -418,11 +407,6 @@ class TourMapPage extends Component {
         ];
 
         const actions = [
-        //     {
-        //     icon: 'warning',
-        //     badge: { value: counter, animate: true },
-        //     onPress: () => this.props.store.setCounter(counter+1),
-        // },
             {
             icon: 'star',
             onPress: () => this.props.store.onRankIconPress(this.props.store.chosenTour.key),
@@ -503,14 +487,10 @@ TourMapPage.propTypes = {
 
 const styles = StyleSheet.create({
     container: {
-        // ...StyleSheet.absoluteFillObject,
-        // justifyContent: 'flex-end',
-        // alignItems: 'center',
         flex: 1,
         backgroundColor: '#EEEEEE',
     },
     map: {
-        // ...StyleSheet.absoluteFillObject,
         flex: 1,
         zIndex: -1,
     },
@@ -534,8 +514,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     buttonContainer: {
-        // flexDirection: 'row',
-        // marginVertical: 20,
         backgroundColor: 'transparent',
     },
     toolbar: {
