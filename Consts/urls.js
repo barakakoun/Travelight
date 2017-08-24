@@ -2,7 +2,8 @@
  * Created by dell on 19/05/2017.
  */
 // const URL_BASE = 'http://10.0.0.31:3000/';
-const URL_BASE = 'http://192.168.43.245:3000/';
+// const URL_BASE = 'http://192.168.43.245:3000/';
+const URL_BASE = 'http://192.168.43.82:3000/';
 
 /** USERS */
 const URL_USERS_ENDPOINT = URL_BASE+'users/';

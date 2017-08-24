@@ -1,10 +1,9 @@
-
 import React, { Component } from 'react';
 import {
     View,
     Text,
-    Picker,
     Image,
+    Picker,
     Navigator,
     StyleSheet,
     TouchableOpacity,
@@ -53,29 +52,36 @@ class SettingsPage extends Component {
     }
 
     renderScene(route, navigator) {
-        const { navigatorOpenDrawer, selectedLanguage } = this.props.store;
+        const { selectedLanguage } = this.props.store;
 
         return (
             <View  style={styles.container}>
                 <MaterialToolbar title={'Settings'}
-                                 primary={'googleBlue'}
-                                 icon="menu"
-                                 onIconPress={this.onOpenBurger.bind(this)}/>
-                { selectedLanguage == "EN" ?
-                    <Text style={{color: 'white', fontSize: 20, marginTop: 60}}>Choose tour language:</Text> :
-                    <Text style={{color: 'white', fontSize: 20, marginTop: 60}}>בחר את שפת הסיור:</Text>
+                                 primary={'googleBlue'}/>
+
+                { selectedLanguage == "en" ?
+                    <Text style={{color: 'white', fontSize: 26, marginTop: 60}}>Choose tour language:</Text> :
+                    <Text style={{color: 'white', fontSize: 26, marginTop: 60}}>בחר את שפת הסיור:</Text>
                 }
                 <Picker
                     selectedValue={selectedLanguage}
                     onValueChange={(lang) => this.props.store.changeSystemLanguage(lang)}>
-                    <Picker.Item label="English" value="EN" />
-                    <Picker.Item label="עברית" value="HE" />
+                    <Picker.Item label="English" value="en" />
+                    <Picker.Item label="עברית" value="he" />
                 </Picker>
+
+                { selectedLanguage == "en" ?
+                    <Text style={{color: 'white', fontSize: 20, marginTop: 60}}>
+                        Pay attention! The language is relevant only to the stations' information
+                    </Text> :
+                    <Text style={{color: 'white', fontSize: 20, marginTop: 60}}>
+                        שים לב! השפה רלוונטית רק למידע על התחנות
+                    </Text>
+                }
             </View>
         );
     }
 }
-
 var NavigationBarRouteMapper = {
     LeftButton(route, navigator, index, navState) {
         return null;
@@ -93,7 +99,6 @@ var NavigationBarRouteMapper = {
         );
     }
 };
-
 const styles = StyleSheet.create({
     text: {
         fontSize: 16,
@@ -104,15 +109,13 @@ const styles = StyleSheet.create({
         flex: 1
     },
     container: {
-        justifyContent: 'flex-start',
-        //alignItems: 'center',
+        //backgroundColor: '#FFFFFF',
         flex: 1,
+        justifyContent: 'flex-start',
     },
     toolbar: {
         backgroundColor: '#e9eaed',
         height: 56,
     },
 });
-
-
 module.exports = SettingsPage;

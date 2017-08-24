@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import {
     StyleSheet,
@@ -18,9 +17,7 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 import { observable } from 'mobx';
 import {observer} from 'mobx-react/native';
 import Swiper from 'react-native-swiper';
-import Stars from 'react-native-stars-rating';
 import ReviewsComponent from './ReviewsComponent.js';
-import _ from 'lodash';
 
 const { width } = Dimensions.get('window');
 
@@ -163,7 +160,7 @@ class TourDetailsPage extends Component {
             LeftButton(route, navigator, index, navState) {
                 return (
                     <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-                                      onPress={() => navigator.parentNavigator.pop()}>
+                                      onPress={() => Alert.alert("exit2")}>
                         <Icon name="keyboard-backspace" color="#FFFFFF" style={{ margin: 3,}} />
                     </TouchableOpacity>
                 );

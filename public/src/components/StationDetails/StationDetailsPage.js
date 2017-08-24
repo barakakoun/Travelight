@@ -75,15 +75,15 @@ class StationDetailsPage extends Component {
             />
         );
 
-        return (
-            <Navigator
-                renderScene={this.renderScene.bind(this)}
-                navigator={this.props.navigator}
-                navigationBar={
-                    <Navigator.NavigationBar style={{backgroundColor: '#246dd5'}}
-                                             routeMapper={NavigationBarRouteMapper} />
-                } />
-        );
+        // return (
+        //     <Navigator
+        //         renderScene={this.renderScene.bind(this)}
+        //         navigator={this.props.navigator}
+        //         navigationBar={
+        //             <Navigator.NavigationBar style={{backgroundColor: '#246dd5'}}
+        //                                      routeMapper={NavigationBarRouteMapper} />
+        //         } />
+        // );
     }
     renderScene(route, navigator) {
         const { chosenStation } = this.props.store;
@@ -91,7 +91,6 @@ class StationDetailsPage extends Component {
 
         return (
                 <View style={styles.container} >
-
                     <MaterialToolbar title={chosenStation.name}
                                      primary={'googleBlue'}
                                      icon="keyboard-backspace"
