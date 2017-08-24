@@ -82,6 +82,7 @@ class SettingsPage extends Component {
         );
     }
 }
+
 var NavigationBarRouteMapper = {
     LeftButton(route, navigator, index, navState) {
         return null;
@@ -99,6 +100,7 @@ var NavigationBarRouteMapper = {
         );
     }
 };
+
 const styles = StyleSheet.create({
     text: {
         fontSize: 16,
@@ -106,10 +108,9 @@ const styles = StyleSheet.create({
     image: {
         width,
         height,
-        flex: 1
+        flex: 1,
     },
     container: {
-        //backgroundColor: '#FFFFFF',
         flex: 1,
         justifyContent: 'flex-start',
     },
@@ -118,4 +119,5 @@ const styles = StyleSheet.create({
         height: 56,
     },
 });
+
 module.exports = SettingsPage;

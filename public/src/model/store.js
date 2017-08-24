@@ -150,6 +150,7 @@ class Store {
     @action changeSystemLanguage(lang) {
         this.currentUser.language = lang;
         this.selectedLanguage = lang;
+        AsyncStorage.setItem('lang', lang);
     }
 
     initUser() {
@@ -212,19 +213,65 @@ class Store {
         }
     }
 
+    // @action getFacebookUserData() {
+    //     const responseInfoCallback = (error,result)=>{
+    //         if (error) {
+    //             alert('Error fetching data: ' + JSON.stringify(error));
+    //         } else {
+    //             //this.currentUser = result.map((result)=>this.mapFacebookDataToUser)
+    //             this.currentUser = {
+    //                 img: result.picture.data.url,
+    //                 firstName : result.first_name,
+    //                 lastName: result.last_name,
+    //                 email: result.email,
+    //                 birthDate: result.birthday,
+    //                 language: "EN",
+    //             };
+    //             AsyncStorage.setItem('token', this.accessToken);
+    //             this.sendFacebookLoginDataToServer()
+    //         }
+    //     };
+    //
+    //     const infoRequest = new GraphRequest(
+    //         '/me',
+    //         {
+    //             accessToken: this.accessToken,
+    //             parameters: {
+    //                 fields: {
+    //                     string: 'email,first_name,last_name,name,picture,birthday' // what you want to get
+    //                 }
+    //             }},
+    //         responseInfoCallback
+    //     );
+    //     new GraphRequestManager().addRequest(infoRequest).start();
+    // }
     @action getFacebookUserData() {
         const responseInfoCallback = (error,result)=>{
             if (error) {
                 alert('Error fetching data: ' + JSON.stringify(error));
             } else {
                 //this.currentUser = result.map((result)=>this.mapFacebookDataToUser)
+
+                AsyncStorage.getItem('lang').then((value) => {
+                    if(value)
+                    {
+                        this.selectedLanguage = value;
+                        this.currentUser.language = value;
+                    }
+                    else if(value == null){
+                        this.selectedLanguage = 'en';
+                        this.currentUser.language = 'en';
+                        AsyncStorage.setItem('lang', this.selectedLanguage);
+                    }
+                });
+
                 this.currentUser = {
                     img: result.picture.data.url,
                     firstName : result.first_name,
                     lastName: result.last_name,
                     email: result.email,
                     birthDate: result.birthday,
-                    language: "EN",
+                    language: this.selectedLanguage,
                 };
                 AsyncStorage.setItem('token', this.accessToken);
                 this.sendFacebookLoginDataToServer()
@@ -864,14 +911,33 @@ class Store {
             .catch(err => console.warn(err))
     }
 
+    // mapStationsToScreen(station) {
+    //     const stationImg = _
+    //         .chain(station.data)
+    //         .filter(row => row.type === TYPE_IMAGE)
+    //         .map(row => row.data)
+    //         .value();
+    //     const audio = _.find(station.data,row => row.type === TYPE_SOUND);
+    //     const text = _.find(station.data,row => row.type === TYPE_TEXT);
+    //
+    //     return {
+    //         key: station.key,
+    //         name: station.name,
+    //         coordinate: station.coordinate,
+    //         img: stationImg,
+    //         audio: audio ? new Sound(audio.data,Sound.MAIN_BUNDLE) : null,
+    //         text: text ? text.data : null,
+    //     }
+    // }
+
     mapStationsToScreen(station) {
         const stationImg = _
             .chain(station.data)
             .filter(row => row.type === TYPE_IMAGE)
             .map(row => row.data)
             .value();
-        const audio = _.find(station.data,row => row.type === TYPE_SOUND);
-        const text = _.find(station.data,row => row.type === TYPE_TEXT);
+        const audio = _.find(station.data,row => row.type === TYPE_SOUND && row.language === this.selectedLanguage);
+        const text = _.find(station.data,row => row.type === TYPE_TEXT && row.language === this.selectedLanguage);
 
         return {
             key: station.key,
