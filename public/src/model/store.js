@@ -27,6 +27,9 @@ import {AsyncStorage} from 'react-native';
 import massages from "../../../Consts/messages";
 import Sound from 'react-native-sound';
 
+const unavailbleRecording = require('../../assets/audio/no_recording_available.mp3');
+const unavailbleRecordingHe = require('../../assets/audio/no_recording_available_he.mp3');
+
 const {
     LoginManager,
     GraphRequest,
@@ -61,7 +64,7 @@ class Store {
     };
     @observable tourReviews = [];
     @observable recommendedTours = [];
-    @observable selectedLanguage = 'EN';
+    @observable selectedLanguage = 'en';
     @observable historyTours = [];
 
     constructor() {
@@ -938,13 +941,15 @@ class Store {
             .value();
         const audio = _.find(station.data,row => row.type === TYPE_SOUND && row.language === this.selectedLanguage);
         const text = _.find(station.data,row => row.type === TYPE_TEXT && row.language === this.selectedLanguage);
+        console.warn(this.selectedLanguage);
+        var noAvailable = this.selectedLanguage == 'en' ? new Sound(unavailbleRecording,Sound.MAIN_BUNDLE) : new Sound(unavailbleRecordingHe,Sound.MAIN_BUNDLE);
 
         return {
             key: station.key,
             name: station.name,
             coordinate: station.coordinate,
             img: stationImg,
-            audio: audio ? new Sound(audio.data,Sound.MAIN_BUNDLE) : null,
+            audio: audio ? new Sound(audio.data,Sound.MAIN_BUNDLE) : noAvailable,
             text: text ? text.data : null,
         }
     }
