@@ -759,19 +759,25 @@ class Store {
     @action getCityEvents() {
         var currEvents = [
             {
-                key: 1,
+                key:1,
+                name:"MusicTech hackaton TLV",
+                description:"Be a part of the future of music.",
+                url:"https://www.hackatune.com/challenges",
+                img:"https://us.123rf.com/450wm/yewkeo/yewkeo0905/yewkeo090500005/4876190-sound-of-music-music-concept-background-vector-layered.jpg?ver=6"
+            }, {
+                key: 2,
                 name: "White night",
                 description: "A night when everybody stays awake and party!",
                 url: "http://www.mouse.co.il/special-events/1.3474650",
                 img: "http://img.mako.co.il/2010/06/27/IMG_0435c.jpg"
             },{
-                key: 2,
+                key: 3,
                 name: "Food festival",
                 description: "Try and buy local food",
                 url: "http://food.nana10.co.il/Article/?ArticleID=1187583",
                 img: "http://cdn.be106.net/p/EF7848100fd4895.jpg"
             },{
-                key: 2,
+                key: 4,
                 name: "Pride parade",
                 description: "The famous pride parade of TLV",
                 url: "http://www.maariv.co.il/news/israel/Article-587365",

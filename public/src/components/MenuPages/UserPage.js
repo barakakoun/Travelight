@@ -106,9 +106,15 @@ class UserPage extends Component {
                                                             {tour.duration}
                                                         </Text>
                                                     </View>
-                                                    <Text style={{fontSize: 15, color: 'black'}}>
-                                                        {parseFloat(this.props.store.calculateDistance(this.props.store.position, tour.coordinate)/1000).toFixed(1)} Km
-                                                    </Text>
+                                                    {
+                                                        this.props.store.position ?
+                                                            <Text style={{fontSize: 15, color: 'black'}}>
+                                                                {parseFloat(this.props.store.calculateDistance(this.props.store.position, tour.coordinate)/1000).toFixed(1)} Km
+                                                            </Text> :
+                                                            <Text style={{fontSize: 15, color: 'black'}}>
+                                                                {tour.duration} Km
+                                                            </Text>
+                                                    }
                                                     <Icon name='directions-walk' color="#000000" style={styles.icon} />
                                                 </View>
                                             </Card.Body>
