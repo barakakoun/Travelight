@@ -12,8 +12,9 @@ exports.toursHistory = function (req,res) {
     //     ' FROM tour T INNER JOIN tour_station TS ON T.ID = TS.TOUR_ID INNER JOIN station S ' +
     //     ' ON TS.STATION_ID = S.ID WHERE TS.STATION_NUMBER =1';
 
-    const query = 'SELECT T.id,T.name,T.description,T.distance,T.duration,T.img' +
-        ' FROM tour T INNER JOIN user_tour UT ON T.ID = UT.tour_id WHERE UT.email = ?';
+    const query = 'SELECT T.id,T.name,T.description,T.distance,T.duration,T.img,S.latitude,S.longitude' +
+        ' FROM tour T INNER JOIN user_tour UT ON T.ID = UT.tour_id INNER JOIN tour_station TS ON T.ID = TS.TOUR_ID INNER JOIN station S ' +
+        ' ON TS.STATION_ID = S.ID WHERE TS.STATION_NUMBER =1 and UT.email = ?';
     connection.query(query,email,
         function (err, tours) {
             if (err) {
@@ -27,6 +28,10 @@ exports.toursHistory = function (req,res) {
                     distance: tour.distance,
                     duration: tour.duration,
                     img: tour.img,
+                    coordinate: {
+                        latitude: tour.latitude,
+                        longitude: tour.longitude
+                    },
                 }));
                 res.send(resTours);
             }

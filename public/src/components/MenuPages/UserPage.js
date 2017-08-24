@@ -107,7 +107,7 @@ class UserPage extends Component {
                                                         </Text>
                                                     </View>
                                                     <Text style={{fontSize: 15, color: 'black'}}>
-                                                        {tour.distance} Km
+                                                        {parseFloat(this.props.store.calculateDistance(this.props.store.position, tour.coordinate)/1000).toFixed(1)} Km
                                                     </Text>
                                                     <Icon name='directions-walk' color="#000000" style={styles.icon} />
                                                 </View>

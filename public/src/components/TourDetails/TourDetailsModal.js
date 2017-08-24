@@ -7,6 +7,7 @@ import {
     Image,
     TouchableHighlight,
     View,
+    Alert,
 } from 'react-native';
 import {observer} from 'mobx-react/native';
 import ReviewsComponent from './ReviewsComponent.js';
@@ -30,7 +31,8 @@ class TourDetailsModal extends Component {
     }
 
     render() {
-        const {chosenTour} = this.props.store;
+        const {chosenTour, position} = this.props.store;
+
         if (!chosenTour) {
             return null;
         }

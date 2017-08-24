@@ -313,7 +313,8 @@ exports.contentBasedRecommend = function (user,country,res) {
                                 tours.push(row.tour);
                             });
 
-                            const toursQuery = 'SELECT id,name,img,duration,distance FROM tour WHERE ID in ('+tours+
+                            const toursQuery = 'SELECT T.id, T.name,T.img,T.duration,T.distance,S.latitude,S.longitude FROM tour T INNER JOIN tour_station TS ON T.ID = TS.TOUR_ID INNER JOIN station S ' +
+                                ' ON TS.STATION_ID = S.ID WHERE TS.STATION_NUMBER =1 and T.ID in ('+tours+
                         ')';
                             connection.query(toursQuery,[],function (err,rows) {
                                 if(err)
@@ -329,6 +330,10 @@ exports.contentBasedRecommend = function (user,country,res) {
                                         img:_.find(rows,row => row.id ===tour.tour).img,
                                         duration:_.find(rows,row => row.id ===tour.tour).duration,
                                         distance:_.find(rows,row => row.id ===tour.tour).distance,
+                                            coordinate: {
+                                                latitude:_.find(rows,row => row.id ===tour.tour).latitude,
+                                                longitude:_.find(rows,row => row.id ===tour.tour).longitude
+                                            },
                                     }));
                                     db.closeDB(connection);
                                     res.send(tourDetails);
