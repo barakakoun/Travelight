@@ -7,6 +7,7 @@ const tourConsts = require('../../../consts/tour');
 const stationConsts = require('../../../consts/station');
 const tourStationConsts = require('../../../consts/tourStation');
 const messages = require('../../../consts/messages');
+const reccomendations = require ('../reccomendation/reccomendationEngine');
 
 const _ = require('lodash');
 //create connection to mysql
@@ -295,9 +296,14 @@ exports.addTourToUser = function ({body:{userId, tourId}} ,res) {
         err ? res.send({error: err}) : null;
         if (result.length > 0) {
             res.send({message: "record exists"});
+            reccomendations.updateTourProfile(tourId);
+            reccomendations.updateUserProfile(userId);
+
         } else {
             connection.query('INSERT INTO user_tour set email = ?, tour_id = ?',[userId,tourId],function (err2,result2) {
                 err2 ? res.send({error: err}) : res.send({message: "record added!"});
+                reccomendations.updateTourProfile(tourId);
+                reccomendations.updateUserProfile(userId);
             });
         }
     });

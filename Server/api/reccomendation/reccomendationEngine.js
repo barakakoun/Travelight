@@ -1,14 +1,13 @@
 const Recommender = require('likely');
 const _ = require('lodash');
 const db = require('../database');
-exports.ratingBasedRecommend =  function(user,country){
+exports.ratingBasedRecommend =  function(user,country,res){
     var connection = db.initDB();
     // select all tour id's that our user rated
-    const toursQuery = 'SELECT tourRv.tour_id from tour_review tourRv inner join reviews rv on tourRv.review_id = rv.id' +
-      'inner join tours t on t.id = tourRv.tour_id' + '  where rv.user_id = ? or t.country = ? order by tourRv.tour_id';
+    const toursQuery = 'SELECT distinct(rv.tour_id) from  reviews rv ' +
+      'inner join tour t on t.id = rv.tour_id' + '  where rv.user_id = ? or t.country = ? order by rv.tour_id';
     //
-    const usersQuery = 'select distinct(rv.user_id) from tour_review tourRv inner join reviews rv on tourRv.review_id = rv.id' +
-        'where tourRv.tour_id in ( toursQueryResult) order by rv.user_id';
+
 
     // const filterUsers =
     //     'select rv.user_id ' +
@@ -20,7 +19,74 @@ exports.ratingBasedRecommend =  function(user,country){
     //     'and tourRv.user_id in(' +
     //         'select rv1.user_id from tour_review tourRv1 inner join reviews rv1'+
     //         'on tourRv1.review_id = rv1.id inner join tours t on t.id = tourRv1.tour_id where t.city = city)'
+    connection.query(toursQuery,[user,country],function(err,rows)
+    {
+        if(err)
+        {
+            console.log(err);
+        }
+        else
+        {
+            console.log(rows);
+            let tours = new Array();
+            rows.map(row=>{
+                tours.push(row.tour_id);
+            })
+            console.log("tours:" + tours);
+            const usersQuery = 'select distinct(rv.user_id) from reviews rv ' +
+                'where rv.tour_id in (?) order by rv.user_id';
+            connection.query(usersQuery,[tours],function(err1,rows1){
+                if(err1)
+                {
+                    console.log(err1);
+                }
+                else
+                {
+                    let users = new Array();
+                    rows1.map(row=>{
+                       users.push(row.user_id);
+                    });
+                    const reviewsQuery = 'select user_id,tour_id,rank from reviews where user_id in (?) and tour_id in(?)';
+                    connection.query(reviewsQuery,[users,tours],function(err2,rows2){
+                        if(err2)
+                        {
+                            console.log(err2);
+                        }
+                        else
+                        {
+                            console.log(tours);
+                            let myMatrix = Array(users.length).fill().map(() => Array(tours.length).fill(0));
+                            rows2.map(row => {
+                                const userIndex = users.indexOf(row.user_id);
+                                const tourIndex = tours.indexOf(parseInt(row.tour_id));
+                                console.log("userIndex:"+userIndex + ",tourIndex:"+tourIndex);
+                                myMatrix[userIndex][tourIndex] = row.rank;
+                            })
+                            console.log(JSON.stringify(myMatrix,null,3));
+                            var bias = Recommender.calculateBias(myMatrix);
 
+                            var model = Recommender.buildModelWithBias(myMatrix,bias,users, tours);
+                            const myUser = rowLabels.indexOf(user);
+                            //db.closeDB(connection);
+                             const recommendations = model.recommendations(user);
+                             let recTours = new Array();
+                             // recommendations.map(row=>{
+                             //     recTours.push(row.)
+                             // })
+
+                            const toursQuery = 'SELECT id,name,img,duration,distance FROM tour WHERE ID in ('+tours+
+                                ')';
+                            db.closeDB(connection);
+                            res.send(recommendations);
+                        }
+                    })
+                }
+
+            });
+
+
+        }
+    })
     //connection.query('SELECT rv.user_id,tourRv.tour_id,rv.rating from tour_review tourRv inner join reviews rv ' +
         //'on tourRv.review_id = rv.id where user_id in (result) order by rv.user_id,tourRv.tour_id');
 
@@ -67,8 +133,8 @@ exports.ratingBasedRecommend =  function(user,country){
 
     var model = Recommender.buildModelWithBias(myMatrix,bias,rowLabels, columnLabels);
     const myUser = rowLabels.indexOf('barak');
-    db.closeDB(connection);
-    return model.recommendations(rowLabels[myUser]);
+    //db.closeDB(connection);
+    console.log( model.recommendations(rowLabels[myUser]));
 };
 
 exports.updateTourProfile=function (tour) {
@@ -77,10 +143,11 @@ exports.updateTourProfile=function (tour) {
         function (err, rows, fields) {
         if(!err)
         {
-        if(rows.userNum > 5)
+           // console.log("number of records:"+rows[0].userNum);
+        if(rows[0].userNum > 5)
         {
-            connection.query('SELECT usrP.category,avg(usrP.rating) from user_profile usrP where usrP.user_id in(' +
-                'select usrT.user_id from user_tour usrT where usrT.tour_id = ?) group by usrP.category order by category',tour,
+            connection.query('SELECT usrP.category_id,avg(usrP.rating) as rating from user_profile usrP where usrP.user_id in(' +
+                'select usrT.email from user_tour usrT where usrT.tour_id = ?) group by usrP.category_id order by usrP.category_id',tour,
                 function (err1, rows1, fields1) {
                     if (!err1) {
                        //delete old ratings
@@ -91,15 +158,22 @@ exports.updateTourProfile=function (tour) {
                         }
                         else
                         {
-                            //insert new ratings
-                            connection.query('INSERT INTO tour_profile values?',rows1,function (insertError,insertResult) {
+                            let myMatrix = new Array();
+                            rows1.map(row =>{
+                                let profile = [parseInt(tour),row.category_id,row.rating];
+                                myMatrix.push(profile);}
+                            )
+
+                            console.log(myMatrix);
+                            connection.query('INSERT INTO tour_profile(tour_id,category_id,rating) VALUES ?',[myMatrix],function (insertError,insertResult) {
                                 if(insertError)
                                 {
                                     console.log(insertError);
                                 }
                                 else
                                 {
-                                    console.log("effected rows:"+ insertResult.affectedRows);
+                                    //console.log("effected rows:"+ insertResult.affectedRows);
+                                    db.closeDB(connection);
                                 }
 
                             });
@@ -112,25 +186,29 @@ exports.updateTourProfile=function (tour) {
                     }
                 });
         }
+        else
+        {
+            db.closeDB(connection);
+        }
         }
         else
         {console.log(err)}}
         );
 
-    db.closeDB(connection);
   //get all users that took this tour and get their taste profile
 };
 
 exports.updateUserProfile=function (user) {
     var connection = db.initDB();
-    connection.query('SELECT count(*) as tourNum from user_tour where user_id = ? ',user,
+    connection.query('SELECT count(*) as tourNum from user_tour where email = ? ',user,
         function (err, rows, fields) {
             if(!err)
             {
-                if(rows.userNum > 5)
+               // console.log("number of records " +rows[0].tourNum )
+                if(rows[0].tourNum > 3)
                 {
-                    connection.query('SELECT tourP.category,avg(tourP.rating) from tour_profile tourP where tourP.tour_id in(' +
-                        'select usrT.tour_id from user_tour usrT where usrT.user_id = ?) group by tourP.category order by category',user,
+                    connection.query('SELECT tourP.category_id,avg(tourP.rating) as rating from tour_profile tourP where tourP.tour_id in(' +
+                        'select usrT.tour_id from user_tour usrT where usrT.email = ?) group by tourP.category_id order by tourP.category_id',user,
                         function (err1, rows1, fields1) {
                             if (!err1) {
                                 //delete old ratings
@@ -141,15 +219,23 @@ exports.updateUserProfile=function (user) {
                                     }
                                     else
                                     {
+                                        let myMatrix = new Array();
+                                        rows1.map(row =>{
+                                            let profile = [user,row.category_id,row.rating];
+                                            myMatrix.push(profile);}
+                                            )
+
+                                        console.log(myMatrix);
                                         //insert new ratings
-                                        connection.query('INSERT INTO user_profile values?',rows1,function (insertError,insertResult) {
+                                        connection.query('INSERT INTO user_profile values ?',[myMatrix],function (insertError,insertResult) {
                                             if(insertError)
                                             {
                                                 console.log(insertError);
                                             }
                                             else
                                             {
-                                                console.log("effected rows:"+ insertResult.affectedRows);
+
+                                                db.closeDB(connection);
                                             }
 
                                         });
@@ -162,12 +248,16 @@ exports.updateUserProfile=function (user) {
                             }
                         });
                 }
+                else
+                {
+                    db.closeDB(connection);
+                }
             }
             else
             {console.log(err)}}
     );
 
-    db.closeDB(connection);
+
     //get all users that took this tour and get their taste profile
 };
 
@@ -279,7 +369,6 @@ function calcSquertDistance(ratings) {
 function getTourDetails(tour,connection)
 {
     const query = 'SELECT id,name,img,duration FROM tour WHERE ID = ?';
-    console.log('sdasdas');
     connection.query(query,[tour.tour],function(err,rows)
     {
         if (err)
@@ -289,7 +378,6 @@ function getTourDetails(tour,connection)
         }
         else
         {
-            console.log('sdasdas2');
             JSON.stringify(rows);
             return ({name:rows[0].name,img:rows[0].img,duration:rows[0].duration,distance:2});
         }
