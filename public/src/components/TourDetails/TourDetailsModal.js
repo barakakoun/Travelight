@@ -38,7 +38,7 @@ class TourDetailsModal extends Component {
             <Modal style={[styles.modal, styles.modalTourDetails]} backdrop={false} backButtonClose={true}
                    position={"bottom"} ref="modalTourDetails"
                    onClosed={this.props.onModalTourDetailsClosed.bind(this)}>
-                <TouchableHighlight underlayColor="white" onPress={this.props.goToTourDetails.bind(this)}>
+                <TouchableHighlight underlayColor="#dae7fe" onPress={this.props.goToTourDetails.bind(this)}>
                     <View style={[styles.modal, styles.modal2]}>
                         <Image resizeMode='cover' style={styles.img} source={{uri:chosenTour.img}}/>
                         <Text style={styles.text}>
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     },
     modalTourDetails: {
         height: 250,
-        backgroundColor: "white",
+        backgroundColor: "#dae7fe",
         borderTopColor: "#4286f5",
         borderTopWidth: 6
     },

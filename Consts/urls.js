@@ -2,13 +2,13 @@
  * Created by dell on 19/05/2017.
  */
 // const URL_BASE = 'http://10.0.0.31:3000/';
-const URL_BASE = 'http://192.168.1.28:3000/';
+// const URL_BASE = 'http://192.168.1.28:3000/';
+const URL_BASE = 'http://192.168.14.19:3000/';
 
 /** USERS */
 const URL_USERS_ENDPOINT = URL_BASE+'users/';
 export const LOGINUSER = URL_USERS_ENDPOINT+'login';
 export const TOURS_HISTORY = URL_USERS_ENDPOINT+'toursHistory/';
-export const URL_ADD_TOUR = URL_USERS_ENDPOINT+'addTour';
 
 
 /** TOURS */

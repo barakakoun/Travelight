@@ -49,13 +49,13 @@ export default class SideNavigation extends Component {
 
         return (
             <Drawer theme='light'>
-                <Drawer.Header backgroundColor='#4286f5' height={100}>
+                <Drawer.Header backgroundColor='#4286f5' height={140}>
                     <View style={styles.header}>
-                        <Avatar size={60}
+                        <Avatar size={70}
                                 image={<Image source={{uri:currentUser.img}}/>}
                         />
                         <Text style={[styles.text, COLOR.paperGrey50, TYPO.paperFontSubhead]}>
-                            {userFullName}
+                            Hello, {userFullName}
                         </Text>
                     </View>
                 </Drawer.Header>
@@ -128,12 +128,13 @@ export default class SideNavigation extends Component {
 const styles = {
     header: {
         paddingTop: 16,
+        marginBottom: 10,
         flex:1,
         justifyContent: 'center',
         alignItems: 'center'
     },
     text: {
-        marginTop: 0
+        marginTop: 15
     },
     barak: {
         backgroundColor: '#e9eaed'

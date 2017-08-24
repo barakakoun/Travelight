@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        backgroundColor: '#fafafa',
+        backgroundColor: '#dae7fe',
         alignItems:'center'
     },
     slide: {
