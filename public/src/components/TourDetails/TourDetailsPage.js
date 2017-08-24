@@ -158,7 +158,7 @@ class TourDetailsPage extends Component {
     }
 
     render() {
-        const {tourStations} = this.props.store;
+        const {tourStations, selectedLanguage} = this.props.store;
         const NavigationBarRouteMapper = {
             LeftButton(route, navigator, index, navState) {
                 return (
@@ -195,7 +195,8 @@ class TourDetailsPage extends Component {
     }
     renderScene(route, navigator) {
         const { chosenTour,
-                tourStations } = this.props.store;
+                tourStations,
+                selectedLanguage} = this.props.store;
         return (
             <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: '#FFFFFF'}}>
                 <MaterialToolbar title={chosenTour.name}
@@ -251,7 +252,7 @@ class TourDetailsPage extends Component {
                             {chosenTour.description}
                         </Text>
                     </ScrollView>
-                    { this.props.selectedLanguage == "HE" ?
+                    { selectedLanguage == 'he' ?
                         <Button onPress={() => this.startTour()} title="התחל סיור" style={styles.btn}/> :
                         <Button onPress={() => this.startTour()} title="Start Tour" style={styles.btn}/>
                     }
