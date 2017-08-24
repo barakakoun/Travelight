@@ -251,7 +251,14 @@ class TourDetailsPage extends Component {
                             {chosenTour.description}
                         </Text>
                     </ScrollView>
+<<<<<<< HEAD
+                    { this.props.selectedLanguage == "HE" ?
+                        <Button onPress={() => this.startTour()} title="התחל סיור" style={styles.btn}/> :
+                        <Button onPress={() => this.startTour()} title="Start Tour" style={styles.btn}/>
+                    }
+=======
                     <Button onPress={() => this.startTour()} title="Begin Tour" style={styles.btn}/>
+>>>>>>> 8fd9912e68d160a3a9933a554b4711d64067a5d4
                 </View>
             </View>
         );
