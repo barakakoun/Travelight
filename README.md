@@ -3,9 +3,9 @@
 For more details, check our project book file.
 
 
-## Screenshots:
+## Screenshots
 
-![what](screenshots/0.png?raw=true "Login")
+![Alt text](screenshots/0.png?raw=true "Login")
 
 ![Alt text](screenshots/1.png?raw=true "Map main page")
 
